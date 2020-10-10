@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const usersRoute = require('./routers/users.route');
 const bodyParser = require('body-parser');
-const hbs = require('express-handlebars')
+const hbs = require('express-handlebars');
 const port = 8080;
 
 app.engine('hbs', hbs({
@@ -13,11 +13,13 @@ app.engine('hbs', hbs({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('./public'));
+
 app.use('/users', usersRoute);
 
 app.set('view engine', 'hbs');
 app.set('views', './views');
+
+app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
     res.render('index');

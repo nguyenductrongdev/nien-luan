@@ -1,5 +1,18 @@
 const mysql = require('mysql');
 
+module.exports.index = (req, res, next) => {
+    try {
+        let avatar = req.query.avatar;
+        let username = req.query.username;
+        res.render('users/index', {
+            username,
+            avatar
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports.postRegister = (req, res, next) => {
     try {
         let txtTenDangNhap = req.body.txtTenDangNhap;
@@ -16,12 +29,15 @@ module.exports.postRegister = (req, res, next) => {
         });
         con.connect(function (err) {
             if (err) throw err;
-            res.send(`${txtTenDangNhap}, ${txtVaiTro},
-                ${ txtMatKhau}, ${txtSoDienThoai}, ${txtEmail}`);
+            let pathAvatar = `/${req.file.path.split('/').slice(1).join('/')}`;
+
             con.query(`INSERT INTO nguoi_dung VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
-                '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}')`, err => {
+                '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${pathAvatar}')`, err => {
                 if (err) throw err;
             });
+            con.end();
+            res.redirect(`/users/?username=${txtTenDangNhap}&avatar=${pathAvatar}`);
+            return;
         });
     } catch (error) {
         next(error);
@@ -57,7 +73,7 @@ module.exports.postLogin = (req, res, next) => {
         });
         con.connect(function (err) {
             if (err) throw err;
-            con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU FROM nguoi_dung 
+            con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR FROM nguoi_dung 
                 WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`, function (err, result) {
                 if (err) throw new Error('login err');
                 let isExist = result.length === 1;
@@ -71,10 +87,8 @@ module.exports.postLogin = (req, res, next) => {
                 else {
                     let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
                     if (isMatchMatKhau) {
-                        // res.send('dang nhap thanh cong');
-                        res.render('users/index', {
-                            username: result[0].ND_TEN_DANG_NHAP
-                        })
+                        res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
+                        return;
                     }
                     else {
                         res.render('users/login', {
@@ -84,6 +98,7 @@ module.exports.postLogin = (req, res, next) => {
                     }
                 }
             });
+            con.end();
         });
     } catch (error) {
         next(error);
