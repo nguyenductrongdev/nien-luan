@@ -44,7 +44,7 @@ module.exports.postRegister = (req, res, next) => {
     }
 }
 
-module.exports.register = (req, res) => {
+module.exports.register = (req, res, next) => {
     try {
         res.render('users/register');
     } catch (error) {
