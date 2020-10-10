@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
-const hbs = require('express-handlebars')
 const usersRoute = require('./routers/users.route');
 const bodyParser = require('body-parser');
+const hbs = require('express-handlebars')
 const port = 8080;
 
 app.engine('hbs', hbs({
