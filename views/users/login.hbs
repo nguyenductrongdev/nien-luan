@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            {{#if existErr}}
+            <div class="alert alert-warning text-center" role="alert">
+                Tên đăng nhập không tồn tại!
+                <a class="btn btn-secondary btn-sm" href="/users/register/">Đăng ký
+                    ngay</a>
+            </div>
+            {{/if}}
+            {{#if matchMatKhauErr}}
+            <div class="alert alert-warning text-center" role="alert">
+                Mật khẩu không khớp!
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-md-6 mx-auto">
+            <form class="my-3" id="frmRegister" name="frmRegister" action="/users/login" method="POST">
+                <div class="form-group">
+                    <label for="txtTenDangNhap">Tên đăng nhập:</label>
+                    <input type="text" name="txtTenDangNhap" id="txtTenDangNhap" class="form-control" placeholder="abc"
+                        id="email" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="txtMatKhau">Mật khẩu:</label>
+                    <input type="password" name="txtMatKhau" id="txtMatKhau" class="form-control"
+                        placeholder="password">
+                </div>
+                <button class="btn btn-primary form-control">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
