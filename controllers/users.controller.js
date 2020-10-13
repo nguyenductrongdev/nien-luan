@@ -31,12 +31,12 @@ module.exports.postRegister = (req, res, next) => {
             if (err) throw err;
             let pathAvatar = `/${req.file.path.split('/').slice(1).join('/')}`;
 
-            con.query(`INSERT INTO nguoi_dung VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
+            con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
                 '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${pathAvatar}')`, err => {
                 if (err) throw err;
             });
             con.end();
-            res.redirect(`/users/?username=${txtTenDangNhap}&avatar=${pathAvatar}`);
+            res.redirect(`/users?username=${txtTenDangNhap}&avatar=${pathAvatar}`);
             return;
         });
     } catch (error) {
@@ -46,7 +46,9 @@ module.exports.postRegister = (req, res, next) => {
 
 module.exports.register = (req, res, next) => {
     try {
-        res.render('users/register');
+        res.render('users/register', {
+            title: "Đăng ký"
+        });
     } catch (error) {
         next(error);
     }
@@ -73,7 +75,7 @@ module.exports.postLogin = (req, res, next) => {
         });
         con.connect(function (err) {
             if (err) throw err;
-            con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR FROM nguoi_dung 
+            con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA FROM NGUOI_DUNG 
                 WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`, function (err, result) {
                 if (err) throw new Error('login err');
                 let isExist = result.length === 1;
@@ -88,7 +90,6 @@ module.exports.postLogin = (req, res, next) => {
                     let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
                     if (isMatchMatKhau) {
                         res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
-                        return;
                     }
                     else {
                         res.render('users/login', {

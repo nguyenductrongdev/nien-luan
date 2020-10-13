@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Nhà sản xuất</th>
+                    <th>Giá</th>
+                </tr>
+                {{#each products}}
+                <tr>
+                    <td>{{this.LDT_MA}}</td>
+                    <td>{{this.LDT_TEN}}</td>
+                    <td>{{this.NSX_TEN}}</td>
+                    <td>{{this.LDT_GIA}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+</div>

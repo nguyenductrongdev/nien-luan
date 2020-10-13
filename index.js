@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./routers/users.route');
+const productsRoute = require('./routers/products.route');
 const bodyParser = require('body-parser');
 const hbs = require('express-handlebars');
 const port = 8080;
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/users', usersRoute);
+app.use('/products', productsRoute);
 
 app.set('view engine', 'hbs');
 app.set('views', './views');

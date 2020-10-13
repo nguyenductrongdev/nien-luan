@@ -1,0 +1,179 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            {{#if addStatus.err}}
+            <div class="alert alert-danger text-center" role="alert">
+                Thêm thất bại, sản phẩm đã được thêm trước đây!
+            </div>
+            {{/if}}
+
+            {{#if addStatus.success}}
+            <div class="alert alert-success text-center" role="alert">
+                Thêm mới loại điện thoại thành công!
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <h1 class="text-center">Thêm loại điện thoại</h1>
+            <form name="frmAddProduct" action="/products/add-product" method="POST" id="frmAddProduct"
+                class="shadow-lg p-5 my-3">
+                <div class="form-group">
+                    <label for="txtMa">Mã</label>
+                    <input type="text" class="form-control" name="txtMa" id="txtMa">
+                </div>
+                <div class="form-group">
+                    <label for="txtTen">Tên</label>
+                    <input type="text" class="form-control" name="txtTen" id="txtTen">
+                </div>
+                {{!-- nha san xuat --}}
+                <div class="form-group">
+                    <label for="slNhaSanXuat">Nhà sản xuất</label>
+                    <select class="custom-select" name="slNhaSanXuat" id="slNhaSanXuat">
+                        <option value="">Choose...</option>
+                        {{#each nhaSanXuatOptions}}
+                        <option value="{{this.ma}}">{{this.ten}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                {{!-- tên chip --}}
+                <div class="form-group">
+                    <label for="txtTenChip">Tên chip</label>
+                    <input type="text" class="form-control" name="txtTenChip" id="txtTenChip">
+                </div>
+                {{!-- jack tai nghe --}}
+                <div class="form-group">
+                    <label>Jack tai nghe</label>
+                    <div class="form-check">
+                        <label class="form-check-label mx-5">Có
+                            <input checked type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-1" value="true">
+                        </label>
+                        <label class="form-check-label">Không
+                            <input type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-2" value="false">
+                        </label>
+                    </div>
+                </div>
+                {{!-- loại pin --}}
+                <div class="form-group">
+                    <label for="chkLoaiPin">Loại pin</label>
+                    <div class="form-check">
+                        <label class="form-check-label mx-5">Li-po
+                            <input checked type="radio" name="rdLoaiPin" id="rdLoaiPin-1" value="li-ion">
+                        </label>
+                        <label class="form-check-label">Li-ion
+                            <input type="radio" name="rdLoaiPin" id="rdLoaiPin-2" value="li-po">
+                        </label>
+                    </div>
+                </div>
+                {{!-- dung lượng pin --}}
+                <div class="form-group">
+                    <label for="txtDungLuongPin">Dung lượng pin</label>
+                    <input type="number" class="form-control" name="txtDungLuongPin" id="txtDungLuongPin">
+                </div>
+                {{!-- toc do sac --}}
+                <div class="form-group">
+                    <label for="txtTocDoSac">Tốc độ sạc</label>
+                    <input type="number" class="form-control" name="txtTocDoSac" id="txtTocDoSac" min="0">
+                </div>
+
+                {{!-- ram --}}
+                <div class="form-group">
+                    <label for="txtDungLuongRAM">Dung lượng RAM</label>
+                    <input type="number" class="form-control" name="txtDungLuongRAM" id="txtDungLuongRAM" min="0">
+                </div>
+                {{!-- rom --}}
+                <div class="form-group">
+                    <label for="txtDungLuongROM">Dung lượng ROM</label>
+                    <input type="number" class="form-control" name="txtDungLuongROM" id="txtDungLuongROM" min="0">
+                </div>
+                {{!-- cuong luc --}}
+                <div class="form-group">
+                    <label for="txtThongTinCuongLuc">Thông tin cường lực</label>
+                    <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc">
+                </div>
+                {{!-- gia --}}
+                <div class="form-group">
+                    <label for="txtGia">Giá</label>
+                    <input type="number" class="form-control" name="txtGia" id="txtGia" min="0">
+                </div>
+                {{!-- loai man hinh --}}
+                <div class="form-group">
+                    <label>Loại màn hình</label>
+                    <div class="form-check">
+                        <label class="form-check-label">LCD
+                            <input checked type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-1" value="LCD">
+                        </label>
+                        <label class="form-check-label mx-3">AMOLED
+                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-2" value="AMOLED">
+                        </label>
+                        <label class="form-check-label">SUPER AMOLED
+                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="SUPPER AMOLED">
+                        </label>
+                        <label class="form-check-label mx-3">OLED
+                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="OLED">
+                        </label>
+                        <label class="form-check-label">Khác
+                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="Không rõ">
+                        </label>
+                    </div>
+                </div>
+                {{!-- do phan giai --}}
+                <div class="form-group">
+                    <label>Độ phân giải màn hình</label>
+                    <select class="custom-select" name="slDoPhanGiai" id="slDoPhanGiai">
+                        <option value="" selected>Choose...</option>
+                        <option value="HD">HD</option>
+                        <option value="HD+">HD+</option>
+                        <option value="Full HD">Full HD</option>
+                        <option value="Full HD+">Full HD+</option>
+                        <option value="2K">2K</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary form-control">Thêm</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#frmAddProduct').submit(function (event) {
+            fields = [
+                ma = $('#txtMa'),
+                ten = $('#txtTen'),
+                nhaSanXuat = $('#slNhaSanXuat'),
+                tenChip = $('#txtTenChip'),
+                jackTaiNghe = $('input[name=rdJackTaiNghe]:checked'),
+                loaiPin = $('input[name="rdLoaiPin"]:checked'),
+                dungLuongPin = $('#txtDungLuongPin'),
+                tocDoSac = $('#txtTocDoSac'),
+                DungLuongRAM = $('#txtDungLuongRAM'),
+                DungLuongROM = $('#txtDungLuongROM'),
+                thongTinCuongLuc = $('#txtThongTinCuongLuc'),
+                gia = $('#txtGia'),
+                loaiManHinh = $('input[name=rdLoaiManHinh]:checked'),
+                slDoPhanGiai = $('#slDoPhanGiai'),
+            ];
+            let isMissValue = false;
+            for (field of fields) {
+                if (field.val() === '') {
+                    field.remove('is-valid');
+                    field.addClass('is-invalid');
+                    isMissValue = true;
+                }
+                else {
+                    field.removeClass('is-invalid');
+                    field.addClass('is-valid');
+                };
+            }
+            if (isMissValue) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+
+
+</script>

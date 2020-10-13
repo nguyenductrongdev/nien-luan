@@ -9,21 +9,22 @@
                 <p class="text-center my-3" style="height: 0;">Chọn ảnh đại diện</p>
             </label>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <form class="shadow-lg p-5" id="frmRegister" name="frmRegister" action="/users/register" method="POST"
                 enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="txtTenDangNhap">Tên đăng nhập:</label>
                     <input type="text" name="txtTenDangNhap" id="txtTenDangNhap" class="form-control" placeholder="abc"
-                        autocomplete="off">
-                    <small class="form-text text-muted">Tên đăng nhập dài từ 8 - 50 ký tự.</small>
+                        autocomplete="off" autofocus />
+                    <small class="form-text text-muted">Tên đăng nhập dài từ 8 - 50 ký tự, bao gồm chữ
+                        cái(hoa, thường) và chữ số.</small>
                 </div>
                 <div class="form-group">
                     <label for="txtMatKhau">Mật khẩu:</label>
                     <input type="password" name="txtMatKhau" id="txtMatKhau" class="form-control"
                         placeholder="password">
-                    <small class="form-text text-muted">Mật khẩu dài 8 - 50 ký tự, bao gồm chữ cái (hoa, thường), chữ số
-                        .</small>
+                    <small class="form-text text-muted">Mật khẩu dài 8 - 50 ký tự, bao gồm chữ cái (hoa, thường), chữ
+                        số.</small>
                 </div>
                 <div class="form-group">
                     <label for="txtSoDienThoai">Số điện thoại:</label>
@@ -67,5 +68,40 @@
                     "transition": "opacity 0.3s"
                 });
             })
+
+        $('#frmRegister').submit(function (event) {
+            const tenDangNhap = $('#txtTenDangNhap');
+            const matKhau = $('#txtMatKhau');
+            const soDienThoai = $('#txtSoDienThoai');
+            const email = $('#txtEmail');
+
+            let isValidUserName = /^[0-9A-Za-z]{8,50}$/.test(tenDangNhap.val());
+            let isValidPassword = /^[0-9A-Za-z]{8,50}$/.test(matKhau.val());
+            let isValidSoDienThoai = /^[0-9]{10}$/.test(soDienThoai.val());
+            let isValidEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email.val());
+
+            if (!isValidUserName)
+                $(tenDangNhap).removeClass('is-valid').addClass('is-invalid');
+            else
+                $(tenDangNhap).removeClass('is-invalid').addClass('is-valid');
+
+            if (!isValidPassword)
+                $(matKhau).removeClass('is-valid').addClass('is-invalid');
+            else
+                $(matKhau).removeClass('is-invalid').addClass('is-valid');
+
+            if (!isValidSoDienThoai)
+                $(soDienThoai).removeClass('is-valid').addClass('is-invalid');
+            else
+                $(soDienThoai).removeClass('is-invalid').addClass('is-valid');
+
+            if (!isValidEmail)
+                $(email).removeClass('is-valid').addClass('is-invalid');
+            else
+                $(email).removeClass('is-invalid').addClass('is-valid');
+
+            if (!isValidUserName || !isValidPassword || !isValidSoDienThoai || !isValidEmail) event.preventDefault();
+
+        })
     });
 </script>

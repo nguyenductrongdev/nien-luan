@@ -4,8 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web</title>
-    <link href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <title>
+        {{#if title}}
+        {{title}}
+        {{else}}
+        Thanh toan Mobile
+        {{/if}}
+    </title>
+    <link rel="icon" href="/asset/images/favicon.png" type="image/icon" />
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <script src="/vendor/jquery/jquery.min.js"></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
@@ -13,6 +20,35 @@
 
 <body>
     <h1 class="text-center bg-dark text-light">header</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Forms</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/users/register">Đăng ký</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/users/login">Đăng nhập</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/products/add-brand">Thêm nhà sản xuất</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products/add-product">Thêm điện thoại</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     {{{body}}}
 
