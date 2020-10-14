@@ -15,10 +15,16 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-4">
+            <label for="fHinhAnh">
+                <img class="img-fluid" style="width: 25vw; height: 25vw;"
+                    src="https://image.flaticon.com/icons/png/512/3/3901.png" alt="camera" role="button">
+            </label>
+        </div>
         <div class="col-md-6 mx-auto">
             <h1 class="text-center">Thêm loại điện thoại</h1>
             <form name="frmAddProduct" action="/products/add-product" method="POST" id="frmAddProduct"
-                class="shadow-lg p-5 my-3">
+                class="shadow-lg p-5 my-3" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="txtMa">Mã</label>
                     <input type="text" class="form-control" name="txtMa" id="txtMa">
@@ -131,6 +137,7 @@
                         <option value="2K">2K</option>
                     </select>
                 </div>
+                <input type="file" class="d-none" name="fHinhAnh" id="fHinhAnh">
                 <button type="submit" class="btn btn-primary form-control">Thêm</button>
             </form>
         </div>
@@ -155,6 +162,7 @@
                 gia = $('#txtGia'),
                 loaiManHinh = $('input[name=rdLoaiManHinh]:checked'),
                 slDoPhanGiai = $('#slDoPhanGiai'),
+                fHinhAnh = $('#fHinhAnh')
             ];
             let isMissValue = false;
             for (field of fields) {

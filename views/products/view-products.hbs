@@ -1,22 +1,52 @@
 <div class="container">
-    <div class="row">
+    {{!-- start row --}}
+    <div class="row my-5">
         <div class="col-md-12">
-            <table class="table">
-                <tr>
-                    <th>Mã</th>
-                    <th>Tên</th>
-                    <th>Nhà sản xuất</th>
-                    <th>Giá</th>
-                </tr>
-                {{#each products}}
-                <tr>
-                    <td>{{this.LDT_MA}}</td>
-                    <td>{{this.LDT_TEN}}</td>
-                    <td>{{this.NSX_TEN}}</td>
-                    <td>{{this.LDT_GIA}}</td>
-                </tr>
-                {{/each}}
+            <h1 class="text-center text-dark">Danh sách các sản phẩm</h1>
+            <table class="table table-borderless table-hover shadow-lg">
+                <thead>
+                    <tr class="thead-dark">
+                        <th>Chọn</th>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Nhà sản xuất</th>
+                        <th>Giá (đơn vị: VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each products}}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="chk" id="chk-{{this.LDT_MA}}" value="{{this.LDT_MA}}">
+                        </td>
+                        <td>{{this.LDT_MA}}</td>
+                        <td>{{this.LDT_TEN}}</td>
+                        <td>{{this.NSX_TEN}}</td>
+                        <td class="text-right">{{this.LDT_GIA}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
             </table>
         </div>
     </div>
+    {{!-- end row --}}
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" id="btnKhuyenMai" class="btn btn-warning">Khuyến mã</button>
+            <button type="button" id="btnNgungKinhDoanh" class="btn btn-warning">Ngừng kinh doanh</button>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    $(function () {
+        $('#btnKhuyenMai').click(function () {
+            let vals = [];
+            $.each($('input[name="chk"]:checked'), function () {
+                vals.push($(this).val());
+            });
+            console.log(vals.join(','));
+        });
+    });
+</script>

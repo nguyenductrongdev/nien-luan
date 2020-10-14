@@ -21,7 +21,7 @@ module.exports.postAddBrand = (req, res, next) => {
         con.connect(function (err) {
             if (err) throw err;
             con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
-                if (err) throw new Error('login err');
+                if (err) throw new Error('add brand err');
             });
             res.send('them thanh cong');
             con.end();
@@ -103,6 +103,8 @@ module.exports.postAddProduct = (req, res, next) => {
         let rdLoaiManHinh = req.body.rdLoaiManHinh;
         let slDoPhanGiai = req.body.slDoPhanGiai;
 
+        let pathHinhAnh = `/${req.file.path.split('/').slice(1).join('/')}`;
+
         let con = mysql.createConnection({
             host: "localhost",
             user: "root",
@@ -111,6 +113,7 @@ module.exports.postAddProduct = (req, res, next) => {
         });
         con.connect(function (err) {
             if (err) throw err;
+
             let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
                 LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
                 LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, 
@@ -120,14 +123,49 @@ module.exports.postAddProduct = (req, res, next) => {
                 '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
                 '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac},
                 ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}')`;
-            con.query(qr, function (err, result) {
+            con.query(qr, err => {
                 let isExist = false;
                 if (err) {
                     isExist = true;
-                    // throw new Error('add product err');
+                    res.redirect(`/products/add-product?isExist=${isExist}`);
                 }
-                res.redirect(`/products/add-product?isExist=${isExist}`);
+                con.query(
+                    `INSERT INTO HINH_ANH(HA_URL, LDT_MA) VALUES('${pathHinhAnh}', '${txtMa}')`,
+                    err => {
+                        if (err) throw new Error('add image image');
+
+                        res.redirect(`/products/add-product?isExist=${isExist}`);
+                        con.end();
+                    });
             });
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.viewProduct = (req, res, next) => {
+    try {
+        let con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "",
+            database: "nienluan"
+        });
+        con.connect(function (err) {
+            if (err) throw err;
+            con.query(
+                `SELECT LDT_MA, LDT_TEN, NSX_TEN, LDT_GIA, CTKM_MA 
+                FROM NHA_SAN_XUAT, LOAI_DIEN_THOAI
+                WHERE NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA`,
+                function (err, result) {
+                    if (err) throw new Error('view product err');
+                    res.render('products/view-products', {
+                        products: result
+                    });
+                }
+            );
+
             con.end();
         });
     } catch (error) {
@@ -135,4 +173,57 @@ module.exports.postAddProduct = (req, res, next) => {
     }
 }
 
-module.exports.
+module.exports.addUnit = (req, res, next) => {
+    try {
+        let con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "",
+            database: "nienluan"
+        });
+        con.connect(function (err) {
+            if (err) throw err;
+            con.query(
+                `SELECT LDT_MA, LDT_TEN
+                FROM LOAI_DIEN_THOAI`,
+                function (err, result) {
+                    if (err) throw new Error('add unit err');
+                    res.render('products/add-unit', {
+                        brands: result
+                    });
+                }
+            );
+            con.end();
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.postAddUnit = (req, res, next) => {
+    try {
+        let slMa = req.body.slMa;
+        let txtIMEI = req.body.txtIMEI;
+
+        let con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "",
+            database: "nienluan"
+        });
+        con.connect(function (err) {
+            if (err) throw err;
+            con.query(
+                `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
+                VALUES('${txtIMEI}', '${slMa}')`,
+                function (err) {
+                    if (err) throw new Error('add unit err');
+                    res.redirect('/products/add-unit');
+                }
+            );
+            con.end();
+        });
+    } catch (error) {
+        next(error);
+    }
+}

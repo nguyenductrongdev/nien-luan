@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-md-6 mx-auto">
+            <form class="my-3 shadow-lg p-5" id="frmAddUnit" name="frmAddUnit" action="/products/add-unit"
+                method="POST">
+                <div class="form-group">
+                    <label for="slTen">Tên điện thoại</label>
+                    <select class="custom-select" name="slMa" id="slMa">
+                        <option value="" selected>Choose...</option>
+                        {{#each brands }}
+                        <option value="{{ this.LDT_MA }}">{{ this.LDT_TEN }}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtTenDangNhap">IMEI</label>
+                    <input type="text" name="txtIMEI" id="txtIMEI" class="form-control" placeholder="abc" id="email"
+                        autocomplete="off">
+                </div>
+                <button class="btn btn-primary form-control">Thêm</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('#frmAddUnit').submit(function (event) {
+            let inputs = [
+                $('input[name="slTen"]:selected'),
+                $('input[name="txtIMEI"]')
+            ];
+
+            let hasEmptyField = false;
+            for (let input of inputs) {
+                if (input.val() === '') {
+                    input.removeClass('is-valid');
+                    input.addClass('is-invalid');
+                    hasEmptyField = true;
+                } else {
+                    input.removeClass('is-invalid');
+                    input.addClass('is-valid');
+                }
+            }
+            if (hasEmptyField) event.preventDefault();
+        });
+    });
+</script>
