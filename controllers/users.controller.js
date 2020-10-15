@@ -1,4 +1,7 @@
 const mysql = require('mysql');
+const fs = require('fs');
+const formidable = require('formidable');
+
 
 module.exports.index = (req, res, next) => {
     try {
@@ -15,29 +18,37 @@ module.exports.index = (req, res, next) => {
 
 module.exports.postRegister = (req, res, next) => {
     try {
-        let txtTenDangNhap = req.body.txtTenDangNhap;
-        let txtVaiTro = req.body.hVaiTro;
-        let txtMatKhau = req.body.txtMatKhau;
-        let txtSoDienThoai = req.body.txtSoDienThoai;
-        let txtEmail = req.body.txtEmail;
+        let form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let txtTenDangNhap = fields.txtTenDangNhap;
+            let txtVaiTro = fields.hVaiTro;
+            let txtMatKhau = fields.txtMatKhau;
+            let txtSoDienThoai = fields.txtSoDienThoai;
+            let txtEmail = fields.txtEmail;
+            let tempPath = files.fAvatar.path;
+            let dbPath = `/uploads/${files.fAvatar.name}`;
 
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "nienluan"
-        });
-        con.connect(function (err) {
-            if (err) throw err;
-            let pathAvatar = `/${req.file.path.split('/').slice(1).join('/')}`;
-
-            con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
-                '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${pathAvatar}')`, err => {
-                if (err) throw err;
+            fs.rename(tempPath, `./public/uploads/${files.fAvatar.name}`, err => {
+                if (err) throw new Error('upload avatar error');
             });
-            con.end();
-            res.redirect(`/users?username=${txtTenDangNhap}&avatar=${pathAvatar}`);
-            return;
+
+            let con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "",
+                database: "nienluan"
+            });
+            con.connect(function (err) {
+                if (err) throw err;
+
+                con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
+                '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${dbPath}')`, err => {
+                    if (err) throw err;
+                });
+                con.end();
+                res.redirect(`/users?username=${txtTenDangNhap}&avatar=${dbPath}`);
+                return;
+            });
         });
     } catch (error) {
         next(error);

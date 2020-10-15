@@ -5,7 +5,6 @@ const multer = require('multer');
 var upload = multer({ dest: './public/uploads' });
 
 const controller = require('./../controllers/products.controller');
-const { route } = require('./users.route');
 
 router
     .get('/add-brand', controller.addBrand)
