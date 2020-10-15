@@ -12,7 +12,7 @@ module.exports.index = (req, res, next) => {
             avatar
         });
     } catch (error) {
-        next(error)
+        next(error);
     }
 }
 
@@ -26,16 +26,16 @@ module.exports.postRegister = (req, res, next) => {
             let txtSoDienThoai = fields.txtSoDienThoai;
             let txtEmail = fields.txtEmail;
             let tempPath = files.fAvatar.path;
-            let dbPath = `/uploads/${files.fAvatar.name}`;
+            let dbPath = `/uploads/${txtTenDangNhap}_${files.fAvatar.name}`;
 
-            fs.rename(tempPath, `./public/uploads/${files.fAvatar.name}`, err => {
+            fs.rename(tempPath, `./public/uploads/${txtTenDangNhap}_${files.fAvatar.name}`, err => {
                 if (err) throw new Error('upload avatar error');
             });
 
             let con = mysql.createConnection({
                 host: "localhost",
                 user: "root",
-                password: "",
+                password: "b1709576",
                 database: "nienluan"
             });
             con.connect(function (err) {
@@ -75,42 +75,46 @@ module.exports.login = (req, res, next) => {
 
 module.exports.postLogin = (req, res, next) => {
     try {
-        let txtTenDangNhap = req.body.txtTenDangNhap;
-        let txtMatKhau = req.body.txtMatKhau;
+        let form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
 
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "nienluan"
-        });
-        con.connect(function (err) {
-            if (err) throw err;
-            con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA FROM NGUOI_DUNG 
+            let txtTenDangNhap = fields.txtTenDangNhap;
+            let txtMatKhau = fields.txtMatKhau;
+
+            let con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "b1709576",
+                database: "nienluan"
+            });
+            con.connect(function (err) {
+                if (err) throw err;
+                con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA FROM NGUOI_DUNG 
                 WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`, function (err, result) {
-                if (err) throw new Error('login err');
-                let isExist = result.length === 1;
+                    if (err) throw new Error('login err');
+                    let isExist = result.length === 1;
 
-                if (!isExist) {
-                    res.render('users/login', {
-                        existErr: true
-                    });
-                    return;
-                }
-                else {
-                    let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
-                    if (isMatchMatKhau) {
-                        res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
-                    }
-                    else {
+                    if (!isExist) {
                         res.render('users/login', {
-                            matchMatKhauErr: true
+                            existErr: true
                         });
                         return;
                     }
-                }
+                    else {
+                        let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
+                        if (isMatchMatKhau) {
+                            res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
+                        }
+                        else {
+                            res.render('users/login', {
+                                matchMatKhauErr: true
+                            });
+                            return;
+                        }
+                    }
+                });
+                con.end();
             });
-            con.end();
         });
     } catch (error) {
         next(error);

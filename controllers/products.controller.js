@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const { options } = require('../routers/users.route');
+const fs = require('fs');
+const formidable = require('formidable');
 
 module.exports.addBrand = (req, res) => {
     res.render('products/add-brand', {
@@ -9,22 +10,25 @@ module.exports.addBrand = (req, res) => {
 
 module.exports.postAddBrand = (req, res, next) => {
     try {
-        let txtMa = req.body.txtMa;
-        let txtTen = req.body.txtTen;
+        let form = formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let txtMa = fields.txtMa;
+            let txtTen = fields.txtTen;
 
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "nienluan"
-        });
-        con.connect(function (err) {
-            if (err) throw err;
-            con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
-                if (err) throw new Error('add brand err');
+            let con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "b1709576",
+                database: "nienluan"
             });
-            res.send('them thanh cong');
-            con.end();
+            con.connect(function (err) {
+                if (err) throw err;
+                con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
+                    if (err) throw new Error('add brand err');
+                });
+                res.send('them thanh cong');
+                con.end();
+            });
         });
     } catch (error) {
         next(error);
@@ -36,7 +40,7 @@ module.exports.addProduct = (req, res, next) => {
         let con = mysql.createConnection({
             host: "localhost",
             user: "root",
-            password: "",
+            password: "b1709576",
             database: "nienluan"
         });
         con.connect(function (err) {
@@ -88,55 +92,67 @@ module.exports.addProduct = (req, res, next) => {
 
 module.exports.postAddProduct = (req, res, next) => {
     try {
-        let txtMa = req.body.txtMa;
-        let txtTen = req.body.txtTen;
-        let slNhaSanXuat = req.body.slNhaSanXuat;
-        let txtTenChip = req.body.txtTenChip;
-        let rdJackTaiNghe = req.body.rdJackTaiNghe;
-        let rdLoaiPin = req.body.rdLoaiPin;
-        let txtDungLuongPin = req.body.txtDungLuongPin;
-        let txtTocDoSac = req.body.txtTocDoSac;
-        let txtDungLuongRAM = req.body.txtDungLuongRAM;
-        let txtDungLuongROM = req.body.txtDungLuongROM;
-        let txtThongTinCuongLuc = req.body.txtThongTinCuongLuc;
-        let txtGia = req.body.txtGia;
-        let rdLoaiManHinh = req.body.rdLoaiManHinh;
-        let slDoPhanGiai = req.body.slDoPhanGiai;
+        let form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let txtMa = fields.txtMa;
+            let txtTen = fields.txtTen;
+            let slNhaSanXuat = fields.slNhaSanXuat;
+            let txtTenChip = fields.txtTenChip;
+            let rdJackTaiNghe = fields.rdJackTaiNghe;
+            let rdLoaiPin = fields.rdLoaiPin;
+            let txtDungLuongPin = fields.txtDungLuongPin;
+            let txtTocDoSac = fields.txtTocDoSac;
+            let txtDungLuongRAM = fields.txtDungLuongRAM;
+            let txtDungLuongROM = fields.txtDungLuongROM;
+            let txtThongTinCuongLuc = fields.txtThongTinCuongLuc;
+            let txtGia = fields.txtGia;
+            let rdLoaiManHinh = fields.rdLoaiManHinh;
+            let slDoPhanGiai = fields.slDoPhanGiai;
 
-        let pathHinhAnh = `/${req.file.path.split('/').slice(1).join('/')}`;
+            let tempPath = files.fHinhAnh.path;
+            let dbPath = `/uploads/${txtMa}_${files.fHinhAnh.name}`;
 
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "nienluan"
-        });
-        con.connect(function (err) {
-            if (err) throw err;
+            let dirPath = `./public/uploads/${txtMa}_${files.fHinhAnh.name}`;
 
-            let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
-                LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
-                LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, 
-                LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI)
-                VALUES 
-                ('${txtMa}', '${slNhaSanXuat}', '${txtTen}', 
-                '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
-                '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac},
-                ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}')`;
-            con.query(qr, err => {
-                let isExist = false;
-                if (err) {
-                    isExist = true;
-                    res.redirect(`/products/add-product?isExist=${isExist}`);
-                }
-                con.query(
-                    `INSERT INTO HINH_ANH(HA_URL, LDT_MA) VALUES('${pathHinhAnh}', '${txtMa}')`,
-                    err => {
-                        if (err) throw new Error('add image image');
+            fs.rename(tempPath, dirPath, err => {
+                if (err) throw new Error('upload product image error');
+            });
 
+            let con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "b1709576",
+                database: "nienluan"
+            });
+            con.connect(function (err) {
+                if (err) throw err;
+
+                let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
+                    LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
+                    LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, 
+                    LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI)
+                    VALUES 
+                    ('${txtMa}', '${slNhaSanXuat}', '${txtTen}', 
+                    '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
+                    '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac},
+                    ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}')`;
+                con.query(qr, err => {
+                    let isExist = false;
+                    if (err) {
+                        isExist = true;
                         res.redirect(`/products/add-product?isExist=${isExist}`);
                         con.end();
-                    });
+                        return;
+                    }
+                    con.query(
+                        `INSERT INTO HINH_ANH(HA_URL, LDT_MA) VALUES('${dbPath}', '${txtMa}')`,
+                        err => {
+                            con.end();
+                            if (err) throw new Error('add image image');
+                            res.redirect(`/products/add-product?isExist=${isExist}`);
+                        }
+                    );
+                });
             });
         });
     } catch (error) {
@@ -149,7 +165,7 @@ module.exports.viewProduct = (req, res, next) => {
         let con = mysql.createConnection({
             host: "localhost",
             user: "root",
-            password: "",
+            password: "b1709576",
             database: "nienluan"
         });
         con.connect(function (err) {
@@ -178,7 +194,7 @@ module.exports.addUnit = (req, res, next) => {
         let con = mysql.createConnection({
             host: "localhost",
             user: "root",
-            password: "",
+            password: "b1709576",
             database: "nienluan"
         });
         con.connect(function (err) {
@@ -202,26 +218,29 @@ module.exports.addUnit = (req, res, next) => {
 
 module.exports.postAddUnit = (req, res, next) => {
     try {
-        let slMa = req.body.slMa;
-        let txtIMEI = req.body.txtIMEI;
+        let form = formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let slMa = fields.slMa;
+            let txtIMEI = fields.txtIMEI;
 
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "nienluan"
-        });
-        con.connect(function (err) {
-            if (err) throw err;
-            con.query(
-                `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
-                VALUES('${txtIMEI}', '${slMa}')`,
-                function (err) {
-                    if (err) throw new Error('add unit err');
-                    res.redirect('/products/add-unit');
-                }
-            );
-            con.end();
+            let con = mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "b1709576",
+                database: "nienluan"
+            });
+            con.connect(function (err) {
+                if (err) throw err;
+                con.query(
+                    `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
+                    VALUES('${txtIMEI}', '${slMa}')`,
+                    function (err) {
+                        if (err) throw new Error('add unit err');
+                        res.redirect('/products/add-unit');
+                    }
+                );
+                con.end();
+            });
         });
     } catch (error) {
         next(error);

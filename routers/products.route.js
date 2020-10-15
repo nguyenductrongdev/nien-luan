@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const multer = require('multer');
-var upload = multer({ dest: './public/uploads' });
-
 const controller = require('./../controllers/products.controller');
 
 router
@@ -12,7 +9,7 @@ router
 
 router
     .get('/add-product', controller.addProduct)
-    .post('/add-product', upload.single('fHinhAnh'), controller.postAddProduct);
+    .post('/add-product', controller.postAddProduct);
 
 router
     .get('/view-products', controller.viewProduct);
@@ -20,5 +17,6 @@ router
 router
     .get('/add-unit', controller.addUnit)
     .post('/add-unit', controller.postAddUnit);
+
 
 module.exports = router;

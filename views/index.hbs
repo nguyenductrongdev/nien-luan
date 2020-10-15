@@ -1,12 +1,45 @@
-<h1 class="text-center">User features</h1>
-<a class="btn btn-info" href="/users/login">Đăng nhập</a>
-<a class="btn btn-info" href="/users/register">Đăng ký</a>
+<style>
+    .card {
+        display: inline-block;
+        width: 15vw;
+        height: 50vh;
+        margin: 0.2vw;
+        overflow: auto;
+    }
 
-<hr>
+    .card-img-top {
+        height: 60%;
+    }
 
-<h1 class="text-center">Admin features</h1>
-<a href="/products/add-brand" class="btn btn-warning">Add new brand</a>
-<a href="/products/add-product" class="btn btn-warning">Add new product</a>
-<a href="/products/view-products" class="btn btn-warning">View all product</a>
+    .card-body {
+        height: 40%;
+    }
 
-<hr>
+    .card-title {
+        height: 50%;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-10">
+
+            {{#each products}}
+            <a href="/products/index?LDT_MA{{this.LDT_MA}}" class="text-dark">
+                <div class="card text-center shadow">
+                    <img src="{{ this.HA_URL }}" class="card-img-top" alt="abc">
+                    <div class="card-body">
+                        <p class="card-title h5">{{ this.LDT_TEN }}</p>
+                        <p class="card-text">{{ this.LDT_GIA }}</p>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+
+        </div>
+    </div>
+</div>
+</div>
