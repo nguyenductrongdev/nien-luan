@@ -160,7 +160,7 @@ module.exports.postAddProduct = (req, res, next) => {
     }
 }
 
-module.exports.viewProduct = (req, res, next) => {
+module.exports.viewProducts = (req, res, next) => {
     try {
         let con = mysql.createConnection({
             host: "localhost",
@@ -244,5 +244,42 @@ module.exports.postAddUnit = (req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+}
+
+module.exports.viewProduct = (req, res, next) => {
+    try {
+        const LDT_MA = req.query.LDT_MA;
+        let con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "b1709576",
+            database: "nienluan"
+        });
+        con.connect(function (err) {
+            if (err) throw err;
+            // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);
+            con.query(
+                `SELECT * 
+                FROM 
+                    LOAI_DIEN_THOAI, NHA_SAN_XUAT, HINH_ANH
+                WHERE
+                    '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
+                    AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
+                    AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+                function (err, result) {
+                    if (err) throw new Error(err);
+                    con.end();
+
+                    result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
+                    res.render('products/view-product', {
+                        title: "Thông tin chi tiết",
+                        product: result[0]
+                    });
+                }
+            );
+        });
+    } catch (error) {
+        if (error) next(error);
     }
 }

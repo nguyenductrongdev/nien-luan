@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-dark" role="alert">
+                <p class="text-center font-weight-bold">{{ product.LDT_TEN }}</p>
+            </div>
+            <img src="{{ product.HA_URL }}" alt="{{ product.LDT_TEN }}" class="img-fluid img-thumbnail d-block w-100">
+            <div class="alert alert-dark" role="alert">
+                <div class="text-center">{{ product.LDT_GIA }}</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <th>Nhà sản xuất</th>
+                    <td>{{ product.NSX_TEN }}</td>
+                </tr>
+                <tr>
+                    <th>Chipset</th>
+                    <td>{{ product.LDT_TEN_CHIP }}</td>
+                </tr>
+                <tr>
+                    <th>Dung lượng pin</th>
+                    <td>{{ product.LDT_DUNG_LUONG_PIN }}</td>
+                </tr>
+                <tr>
+                    <th>Bộ nhớ</th>
+                    <td>{{ product.LDT_DUNG_LUONG_ROM }}</td>
+                </tr>
+                <tr>
+                    <th>RAM</th>
+                    <td>{{ product.LDT_DUNG_LUONG_RAM }}</td>
+                </tr>
+                <tr>
+                    <th>Jack tai nghe</th>
+                    <td>{{ product.LDT_JACK_TAI_NGHE }}</td>
+                </tr>
+                <tr>
+                    <th>Cường lực</th>
+                    <td>{{ product.LDT_THONG_TIN_CUONG_LUC }}</td>
+                </tr>
+                <tr>
+                    <th>Tốc độ sạc</th>
+                    <td>{{ product.LDT_TOC_DO_SAC }}</td>
+                </tr>
+                <tr>
+                    <th>Loại màn hình</th>
+                    <td>{{ product.LDT_LOAI_MAN_HINH }}</td>
+                </tr>
+                <tr>
+                    <th>Độ phân giải</th>
+                    <td>{{ product.LDT_DO_PHAN_GIAI }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

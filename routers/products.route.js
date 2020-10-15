@@ -12,11 +12,13 @@ router
     .post('/add-product', controller.postAddProduct);
 
 router
-    .get('/view-products', controller.viewProduct);
+    .get('/view-products', controller.viewProducts);
 
 router
     .get('/add-unit', controller.addUnit)
     .post('/add-unit', controller.postAddUnit);
 
+router
+    .get('/view-product', controller.viewProduct)
 
 module.exports = router;
