@@ -4,7 +4,8 @@ const formidable = require('formidable');
 
 module.exports.addBrand = (req, res) => {
     res.render('products/add-brand', {
-        title: 'Thêm nhà sản xuất'
+        title: 'Thêm nhà sản xuất',
+        layout: 'admin'
     });
 }
 
@@ -26,7 +27,7 @@ module.exports.postAddBrand = (req, res, next) => {
                 con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
                     if (err) throw new Error('add brand err');
                 });
-                res.send('them thanh cong');
+                res.redirect('/products/view-products');
                 con.end();
             });
         });
@@ -72,16 +73,17 @@ module.exports.addProduct = (req, res, next) => {
                     res.render('products/add-product', {
                         title: 'Thêm điện thoại',
                         addStatus,
-                        nhaSanXuatOptions
+                        nhaSanXuatOptions,
+                        layout: 'admin'
                     });
                     // khi chua them moi truoc do
                 } else {
                     res.render('products/add-product', {
                         title: 'Thêm điện thoại',
-                        nhaSanXuatOptions
+                        nhaSanXuatOptions,
+                        layout: 'admin'
                     });
                 }
-
             });
             con.end();
         });
@@ -177,7 +179,8 @@ module.exports.viewProducts = (req, res, next) => {
                 function (err, result) {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
-                        products: result
+                        products: result,
+                        layout: 'admin'
                     });
                 }
             );
@@ -205,7 +208,8 @@ module.exports.addUnit = (req, res, next) => {
                 function (err, result) {
                     if (err) throw new Error('add unit err');
                     res.render('products/add-unit', {
-                        brands: result
+                        brands: result,
+                        layout: 'admin'
                     });
                 }
             );
@@ -272,6 +276,7 @@ module.exports.viewProduct = (req, res, next) => {
                     con.end();
 
                     result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
+                    result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
                     res.render('products/view-product', {
                         title: "Thông tin chi tiết",
                         product: result[0]

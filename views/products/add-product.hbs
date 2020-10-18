@@ -1,3 +1,11 @@
+<style>
+    #phone-image {
+        width: 30vw;
+        height: 60vh;
+        object-fit: contain;
+    }
+</style>
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 mx-auto">
@@ -15,10 +23,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <label for="fHinhAnh">
-                <img class="img-fluid" style="width: 25vw; height: 25vw;"
-                    src="https://image.flaticon.com/icons/png/512/3/3901.png" alt="camera" role="button">
+        <div class="col-md-4 col-md-5 d-flex flex-column align-items-center">
+            <label class="position-relative my-5" for="fHinhAnh" role="button">
+                <i class="d-none position-absolute fas fa-camera" id="camera-icon"></i>
+                <img id="phone-image" class="img-fluid border border-dark shadow-lg"
+                    src="/asset/images/placeholder-phone.png" alt="x">
+                <p class="text-center my-3" style="height: 0;">Chọn ảnh sản phẩm</p>
             </label>
         </div>
         <div class="col-md-6 mx-auto">
@@ -146,6 +156,41 @@
 
 <script>
     $(function () {
+        $('#phone-image')
+            .mouseenter(function () {
+                $('#camera-icon')
+                    .css({
+                        "font-size": "70px",
+                        "top": "50%",
+                        "left": "50%",
+                        "transform": "translate(-50%, -50%)"
+                    })
+                    .removeClass('d-none');
+                $('#phone-image').css({
+                    "opacity": "0.5",
+                    "transition": "opacity 0.3s",
+                });
+            })
+            .mouseleave(function () {
+                $('#camera-icon').addClass('d-none');
+                $('#phone-image').css({
+                    "opacity": "1",
+                    "transition": "opacity 0.3s"
+                });
+            });
+
+        $('input[name="fHinhAnh"]')
+            .change(function () {
+                let reader = new FileReader();
+                reader.onload = (event) => {
+                    let url = event.target.result;
+                    console.log(url)
+                    $('#phone-image').attr('src', url);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+
+
         $('#frmAddProduct').submit(function (event) {
             fields = [
                 ma = $('#txtMa'),
@@ -159,7 +204,7 @@
                 DungLuongRAM = $('#txtDungLuongRAM'),
                 DungLuongROM = $('#txtDungLuongROM'),
                 thongTinCuongLuc = $('#txtThongTinCuongLuc'),
-                gia = $('#txtGia').val('4000000'),
+                gia = $('#txtGia'),
                 loaiManHinh = $('input[name=rdLoaiManHinh]:checked'),
                 slDoPhanGiai = $('#slDoPhanGiai'),
                 fHinhAnh = $('#fHinhAnh')

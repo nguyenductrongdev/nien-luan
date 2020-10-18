@@ -8,7 +8,7 @@
         {{#if title}}
         {{title}}
         {{else}}
-        Thanh toan Mobile
+        Trọng Ý Mobile
         {{/if}}
     </title>
     <link rel="icon" href="/asset/images/favicon.png" type="image/icon" />
@@ -16,51 +16,125 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <style>
+        img {
+            object-fit: contain;
+        }
+
+        .card {
+            display: inline-block;
+            width: 175px;
+            height: 280px;
+            margin: 0.2vw;
+            overflow: auto;
+        }
+
+        .card-img-top {
+            height: 60%;
+        }
+
+        .card-body {
+            height: 40%;
+        }
+
+        .card-title {
+            height: 50%;
+        }
+
+        .brand-list img {
+            width: 10vw;
+            height: 50px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 
 <body>
-    <h1 class="text-center bg-dark text-light">header</h1>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Forms</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top py-0">
+        <a class="navbar-brand pl-3" href="/"><i class="fas fa-home"></i></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/register">Đăng ký</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/login">Đăng nhập</a>
-                </li>
-            </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/products/add-brand">Thêm nhà sản xuất</a>
+                    <a class="nav-link" href="/users/register"><i class="fas fa-user-plus"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/products/add-product">Thêm loại điện thoại</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/view-products">Xem tất cả điện thoại</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/add-unit">Thêm điện thoại</a>
+                    <a class="nav-link" href="/users/login"><i class="fas fa-sign-in-alt"></i></a>
                 </li>
             </ul>
         </div>
     </nav>
 
+
+
     {{{body}}}
 
-    <h1 class="text-center bg-dark text-light">footer</h1>
-    <script src="/vendor/popper/popper.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <footer class="row bg-dark w-100 mx-0">
+        <div class="col-md-4">
+            <p class="text-uppercase text-light">THÔNG TIN HỖ TRỢ</p>
+            <ul>
+                <li><a class="text-light" href="#">Chính sách bảo hành</a></li>
+                <li><a class="text-light" href="#">Chính sách bảo hành</a></li>
+                <li><a class="text-light" href="#">Chính sách bảo hành</a></li>
+                <li><a class="text-light" href="#">Chính sách bảo hành</a></li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <p class="text-uppercase text-light">thông tin liên lạc</p>
+            <ul>
+                <li>
+                    <a href="tel:+86378693635" class="text-light">Số điện thoại: 0378693635</a>
+                </li>
+                <li>
+                    <a href="mailto:vodang@gmail.com" class="text-light">Email: vodang@gmail.com</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <p class="text-uppercase text-light">chi nhánh</p>
+            <ul>
+                <li class="text-light">Miền bắc
+                    <ul>
+                        <li><a class="text-light" class="text-light" href="#">382 Nguyễn Văn Cừ</a></li>
+                        <li><a class="text-light" class="text-light" href="#">122 Thái Hà</a></li>
+                        <li><a class="text-light" class="text-light" href="#">392 Cầu giấy</a></li>
+                        <li><a class="text-light" class="text-light" href="#">28 Trần phú - Hà đông</a></li>
+                    </ul>
+                </li>
+                <li class="text-light">Miền trung
+                    <ul>
+                        <li><a class="text-light" class="text-light" href="#">153-155 Nguyễn Văn Linh-TP Đà Nẵng</a>
+                        </li>
+                        <li><a class="text-light" class="text-light" href="#">151 - 153 Hùng Vương, TP Tuy Hòa, Phú
+                                Yên</a></li>
+                        <li><a class="text-light" class="text-light" href="#">6A Lê Hồng Phong, Phường 4, Đà Lạt</a>
+                        </li>
+                        <li><a class="text-light" class="text-light" href="#">198 Tôn Đức Thắng, Phú Thủy, Phan
+                                Thiết</a></li>
+                    </ul>
+                </li>
+                <li class="text-light">Miền nam
+                    <ul>
+                        <li><a class="text-light" class="text-light" href="#">621D Cách Mạng Tháng 8, Phường 15 -
+                                Quận
+                                10</a></li>
+                        <li><a class="text-light" class="text-light" href="#">436 Quang Trung, Phường 10, Quận Gò
+                                Vấp,
+                                TP.HCM</a></li>
+                        <li><a class="text-light" class="text-light" href="#">215 Lê Văn Việt, phường Hiệp Phú, Quận
+                                9</a></li>
+                        <li><a class="text-light" class="text-light" href="#">867 Lũy Bán Bích, P. Tân Thành, Q. Tân
+                                Phú, TP.HCM</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <script src="/vendor/popper/popper.min.js"></script>
+        <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -89,30 +89,42 @@ module.exports.postLogin = (req, res, next) => {
             });
             con.connect(function (err) {
                 if (err) throw err;
-                con.query(`SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA FROM NGUOI_DUNG 
-                WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`, function (err, result) {
-                    if (err) throw new Error('login err');
-                    let isExist = result.length === 1;
+                con.query(
+                    `SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA 
+                    FROM NGUOI_DUNG 
+                    WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`,
+                    function (err, result) {
+                        if (err) throw new Error('login err');
+                        let isExist = result.length === 1;
 
-                    if (!isExist) {
-                        res.render('users/login', {
-                            existErr: true
-                        });
-                        return;
-                    }
-                    else {
-                        let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
-                        if (isMatchMatKhau) {
-                            res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
-                        }
-                        else {
+                        if (!isExist) {
                             res.render('users/login', {
-                                matchMatKhauErr: true
+                                existErr: true
                             });
                             return;
                         }
-                    }
-                });
+                        else {
+                            let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
+                            if (isMatchMatKhau) {
+                                switch (result[0].VT_MA) {
+                                    case 'ND':
+                                        res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
+                                        return;
+                                    case 'AD':
+                                        res.render('users/admin', {
+                                            layout: 'admin'
+                                        });
+                                        return;
+                                }
+                            }
+                            else {
+                                res.render('users/login', {
+                                    matchMatKhauErr: true
+                                });
+                                return;
+                            }
+                        }
+                    });
                 con.end();
             });
         });
