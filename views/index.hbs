@@ -84,7 +84,7 @@
 </main>
 
 <script>
-    let PRODUCT_PER_PAGE = 4;
+    const PRODUCT_PER_PAGE = 5;
 
     axios.get(`/api/products/page?page=1&productsPerPage=${PRODUCT_PER_PAGE}`)
         .then(response => response.data)
@@ -95,8 +95,12 @@
                 let PRODUCT_LENGTH = await axios.get('/api/products/getNbProducts')
                     .then(result => result.data[0].LDT_LENGTH);
 
-                function drawPagination() {
+                function emptyPagination() {
                     $('.index-pagination').empty();
+                }
+
+                function drawPagination() {
+                    emptyPagination();
                     let nbPageitem = Math.ceil(PRODUCT_LENGTH / PRODUCT_PER_PAGE);
                     for (let i = 0; i < nbPageitem; i++) {
                         if (i === 0)
@@ -160,27 +164,26 @@
                     $(this).parent().toggleClass('hight-light');
                     let brands = getBrandsFilter();
                     // case removed all hight-light brand
+                    viewProducts = [];
                     if (brands.length === 0) {
                         viewProducts = await getProductOfPage();
                         PRODUCT_LENGTH = await axios
                             .get('/api/products/getNbProducts')
                             .then(result => result.data[0].LDT_LENGTH);
+                        drawPagination();
                     } else {
-                        viewProducts = [];
                         for (let brand of brands) {
                             viewProducts.push(...await axios.get(`/api/products/filter-brand?brandName=${brand}`)
                                 .then(response => response.data));
                         }
                         PRODUCT_LENGTH = viewProducts.length;
+                        emptyPagination();
                     }
 
-
-
-                    drawPagination();
                     render(viewProducts);
                 });
 
-                $('.index-pagination .page-link').click(function () {
+                $(document).on('click', '.index-pagination .page-link', function () {
                     $('.index-pagination .active').removeClass('active');
                     $(this).parents('li').addClass('active');
 
@@ -194,13 +197,13 @@
                 });
 
                 function getBrandsFilter() {
+                    // get brands checked (hight-light)
                     let brandsFilter = [];
                     let x = $.each($('.hight-light'), function () {
                         brandsFilter.push($(this).children().attr('data-brand'));
                     });
                     return brandsFilter;
                 }
-
 
             });
         });
