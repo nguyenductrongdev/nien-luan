@@ -74,14 +74,14 @@ module.exports.addProduct = (req, res, next) => {
                         title: 'Thêm điện thoại',
                         addStatus,
                         nhaSanXuatOptions,
-                        layout: 'admin'
+                        // layout: 'admin'
                     });
                     // khi chua them moi truoc do
                 } else {
                     res.render('products/add-product', {
                         title: 'Thêm điện thoại',
                         nhaSanXuatOptions,
-                        layout: 'admin'
+                        // layout: 'admin'
                     });
                 }
             });
@@ -180,7 +180,7 @@ module.exports.viewProducts = (req, res, next) => {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
                         products: result,
-                        layout: 'admin'
+                        // layout: 'admin'
                     });
                 }
             );
@@ -209,7 +209,7 @@ module.exports.addUnit = (req, res, next) => {
                     if (err) throw new Error('add unit err');
                     res.render('products/add-unit', {
                         brands: result,
-                        layout: 'admin'
+                        // layout: 'admin'
                     });
                 }
             );

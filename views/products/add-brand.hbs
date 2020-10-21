@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-6 mx-auto my-5">
             <h1 class="text-center">Thêm nhà sản xuất</h1>
-            <form class="shadow-lg p-5" action="/products/add-brand" method="POST">
+            <form class="shadow-lg p-5" id="frmAddBrand" name="frmAddBrand" action="/products/add-brand" method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Mã</label>
                     <input type="text" class="form-control" name="txtMa" id="txtMa">
@@ -16,3 +16,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('#frmAddBrand').submit(function () {
+            $('#txtMa').val('LN');
+            $('#txtTen').val('Lenovo');
+
+            $.post(`/api/products/add-brand?txtMa=${$('#txtMa').val()}&txtTen=${$('#txtTen').val()}`,
+                function (data, status) {
+                    alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                });
+            return false;
+        });
+    });
+</script>

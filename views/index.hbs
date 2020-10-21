@@ -38,27 +38,27 @@
 </div>
 
 <ul class="list-group list-group-horizontal d-flex justify-content-center flex-wrap brand-list">
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logoapple.jpg" alt="apple"
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logoapple.jpg" alt="apple"
             role="button" data-brand="AP">
     </li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logosamsung.jpg" alt="samsung"
-            role="button" data-brand="SS"></li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logovsmart.png" alt="vsmart"
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logosamsung.jpg"
+            alt="samsung" role="button" data-brand="SS"></li>
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logovsmart.png" alt="vsmart"
             role="button" data-brand="VS"></li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logoxiaomi.jpg" alt="xiaomi"
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logoxiaomi.jpg" alt="xiaomi"
             role="button" data-brand="XM"></li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logonokia.jpg" alt="nokia"
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logonokia.jpg" alt="nokia"
             role="button" data-brand="NK">
     </li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logoasus.jpg" alt="asus" role="button"
-            data-brand="AS">
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logoasus.png" alt="asus"
+            role="button" data-brand="AS">
     </li>
-    <li class="list-group-item"><img class="btn-brand" src="/asset/images/brands/logooppo.png" alt="oppo" role="button"
-            data-brand="OP">
+    <li class="list-group-item"><img class="img-fluid btn-brand" src="/asset/images/brands/logooppo.png" alt="oppo"
+            role="button" data-brand="OP">
     </li>
 </ul>
 
-<div class="container">
+<main class="container">
     <div class="row my-3">
         <div class="col-md-2">
             <ul class="list-group list-group-flush">
@@ -75,27 +75,45 @@
     <div class="row">
         <div class="col-3 ml-auto">
             <nav>
-                <ul class="pagination pagination-sm">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <ul class="pagination pagination-sm index-pagination">
+
                 </ul>
             </nav>
         </div>
     </div>
-</div>
+</main>
 
 <script>
-    axios.get('/api/')
+    let PRODUCT_PER_PAGE = 4;
+
+    axios.get(`/api/products/page?page=1&productsPerPage=${PRODUCT_PER_PAGE}`)
         .then(response => response.data)
         .then(function (products) {
-            $(function () {
+            $(async function () {
                 const productField = $('.product-field');
                 let viewProducts = JSON.parse(JSON.stringify(products));
+                let PRODUCT_LENGTH = await axios.get('/api/products/getNbProducts')
+                    .then(result => result.data[0].LDT_LENGTH);
+
+                function drawPagination() {
+                    $('.index-pagination').empty();
+                    let nbPageitem = Math.ceil(PRODUCT_LENGTH / PRODUCT_PER_PAGE);
+                    for (let i = 0; i < nbPageitem; i++) {
+                        if (i === 0)
+                            $('.index-pagination').append(
+                                `<li class="page-item active"><span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></li>`
+                            );
+                        else
+                            $('.index-pagination').append(
+                                `<li class="page-item"><span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></li>`
+                            );
+                    }
+                }
+
+                function getProductOfPage(page = 1) {
+                    return axios.get(`/api/products/page?page=${page}&productsPerPage=${PRODUCT_PER_PAGE}`)
+                        .then(response => response.data)
+                }
 
                 function descCost(products) {
                     return Array.from(products.sort((a, b) => {
@@ -106,12 +124,6 @@
                 function ascCost(products) {
                     return Array.from(products.sort((a, b) => {
                         return +(a.LDT_GIA.replaceAll(',', '')) - +(b.LDT_GIA.replaceAll(',', ''));
-                    }));
-                }
-
-                function filterBrand(products, brand) {
-                    return Array.from(products.filter(product => {
-                        return product.NSX_MA === brand;
                     }));
                 }
 
@@ -133,6 +145,7 @@
                 }
 
                 render(products);
+                drawPagination();
 
                 $('.btn-asc').click(function () {
                     render(ascCost(viewProducts));
@@ -143,11 +156,52 @@
                     render(descCost(viewProducts));
                 });
 
-                $('.btn-brand').click(function () {
-                    let brand = $(this).attr('data-brand');
-                    viewProducts = filterBrand(products, brand);
+                $('.btn-brand').click(async function () {
+                    $(this).parent().toggleClass('hight-light');
+                    let brands = getBrandsFilter();
+                    // case removed all hight-light brand
+                    if (brands.length === 0) {
+                        viewProducts = await getProductOfPage();
+                        PRODUCT_LENGTH = await axios
+                            .get('/api/products/getNbProducts')
+                            .then(result => result.data[0].LDT_LENGTH);
+                    } else {
+                        viewProducts = [];
+                        for (let brand of brands) {
+                            viewProducts.push(...await axios.get(`/api/products/filter-brand?brandName=${brand}`)
+                                .then(response => response.data));
+                        }
+                        PRODUCT_LENGTH = viewProducts.length;
+                    }
+
+
+
+                    drawPagination();
                     render(viewProducts);
                 });
+
+                $('.index-pagination .page-link').click(function () {
+                    $('.index-pagination .active').removeClass('active');
+                    $(this).parents('li').addClass('active');
+
+                    let page = $(this).attr('data-page');
+                    axios.get(`/api/products/page?page=${page}&productsPerPage=${PRODUCT_PER_PAGE}`)
+                        .then(result => result.data)
+                        .then(product => {
+                            viewProducts = product;
+                            render(product);
+                        });
+                });
+
+                function getBrandsFilter() {
+                    let brandsFilter = [];
+                    let x = $.each($('.hight-light'), function () {
+                        brandsFilter.push($(this).children().attr('data-brand'));
+                    });
+                    return brandsFilter;
+                }
+
+
             });
         });
 

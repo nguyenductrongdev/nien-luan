@@ -17,6 +17,11 @@ img {
     height: 10px;
 }
 
+.hight-light {
+    outline: solid 7px lightblue !important;
+    z-index: 100;
+}
+
 .btn-asc,
 .btn-desc {
     font-size: 16px !important;
@@ -51,6 +56,14 @@ img {
             font-size: 10px !important;
         }
     }
+}
+
+.index-pagination li {
+    margin: 0.3rem;
+}
+
+main.container {
+    min-height: 70vh;
 }
 
 // Small devices (landscape phones, 576px and up)
@@ -88,6 +101,8 @@ img {
             }
         }
     }
+
+
 
 }
 
