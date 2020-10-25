@@ -58,16 +58,52 @@
     </li>
 </ul>
 
+<nav class="navbar navbar-expand-lg navbar-light p-0 tool-bar">
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto pr-5">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Giá
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <span class="dropdown-item btn-desc" role="button">Giá tăng dần</span>
+                    <span class="dropdown-item btn-asc" role="button">Giá giảm dần</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <main class="container">
     <div class="row my-3">
-        <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item p-3"><button class="btn btn-info btn-asc">Giá tăng dần</button></li>
-                <li class="list-group-item p-3"><button class="btn btn-info btn-desc">Giá giảm dần</button></li>
-            </ul>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-6">
+                    Bộ nhớ:
+                    <ul class="list-unstyled">
+                        <li><input type="checkbox" name="txtROM" id="txtROM-0" value="32"> 32GB</li>
+                        <li><input type="checkbox" name="txtROM" id="txtROM-1" value="64"> 64GB</li>
+                        <li><input type="checkbox" name="txtROM" id="txtROM-2" value="128"> 128GB</li>
+                        <li><input type="checkbox" name="txtROM" id="txtROM-3" value="256"> 256GB</li>
+                        <li><input type="checkbox" name="txtROM" id="txtROM-4" value="512"> 512GB</li>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    RAM:
+                    <ul class="list-unstyled">
+                        <li><input type="checkbox" name="txtRAM" id="txtRAM-0" value="2"> 2GB</li>
+                        <li><input type="checkbox" name="txtRAM" id="txtRAM-1" value="4"> 4GB</li>
+                        <li><input type="checkbox" name="txtRAM" id="txtRAM-2" value="6"> 6GB</li>
+                        <li><input type="checkbox" name="txtRAM" id="txtRAM-3" value="8"> 8GB</li>
+                        <li><input type="checkbox" name="txtRAM" id="txtRAM-4" value="12"> 12GB</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-        <div class="col-md-10 d-flex justify-content-center align-items-center">
-            <div class="product-field">
+        <div class="col-md-9 d-flex justify-content-center align-items-center">
+            <div class="product-field mx-auto">
 
             </div>
         </div>
@@ -91,7 +127,15 @@
         .then(function (products) {
             $(async function () {
                 const productField = $('.product-field');
+
                 let viewProducts = JSON.parse(JSON.stringify(products));
+
+                let filter = {
+                    brands: [],
+                    rams: [],
+                    roms: []
+                }
+
                 let PRODUCT_LENGTH = await axios.get('/api/products/getNbProducts')
                     .then(result => result.data[0].LDT_LENGTH);
 
@@ -105,18 +149,65 @@
                     for (let i = 0; i < nbPageitem; i++) {
                         if (i === 0)
                             $('.index-pagination').append(
-                                `<li class="page-item active"><span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></li>`
+                                `<li class="page-item active"> <span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></ > `
                             );
                         else
                             $('.index-pagination').append(
-                                `<li class="page-item"><span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></li>`
+                                `<li class="page-item"> <span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></ > `
                             );
                     }
                 }
 
                 function getProductOfPage(page = 1) {
                     return axios.get(`/api/products/page?page=${page}&productsPerPage=${PRODUCT_PER_PAGE}`)
-                        .then(response => response.data)
+                        .then(response => response.data);
+                }
+
+                async function filterProducts() {
+                    if (filter.brands.length === 0 && filter.rams.length === 0 && filter.roms.length === 0) {
+                        drawPagination();
+                        return await axios.get(`/api/products/page?page=${1}&productsPerPage=${PRODUCT_PER_PAGE}`)
+                            .then(res => res.data)
+                    }
+
+                    let filterByBrand = [];
+                    for (let brand of filter.brands) {
+                        filterByBrand.push(
+                            ...await axios.get(`/api/products/filter-brand?brandName=${brand}`).then(res => res.data)
+                        );
+                    }
+                    filterByBrand = filterByBrand.map(item => JSON.stringify(item));
+
+                    let filterByRAM = [];
+                    for (let ram of filter.rams) {
+                        filterByRAM.push(
+                            ...await axios.get(`/api/products/filter-RAM?RAM=${ram}`).then(res => res.data)
+                        );
+                    }
+                    filterByRAM = filterByRAM.map(item => JSON.stringify(item));
+
+                    let filterByROM = [];
+                    for (let rom of filter.roms) {
+                        filterByROM.push(
+                            ...await axios.get(`/api/products/filter-ROM?ROM=${rom}`).then(res => res.data)
+                        );
+                    }
+
+                    filterByROM = filterByROM.map(item => JSON.stringify(item));
+
+                    let unique = [];
+                    let result = [];
+
+                    unique.push(...Array.from(new Set([].concat(filterByBrand, filterByRAM, filterByROM))));
+
+                    for (let unit of unique) {
+                        if ((filterByBrand.includes(unit) || filter.brands.length === 0)
+                            && (filterByRAM.includes(unit) || filter.rams.length === 0)
+                            && (filterByROM.includes(unit) || filter.roms.length === 0))
+
+                            result.push(unit);
+                    }
+                    return result.map(item => JSON.parse(item));
                 }
 
                 function descCost(products) {
@@ -135,9 +226,9 @@
                     productField.empty();
                     for (let product of products) {
                         productField.append(
-                            `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                            `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none" >
                                 <div class="card text-center shadow">
-                                    <img src="${product.HA_URL}" class="card-img-top" alt="abc">
+                                    <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>
                                         <p class="card-text cost">${product.LDT_GIA}</p>
@@ -148,7 +239,7 @@
                     }
                 }
 
-                render(products);
+                render(viewProducts);
                 drawPagination();
 
                 $('.btn-asc').click(function () {
@@ -163,23 +254,15 @@
                 $('.btn-brand').click(async function () {
                     $(this).parent().toggleClass('hight-light');
                     let brands = getBrandsFilter();
-                    // case removed all hight-light brand
-                    viewProducts = [];
-                    if (brands.length === 0) {
-                        viewProducts = await getProductOfPage();
-                        PRODUCT_LENGTH = await axios
-                            .get('/api/products/getNbProducts')
-                            .then(result => result.data[0].LDT_LENGTH);
-                        drawPagination();
-                    } else {
-                        for (let brand of brands) {
-                            viewProducts.push(...await axios.get(`/api/products/filter-brand?brandName=${brand}`)
-                                .then(response => response.data));
-                        }
-                        PRODUCT_LENGTH = viewProducts.length;
-                        emptyPagination();
-                    }
 
+                    // case removed all hight-light brand
+                    if (brands.length === 0) {
+                        filter.brands = [];
+                    } else {
+                        emptyPagination();
+                        filter.brands = brands;
+                    }
+                    viewProducts = await filterProducts();
                     render(viewProducts);
                 });
 
@@ -205,6 +288,39 @@
                     return brandsFilter;
                 }
 
+                $('input[name="txtROM"]').click(async function () {
+                    emptyPagination();
+                    viewProducts = [];
+                    let ROMvalues = [];
+                    $.each($('input[name="txtROM"]:checked'), function () {
+                        ROMvalues.push($(this).val());
+                    });
+                    if (ROMvalues.length === 0) {
+                        filter.roms = [];
+                    } else {
+                        filter.roms = ROMvalues;
+                    }
+                    viewProducts = await filterProducts();
+                    render(viewProducts);
+                });
+
+                $('input[name="txtRAM"]').click(async function () {
+                    emptyPagination();
+                    viewProducts = [];
+                    let RAMvalues = [];
+                    $.each($('input[name="txtRAM"]:checked'), function () {
+                        RAMvalues.push($(this).val());
+                    });
+
+                    if (RAMvalues.length === 0) {
+                        filter.rams = [];
+                    }
+                    else {
+                        filter.rams = RAMvalues;
+                    }
+                    viewProducts = await filterProducts();
+                    render(viewProducts);
+                });
             });
         });
 

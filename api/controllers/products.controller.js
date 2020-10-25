@@ -117,3 +117,53 @@ module.exports.filterBrand = (req, res) => {
         );
     });
 }
+
+module.exports.filterROM = (req, res, next) => {
+    try {
+        let ROM = req.query.ROM;
+        let con = mysql.createConnection(config);
+        con.query(
+            `SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
+            FROM LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
+            WHERE 
+                LOAI_DIEN_THOAI.LDT_DUNG_LUONG_ROM = ${ROM}
+                AND NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
+                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+            (err, result) => {
+                if (err) throw new Error('Fetch by ROM error');
+                con.end();
+                res.json(result.map(phone => {
+                    phone.LDT_GIA = phone.LDT_GIA.toLocaleString('vi-VN');
+                    return phone;
+                }));
+            }
+        )
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.filterRAM = (req, res, next) => {
+    try {
+        let RAM = req.query.RAM;
+        let con = mysql.createConnection(config);
+        con.query(
+            `SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
+            FROM LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
+            WHERE 
+                LOAI_DIEN_THOAI.LDT_DUNG_LUONG_RAM = ${RAM}
+                AND NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
+                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+            (err, result) => {
+                if (err) throw new Error('Fetch by RAM error');
+                con.end();
+                res.json(result.map(phone => {
+                    phone.LDT_GIA = phone.LDT_GIA.toLocaleString('vi-VN');
+                    return phone;
+                }));
+            }
+        )
+    } catch (error) {
+        next(error);
+    }
+}

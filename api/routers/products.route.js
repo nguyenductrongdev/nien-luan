@@ -15,4 +15,10 @@ router
 router
     .get('/filter-brand', controller.filterBrand);
 
+router
+    .get('/filter-ROM', controller.filterROM);
+
+router
+    .get('/filter-RAM', controller.filterRAM);
+
 module.exports = router;
