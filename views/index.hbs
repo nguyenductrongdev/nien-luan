@@ -67,8 +67,8 @@
                     Giá
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <span class="dropdown-item btn-desc" role="button">Giá tăng dần</span>
-                    <span class="dropdown-item btn-asc" role="button">Giá giảm dần</span>
+                    <span class="dropdown-item btn-desc" role="button">Giá giảm dần</span>
+                    <span class="dropdown-item btn-asc" role="button">Giá tăng dần</span>
                 </div>
             </li>
         </ul>
@@ -100,7 +100,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
         <div class="col-md-9 d-flex justify-content-center align-items-center">
             <div class="product-field mx-auto">
@@ -111,9 +110,7 @@
     <div class="row">
         <div class="col-3 ml-auto">
             <nav>
-                <ul class="pagination pagination-sm index-pagination">
-
-                </ul>
+                <ul class="pagination pagination-sm index-pagination"></ul>
             </nav>
         </div>
     </div>
@@ -164,13 +161,17 @@
                 }
 
                 async function filterProducts() {
-                    if (filter.brands.length === 0 && filter.rams.length === 0 && filter.roms.length === 0) {
+                    if (filter.brands.length === 0 &&
+                        filter.rams.length === 0 &&
+                        filter.roms.length === 0) {
                         drawPagination();
-                        return await axios.get(`/api/products/page?page=${1}&productsPerPage=${PRODUCT_PER_PAGE}`)
-                            .then(res => res.data)
+                        return await getProductOfPage(1);
                     }
 
                     let filterByBrand = [];
+                    let filterByRAM = [];
+                    let filterByROM = [];
+
                     for (let brand of filter.brands) {
                         filterByBrand.push(
                             ...await axios.get(`/api/products/filter-brand?brandName=${brand}`).then(res => res.data)
@@ -178,7 +179,6 @@
                     }
                     filterByBrand = filterByBrand.map(item => JSON.stringify(item));
 
-                    let filterByRAM = [];
                     for (let ram of filter.rams) {
                         filterByRAM.push(
                             ...await axios.get(`/api/products/filter-RAM?RAM=${ram}`).then(res => res.data)
@@ -186,7 +186,6 @@
                     }
                     filterByRAM = filterByRAM.map(item => JSON.stringify(item));
 
-                    let filterByROM = [];
                     for (let rom of filter.roms) {
                         filterByROM.push(
                             ...await axios.get(`/api/products/filter-ROM?ROM=${rom}`).then(res => res.data)
@@ -198,6 +197,7 @@
                     let unique = [];
                     let result = [];
 
+                    // unique array store unique value of all filter getted
                     unique.push(...Array.from(new Set([].concat(filterByBrand, filterByRAM, filterByROM))));
 
                     for (let unit of unique) {
@@ -226,8 +226,8 @@
                     productField.empty();
                     for (let product of products) {
                         productField.append(
-                            `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none" >
-                                <div class="card text-center shadow">
+                            `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                                <div class="card text-center shadow" role="button">
                                     <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>

@@ -37,12 +37,33 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
+                {{#if username}}
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle text-decoration-none" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{avatar}}" alt="" class="rounded-circle"
+                                style="width: 3vw; height: 3vw; object-fit: contain;">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="/users/?username={{username}}&avatar={{avatar}}">
+                                Trang cá nhân
+                            </a>
+                            <a class="dropdown-item" href="/users/logout">
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {{else}}
                 <li class="nav-item">
                     <a class="nav-link" href="/users/register"><i class="fas fa-user-plus"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/users/login"><i class="fas fa-sign-in-alt"></i></a>
                 </li>
+                {{/if}}
             </ul>
         </div>
     </nav>

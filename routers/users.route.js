@@ -14,6 +14,9 @@ router
     .post('/login', controller.postLogin);
 
 router
+    .get('/logout', controller.logout);
+
+router
     .get('/', controller.index);
 
 module.exports = router;

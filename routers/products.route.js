@@ -21,4 +21,6 @@ router
 router
     .get('/view-product', controller.viewProduct)
 
+
+
 module.exports = router;

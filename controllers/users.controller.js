@@ -5,8 +5,8 @@ const formidable = require('formidable');
 
 module.exports.index = (req, res, next) => {
     try {
-        let avatar = req.query.avatar;
-        let username = req.query.username;
+        let avatar = req.query.avatar || req.cookies('username');
+        let username = req.query.username || req.cookies('avatar');
         res.render('users/index', {
             username,
             avatar
@@ -108,7 +108,10 @@ module.exports.postLogin = (req, res, next) => {
                             if (isMatchMatKhau) {
                                 switch (result[0].VT_MA) {
                                     case 'ND':
-                                        res.redirect(`/users/?username=${result[0].ND_TEN_DANG_NHAP}&avatar=${result[0].ND_AVATAR}`);
+                                        // set cookie after valid login
+                                        res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
+                                        res.cookie('avatar', `${result[0].ND_AVATAR}`);
+                                        res.redirect('/');
                                         return;
                                     case 'AD':
                                         res.render('users/admin', {
@@ -133,3 +136,8 @@ module.exports.postLogin = (req, res, next) => {
     }
 }
 
+module.exports.logout = (req, res) => {
+    res.clearCookie('username');
+    res.clearCookie('avatar');
+    res.redirect('/');
+}

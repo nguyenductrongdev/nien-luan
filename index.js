@@ -6,6 +6,8 @@ const productsRoute = require('./routers/products.route');
 
 const apiProductsRoute = require('./api/routers/products.route');
 
+const cookieParser = require('cookie-parser');
+
 const hbs = require('express-handlebars');
 const port = 8080;
 
@@ -15,6 +17,9 @@ app.engine('hbs', hbs({
     layoutsDir: './views/layouts/',
     defaultLayout: 'layout'
 }));
+
+app.use(cookieParser());
+
 
 app.use('/users', usersRoute);
 app.use('/products', productsRoute);
@@ -27,8 +32,12 @@ app.set('views', './views');
 app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
+    let { username, avatar } = req.cookies;
     try {
-        res.render('index');
+        res.render('index', {
+            username,
+            avatar
+        });
     } catch (error) {
         throw new Error('index error');
     }

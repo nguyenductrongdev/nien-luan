@@ -279,6 +279,8 @@ module.exports.viewProduct = (req, res, next) => {
                     result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
                     res.render('products/view-product', {
                         title: "Thông tin chi tiết",
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
                         product: result[0]
                     });
                 }
