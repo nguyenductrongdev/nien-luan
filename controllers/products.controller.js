@@ -2,10 +2,20 @@ const mysql = require('mysql');
 const fs = require('fs');
 const formidable = require('formidable');
 
+const config = {
+    host: "localhost",
+    user: "root",
+    password: "b1709576",
+    database: "nienluan",
+    multipleStatements: true
+}
+
 module.exports.addBrand = (req, res) => {
     res.render('products/add-brand', {
         title: 'Thêm nhà sản xuất',
-        layout: 'admin'
+        layout: 'admin',
+        username: req.cookies.username,
+        avatar: req.cookies.avatar
     });
 }
 
@@ -47,12 +57,12 @@ module.exports.addProduct = (req, res, next) => {
         con.connect(function (err) {
             if (err) throw err;
             con.query('SELECT * FROM NHA_SAN_XUAT', function (err, result) {
-                if (err) throw new Error('login err');
+                if (err) throw new Error('add product err');
                 nhaSanXuatOptions = [];
                 for (let i = 0; i < result.length; i++) {
                     nhaSanXuatOptions.push({
                         ma: result[i].NSX_MA,
-                        ten: result[i].NSX_TEN
+                        ten: result[i].NSX_TEN,
                     });
                 }
 
@@ -74,14 +84,18 @@ module.exports.addProduct = (req, res, next) => {
                         title: 'Thêm điện thoại',
                         addStatus,
                         nhaSanXuatOptions,
-                        // layout: 'admin'
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
+                        layout: 'admin'
                     });
                     // khi chua them moi truoc do
                 } else {
                     res.render('products/add-product', {
                         title: 'Thêm điện thoại',
                         nhaSanXuatOptions,
-                        // layout: 'admin'
+                        layout: 'admin',
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar
                     });
                 }
             });
@@ -180,7 +194,9 @@ module.exports.viewProducts = (req, res, next) => {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
                         products: result,
-                        // layout: 'admin'
+                        layout: 'admin',
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar
                     });
                 }
             );
@@ -209,7 +225,9 @@ module.exports.addUnit = (req, res, next) => {
                     if (err) throw new Error('add unit err');
                     res.render('products/add-unit', {
                         brands: result,
-                        // layout: 'admin'
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
+                        layout: 'admin'
                     });
                 }
             );
@@ -281,12 +299,140 @@ module.exports.viewProduct = (req, res, next) => {
                         title: "Thông tin chi tiết",
                         username: req.cookies.username,
                         avatar: req.cookies.avatar,
-                        product: result[0]
+                        product: result[0],
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar
                     });
                 }
             );
         });
     } catch (error) {
         if (error) next(error);
+    }
+}
+
+module.exports.editProduct = (req, res, next) => {
+    try {
+        const LDT_MA = req.query.LDT_MA;
+        let con = mysql.createConnection(config);
+
+        con.connect(function (err) {
+            if (err) throw new Error(err);
+            con.query(
+                `SELECT *
+                FROM 
+                    LOAI_DIEN_THOAI, NHA_SAN_XUAT, HINH_ANH
+                WHERE
+                    '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
+                    AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
+                    AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA;
+                SELECT * 
+                FROM 
+                    NHA_SAN_XUAT`,
+                function (err, result) {
+                    let productInfo = result[0];
+                    let providerInfo = result[1];
+                    if (err) throw new Error(err);
+                    con.end();
+
+                    productInfo[0].LDT_JACK_TAI_NGHE = (productInfo[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
+                    res.render('products/edit-product', {
+                        title: "Sửa sản phẩm",
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
+                        product: productInfo[0],
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
+                        nhaSanXuatOptions: providerInfo
+                    });
+                }
+            );
+        });
+    } catch (error) {
+        if (error) next(error);
+    }
+}
+
+module.exports.postEditProduct = (req, res, next) => {
+    try {
+        let form = formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            if (err) throw new Error(err);
+            let {
+                txtMa,
+                txtTen,
+                slNhaSanXuat,
+                txtTenChip,
+                rdJackTaiNghe,
+                rdLoaiPin,
+                txtDungLuongPin,
+                txtTocDoSac,
+                txtDungLuongRAM,
+                txtDungLuongROM,
+                txtThongTinCuongLuc,
+                txtGia,
+                rdLoaiManHinh,
+                slDoPhanGiai
+            } = fields;
+            let con = mysql.createConnection(config);
+            con.connect(err => {
+                if (err) throw new Error(err);
+                con.query(
+                    `UPDATE LOAI_DIEN_THOAI
+                    SET
+                        NSX_MA = '${slNhaSanXuat}',
+                        LDT_TEN = '${txtTen}',
+                        LDT_TEN_CHIP = '${txtTenChip}',
+                        LDT_DUNG_LUONG_PIN = ${txtDungLuongPin},
+                        LDT_DUNG_LUONG_RAM = ${txtDungLuongRAM},
+                        LDT_DUNG_LUONG_ROM = ${txtDungLuongROM},
+                        LDT_THONG_TIN_CUONG_LUC = '${txtThongTinCuongLuc}',
+                        LDT_JACK_TAI_NGHE = ${rdJackTaiNghe},
+                        LDT_TOC_DO_SAC = ${txtTocDoSac},
+                        LDT_GIA = ${txtGia},
+                        LDT_LOAI_PIN = '${rdLoaiPin}',
+                        LDT_LOAI_MAN_HINH = '${rdLoaiManHinh}',
+                        LDT_DO_PHAN_GIAI = '${slDoPhanGiai}'
+                    WHERE LDT_MA = '${txtMa}'`,
+                    (err, result) => {
+                        if (err) throw new Error(err);
+                    });
+                if (files.fHinhAnh.name !== '') {
+                    let tempPath = files.fHinhAnh.path;
+                    let productImagesPath = '/uploads'
+
+                    let dbPath = `${productImagesPath}/${txtMa}_${files.fHinhAnh.name}`;
+                    let savePath = `./public/uploads/${txtMa}_${files.fHinhAnh.name}`;
+
+                    fs.rename(tempPath, savePath, err => {
+                        if (err) throw new Error('upload product image error');
+                    });
+
+                    con.query(`
+                        SELECT  HA_URL
+                        FROM    HINH_ANH
+                        WHERE   LDT_MA = '${txtMa}'
+                    `, (err, result) => {
+                        if (err) throw new Error(err);
+                        let oldURL = result[0].HA_URL;
+                        // del old image
+                        fs.unlink(`./public${oldURL}`, err => {
+                            if (err) throw new Error(err);
+                            // set new URL of product image
+                            con.query(
+                                `UPDATE HINH_ANH
+                                SET 
+                                    HA_URL = '${dbPath}'
+                                WHERE
+                                    LDT_MA = '${txtMa}'`
+                            );
+                        });
+                    })
+                }
+                res.redirect('/products/view-products');
+            });
+        });
+    } catch (error) {
+        next(error);
     }
 }

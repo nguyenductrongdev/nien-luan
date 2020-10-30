@@ -92,6 +92,36 @@ module.exports.addBrand = (req, res) => {
     });
 }
 
+module.exports.addUnit = (req, res) => {
+    let {
+        slMa,
+        txtIMEI
+    } = req.query;
+
+    let con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "b1709576",
+        database: "nienluan"
+    });
+    con.connect(function (err) {
+        if (err) throw err;
+        con.query(
+            `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
+                    VALUES('${txtIMEI}', '${slMa}')`,
+            function (err) {
+                let resObj = {};
+                if (err)
+                    resObj.status = 'error'
+                else
+                    resObj.status = 'success'
+                res.json(resObj);
+            }
+        );
+        con.end();
+    });
+}
+
 module.exports.filterBrand = (req, res) => {
     let { brandName } = req.query;
     let con = mysql.createConnection(config);

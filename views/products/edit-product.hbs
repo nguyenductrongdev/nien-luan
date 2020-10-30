@@ -1,39 +1,28 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            {{#if addStatus.err}}
-            <div class="alert alert-danger text-center" role="alert">
-                Thêm thất bại, sản phẩm đã được thêm trước đây!
-            </div>
-            {{/if}}
+<style>
+    #phone-image {
+        width: 30vw;
+        height: 60vh;
+        object-fit: contain;
+    }
+</style>
 
-            {{#if addStatus.success}}
-            <div class="alert alert-success text-center" role="alert">
-                Thêm mới loại điện thoại thành công!
-            </div>
-            {{/if}}
-        </div>
-    </div>
+<div class="container">
     <div class="row">
         <div class="col-md-4 col-md-5 d-flex flex-column align-items-center">
             <label class="position-relative my-5" for="fHinhAnh" role="button">
                 <i class="d-none position-absolute fas fa-camera" id="camera-icon"></i>
-                <img id="phone-image" class="img-fluid border border-dark shadow-lg"
-                    src="/asset/images/placeholder-phone.png" alt="x">
+                <img id="phone-image" class="img-fluid border border-dark shadow-lg" src="{{product.HA_URL}}" alt="x">
                 <p class="text-center my-3" style="height: 0;">Chọn ảnh sản phẩm</p>
             </label>
         </div>
         <div class="col-md-6 mx-auto">
             <h1 class="text-center">Thêm loại điện thoại</h1>
-            <form name="frmAddProduct" action="/products/add-product" method="POST" id="frmAddProduct"
+            <form name="frmAddProduct" action="/products/edit-product" method="POST" id="frmAddProduct"
                 class="shadow-lg p-5 my-3" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="txtMa">Mã</label>
-                    <input type="text" class="form-control" name="txtMa" id="txtMa">
-                </div>
+                <input type="hidden" class="form-control" name="txtMa" id="txtMa" value="{{product.LDT_MA}}">
                 <div class="form-group">
                     <label for="txtTen">Tên</label>
-                    <input type="text" class="form-control" name="txtTen" id="txtTen">
+                    <input type="text" class="form-control" name="txtTen" id="txtTen" value="{{product.LDT_TEN}}">
                 </div>
                 {{!-- nha san xuat --}}
                 <div class="form-group">
@@ -41,15 +30,20 @@
                     <select class="custom-select" name="slNhaSanXuat" id="slNhaSanXuat">
                         <option value="">Choose...</option>
                         {{#each nhaSanXuatOptions}}
-                        <option value="{{this.ma}}">{{this.ten}}</option>
+                        <option value="{{this.NSX_MA}}">{{this.NSX_TEN}}</option>
                         {{/each}}
                     </select>
+                    <script>
+                        let nhaSanXuatVal = "{{product.NSX_MA}}";
+                        $(`option[value="${nhaSanXuatVal}"]`).attr('selected', '');
+                    </script>
                 </div>
 
                 {{!-- tên chip --}}
                 <div class="form-group">
                     <label for="txtTenChip">Tên chip</label>
-                    <input type="text" class="form-control" name="txtTenChip" id="txtTenChip">
+                    <input type="text" class="form-control" name="txtTenChip" id="txtTenChip"
+                        value="{{product.LDT_TEN_CHIP}}">
                 </div>
                 {{!-- jack tai nghe --}}
                 <div class="form-group">
@@ -70,7 +64,7 @@
                         <label class="form-check-label mx-5">Li-po
                             <input checked type="radio" name="rdLoaiPin" id="rdLoaiPin-1" value="li-ion">
                         </label>
-                        <label class="form-check-label">Li-ion
+                        <label class=" form-check-label">Li-ion
                             <input type="radio" name="rdLoaiPin" id="rdLoaiPin-2" value="li-po">
                         </label>
                     </div>
@@ -78,36 +72,42 @@
                 {{!-- dung lượng pin --}}
                 <div class="form-group">
                     <label for="txtDungLuongPin">Dung lượng pin</label>
-                    <input type="number" class="form-control" name="txtDungLuongPin" id="txtDungLuongPin">
+                    <input type="number" class="form-control" name="txtDungLuongPin" id="txtDungLuongPin"
+                        value="{{product.LDT_DUNG_LUONG_PIN}}">
                 </div>
                 {{!-- toc do sac --}}
-                <div class="form-group">
+                <div class=" form-group">
                     <label for="txtTocDoSac">Tốc độ sạc</label>
-                    <input type="number" class="form-control" name="txtTocDoSac" id="txtTocDoSac" min="0">
+                    <input type="number" class="form-control" name="txtTocDoSac" id="txtTocDoSac" min="0"
+                        value="{{product.LDT_TOC_DO_SAC}}">
                 </div>
 
                 {{!-- ram --}}
                 <div class="form-group">
                     <label for="txtDungLuongRAM">Dung lượng RAM</label>
-                    <input type="number" class="form-control" name="txtDungLuongRAM" id="txtDungLuongRAM" min="0">
+                    <input type="number" class="form-control" name="txtDungLuongRAM" id="txtDungLuongRAM" min="0"
+                        value="{{product.LDT_DUNG_LUONG_RAM}}">
                 </div>
                 {{!-- rom --}}
                 <div class="form-group">
                     <label for="txtDungLuongROM">Dung lượng ROM</label>
-                    <input type="number" class="form-control" name="txtDungLuongROM" id="txtDungLuongROM" min="0">
+                    <input type="number" class="form-control" name="txtDungLuongROM" id="txtDungLuongROM" min="0"
+                        value="{{product.LDT_DUNG_LUONG_ROM}}">
                 </div>
                 {{!-- cuong luc --}}
                 <div class="form-group">
                     <label for="txtThongTinCuongLuc">Thông tin cường lực</label>
-                    <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc">
+                    <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc"
+                        value="{{product.LDT_THONG_TIN_CUONG_LUC}}">
                 </div>
                 {{!-- gia --}}
                 <div class="form-group">
                     <label for="txtGia">Giá</label>
-                    <input type="number" class="form-control" name="txtGia" id="txtGia" min="0">
+                    <input type="number" class="form-control" name="txtGia" id="txtGia" min="0"
+                        value="{{product.LDT_GIA}}">
                 </div>
                 {{!-- loai man hinh --}}
-                <div class="form-group">
+                <div class=" form-group">
                     <label>Loại màn hình</label>
                     <div class="form-check">
                         <label class="form-check-label">LCD
@@ -126,21 +126,30 @@
                             <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="Không rõ">
                         </label>
                     </div>
+                    <script>
+                        let loaiManHinhVal = "{{product.LDT_LOAI_MAN_HINH}}";
+                        $.each($('input[name="rdLoaiManHinh"]'), function () {
+                            if ($(this).val() === loaiManHinhVal) $(this).attr('checked', '');
+                        });
+                    </script>
                 </div>
                 {{!-- do phan giai --}}
                 <div class="form-group">
                     <label>Độ phân giải màn hình</label>
                     <select class="custom-select" name="slDoPhanGiai" id="slDoPhanGiai">
-                        <option value="" selected>Choose...</option>
                         <option value="HD">HD</option>
                         <option value="HD+">HD+</option>
                         <option value="Full HD">Full HD</option>
                         <option value="Full HD+">Full HD+</option>
                         <option value="2K">2K</option>
                     </select>
+                    <script>
+                        let doPhanGiaiVal = "{{product.LDT_DO_PHAN_GIAI}}";
+                        $(`option[value="${doPhanGiaiVal}"]`).attr('selected', '');
+                    </script>
                 </div>
-                <input type="file" class="d-none" name="fHinhAnh" id="fHinhAnh">
-                <button type="submit" class="btn btn-primary form-control">Thêm</button>
+                <input type="file" class="d-none" name="fHinhAnh" id="fHinhAnh" value="{{product.HA_URL}}">
+                <button type="submit" class="btn btn-primary form-control btn-edit">Thêm</button>
             </form>
         </div>
     </div>
@@ -149,11 +158,6 @@
 <script>
     $(function () {
         $('#phone-image')
-            .css({
-                'width': '30vw',
-                'height': '60vh',
-                'object-fit': 'contain'
-            })
             .mouseenter(function () {
                 $('#camera-icon')
                     .css({
@@ -181,7 +185,6 @@
                 let reader = new FileReader();
                 reader.onload = (event) => {
                     let url = event.target.result;
-                    console.log(url)
                     $('#phone-image').attr('src', url);
                 }
                 reader.readAsDataURL(this.files[0]);
@@ -204,7 +207,6 @@
                 gia = $('#txtGia'),
                 loaiManHinh = $('input[name=rdLoaiManHinh]:checked'),
                 slDoPhanGiai = $('#slDoPhanGiai'),
-                fHinhAnh = $('#fHinhAnh')
             ];
             let isMissValue = false;
             for (field of fields) {

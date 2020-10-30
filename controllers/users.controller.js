@@ -5,12 +5,20 @@ const formidable = require('formidable');
 
 module.exports.index = (req, res, next) => {
     try {
-        let avatar = req.query.avatar || req.cookies('username');
-        let username = req.query.username || req.cookies('avatar');
-        res.render('users/index', {
-            username,
-            avatar
-        });
+        let avatar = req.query.avatar || req.cookies.avatar;
+        let username = req.query.username || req.cookies.username;
+        if (username == 'admin') {
+            res.render('users/index', {
+                username,
+                avatar,
+                layout: 'admin'
+            });
+        } else {
+            res.render('users/index', {
+                username,
+                avatar
+            });
+        }
     } catch (error) {
         next(error);
     }
@@ -114,6 +122,9 @@ module.exports.postLogin = (req, res, next) => {
                                         res.redirect('/');
                                         return;
                                     case 'AD':
+                                        res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
+                                        res.cookie('avatar', `${result[0].ND_AVATAR}`);
+                                        res.redirect('/');
                                         res.render('users/admin', {
                                             layout: 'admin'
                                         });

@@ -21,6 +21,8 @@ router
 router
     .get('/view-product', controller.viewProduct)
 
-
+router
+    .get('/edit-product', controller.editProduct)
+    .post('/edit-product', controller.postEditProduct);
 
 module.exports = router;

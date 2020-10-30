@@ -1,5 +1,8 @@
 <div class="container">
     <div class="row">
+        <div class="col-md-6 mx-auto my-5 msg"></div>
+    </div>
+    <div class="row">
         <div class="col-md-6 mx-auto my-5">
             <h1 class="text-center">Thêm nhà sản xuất</h1>
             <form class="shadow-lg p-5" id="frmAddBrand" name="frmAddBrand" action="/products/add-brand" method="POST">
@@ -11,7 +14,7 @@
                     <label for="exampleInputPassword1">Tên</label>
                     <input type="text" class="form-control" name="txtTen" id="txtTen">
                 </div>
-                <button type="submit" class="btn btn-primary form-control">Thêm</button>
+                <button type="button" class="btn btn-primary form-control" id="btn-add">Thêm</button>
             </form>
         </div>
     </div>
@@ -19,15 +22,31 @@
 
 <script>
     $(function () {
-        $('#frmAddBrand').submit(function () {
-            $('#txtMa').val('LN');
-            $('#txtTen').val('Lenovo');
+        $('#frmAddBrand #btn-add').click(function () {
+            let txtMa = $('#txtMa').val();
+            let txtTen = $('#txtTen').val();
 
-            $.post(`/api/products/add-brand?txtMa=${$('#txtMa').val()}&txtTen=${$('#txtTen').val()}`,
-                function (data, status) {
-                    alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            $.post(`/api/products/add-brand?txtMa=${txtMa}&txtTen=${txtTen}`,
+                function (data, stt) {
+                    console.log(data)
+                    let { status, message } = data;
+                    switch (status) {
+                        case 'success':
+                            $('.msg').html(`
+                                <div class="alert alert-success" role="alert">
+                                    ${message}
+                                </div>
+                            `);
+                            break;
+                        case 'error':
+                            $('.msg').html(`
+                                <div class="alert alert-danger" role="alert">
+                                    ${message.join('<br/>')}
+                                </div >
+                            `);
+                            break;
+                    }
                 });
-            return false;
         });
     });
 </script>

@@ -13,8 +13,7 @@ img {
 }
 
 .tool-bar {
-  background: #020024;
-  background: linear-gradient(90deg, #020024 0%, #090979 24%, #00d4ff 100%);
+  background: lightcyan;
 }
 
 .brand-list li {
@@ -25,9 +24,15 @@ img {
   height: 10px;
 }
 
+.filter {
+  background: rgba(128, 128, 128, 0.3);
+  backdrop-filter: blur(1.3px);
+  z-index: 1;
+}
+
 .hight-light {
   outline: solid 7px lightblue !important;
-  z-index: 100;
+  z-index: 1;
 }
 
 .product-field {

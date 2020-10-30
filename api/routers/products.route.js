@@ -13,6 +13,9 @@ router
     .post('/add-brand', controller.addBrand);
 
 router
+    .post('/add-unit', controller.addUnit);
+
+router
     .get('/filter-brand', controller.filterBrand);
 
 router

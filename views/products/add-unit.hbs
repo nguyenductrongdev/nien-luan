@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-md-6 mx-auto msg">
         </div>
     </div>
     <div class="row my-3">
@@ -8,7 +8,7 @@
             <form class="my-3 shadow-lg p-5" id="frmAddUnit" name="frmAddUnit" action="/products/add-unit"
                 method="POST">
                 <div class="form-group">
-                    <label for="slTen">Tên điện thoại</label>
+                    <label>Tên điện thoại</label>
                     <select class="custom-select" name="slMa" id="slMa">
                         <option value="" selected>Choose...</option>
                         {{#each brands }}
@@ -21,7 +21,7 @@
                     <input type="text" name="txtIMEI" id="txtIMEI" class="form-control" placeholder="abc" id="email"
                         autocomplete="off">
                 </div>
-                <button class="btn btn-primary form-control">Thêm</button>
+                <button type="button" class="btn btn-primary form-control btn-add">Thêm</button>
             </form>
         </div>
     </div>
@@ -30,12 +30,11 @@
 
 <script>
     $(function () {
-        $('#frmAddUnit').submit(function (event) {
+        $('.btn-add').click(function (event) {
             let inputs = [
-                $('input[name="slTen"]:selected'),
+                $('select[name="slMa"]'),
                 $('input[name="txtIMEI"]')
             ];
-
             let hasEmptyField = false;
             for (let input of inputs) {
                 if (input.val() === '') {
@@ -47,7 +46,30 @@
                     input.addClass('is-valid');
                 }
             }
-            if (hasEmptyField) event.preventDefault();
+            if (!hasEmptyField) {
+                let slMa = $('select[name="slMa"]').val();
+                let txtIMEI = $('input[name="txtIMEI"]').val();
+                $.post(`/api/products/add-unit?slMa=${slMa}&txtIMEI=${txtIMEI}`, (data, stt) => {
+                    switch (data.status) {
+                        case 'error':
+                            $('.msg').html(`
+                                <div class="alert alert-danger" role="alert">
+                                    IMEI <span class="font-weight-bold">${txtIMEI}</span> của sản phẩm đã đươch thêm
+                                </div>
+                            `);
+                            console.log('err');
+                            break;
+                        case 'success':
+                            $('.msg').html(`
+                                <div class="alert alert-success" role="alert">
+                                    Thêm thành công IMEI <span class="font-weight-bold">${txtIMEI}</span>
+                                </div>
+                            `);
+                            console.log('ok');
+                            break;
+                    }
+                });
+            }
         });
     });
 </script>

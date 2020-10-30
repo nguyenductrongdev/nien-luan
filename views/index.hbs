@@ -58,9 +58,9 @@
     </li>
 </ul>
 
-<nav class="navbar navbar-expand-lg navbar-light p-0 tool-bar">
+<nav class="navbar navbar-expand-lg navbar-light p-0 tool-bar my-1">
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ml-auto pr-5">
+        <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,37 +71,78 @@
                     <span class="dropdown-item btn-asc" role="button">Giá tăng dần</span>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#" type="button" data-toggle="collapse"
+                    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Bộ lọc
+                </a>
+                <div class="collapse position-absolute filter p-2" id="collapseExample" style="z-index: 100;">
+                    <ul class="list-unstyled d-inline-block">
+                        <span class="font-weight-bold">Bộ nhớ:</span>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtROM" id="txtROM-0" value="32"> 32GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtROM" id="txtROM-1" value="64"> 64GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtROM" id="txtROM-2" value="128"> 128GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtROM" id="txtROM-3" value="256"> 256GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtROM" id="txtROM-4" value="512"> 512GB
+                            </label>
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled d-inline-block">
+                        <span class="font-weight-bold">RAM:</span>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtRAM" id="txtRAM-0" value="2"> 2GB
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtRAM" id="txtRAM-1" value="4"> 4GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtRAM" id="txtRAM-2" value="6"> 6GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtRAM" id="txtRAM-3" value="8"> 8GB
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtRAM" id="txtRAM-4" value="12"> 12GB
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
         </ul>
     </div>
 </nav>
 
 <main class="container">
     <div class="row my-3">
-        <div class="col-md-3">
-            <div class="row">
-                <div class="col-6">
-                    Bộ nhớ:
-                    <ul class="list-unstyled">
-                        <li><input type="checkbox" name="txtROM" id="txtROM-0" value="32"> 32GB</li>
-                        <li><input type="checkbox" name="txtROM" id="txtROM-1" value="64"> 64GB</li>
-                        <li><input type="checkbox" name="txtROM" id="txtROM-2" value="128"> 128GB</li>
-                        <li><input type="checkbox" name="txtROM" id="txtROM-3" value="256"> 256GB</li>
-                        <li><input type="checkbox" name="txtROM" id="txtROM-4" value="512"> 512GB</li>
-                    </ul>
-                </div>
-                <div class="col-6">
-                    RAM:
-                    <ul class="list-unstyled">
-                        <li><input type="checkbox" name="txtRAM" id="txtRAM-0" value="2"> 2GB</li>
-                        <li><input type="checkbox" name="txtRAM" id="txtRAM-1" value="4"> 4GB</li>
-                        <li><input type="checkbox" name="txtRAM" id="txtRAM-2" value="6"> 6GB</li>
-                        <li><input type="checkbox" name="txtRAM" id="txtRAM-3" value="8"> 8GB</li>
-                        <li><input type="checkbox" name="txtRAM" id="txtRAM-4" value="12"> 12GB</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-9 d-flex justify-content-center align-items-center">
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
             <div class="product-field mx-auto">
 
             </div>
@@ -123,6 +164,14 @@
         .then(response => response.data)
         .then(function (products) {
             $(async function () {
+
+                //////////
+                $('.filter').click(function () {
+                    console.log('filter');
+                });
+                ///////////
+
+
                 const productField = $('.product-field');
 
                 let viewProducts = JSON.parse(JSON.stringify(products));

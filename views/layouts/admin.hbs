@@ -14,74 +14,85 @@
     <link rel="icon" href="/asset/images/favicon.png" type="image/icon" />
     <link href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/asset/css/style.css" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Sansita+Swashed:wght@600&display=swap"
+        rel="stylesheet">
+
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Forms</a>
+    admin layout
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top py-0">
+        <a class="navbar-brand pl-3" href="/">
+            <i class="fas fa-home"></i>
+            <span class="shop-name"> Trọng Ý Mobile</span>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Trang chủ</a>
-                </li>
-            </ul>
             <ul class="navbar-nav ml-auto">
+                {{#if username}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/products/add-brand">Thêm nhà sản xuất</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle text-decoration-none" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{avatar}}" alt="" class="rounded-circle"
+                                style="width: 3vw; height: 3vw; object-fit: contain;">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="/users/?username={{username}}&avatar={{avatar}}">
+                                Trang cá nhân
+                            </a>
+                            <a class="dropdown-item" href="/users/logout">
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {{else}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/users/register"><i class="fas fa-user-plus"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/products/add-product">Thêm loại điện thoại</a>
+                    <a class="nav-link" href="/users/login"><i class="fas fa-sign-in-alt"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/view-products">Xem tất cả điện thoại</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/add-unit">Thêm điện thoại</a>
-                </li>
+                {{/if}}
             </ul>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                {{!-- <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="pill" href="#home">Thêm nhà sản xuất</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#menu1">Thêm loại điện thoại</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#menu2">Xem tất cả điện thoại</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#menu3">Thêm điện thoại</a>
-                    </li>
-                </ul>
+    <div class="container-fluid">
+        <a href="/products/add-brand" class="bg-dark text-light text-decoration-none p-4 rounded btn">
+            Thêm nhà sản xuât
+        </a>
 
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div class="tab-pane container active" id="home">
-                        <iframe class="w-100" src="/products/add-brand/" frameborder="0" style="height: 50vh;"></iframe>
-                    </div>
-                    <div class="tab-pane container fade" id="menu1">menu 2</div>
-                    <div class="tab-pane container fade" id="menu2">menu 3</div>
-                    <div class="tab-pane container fade" id="menu3">menu 4</div>
-                </div> --}}
-            </div>
-        </div>
+        <a href="/products/add-product" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
+            Thêm loại điện thoại
+        </a>
+
+        <a href="/products/add-unit" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
+            Thêm điện thoại
+        </a>
+
+        <a href="/products/view-products" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
+            Xem tất cả điên thoại
+        </a>
+
     </div>
 
+
     {{{ body }}}
+
+
+    <script src="/vendor/popper/popper.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
