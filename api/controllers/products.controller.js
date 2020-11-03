@@ -197,3 +197,57 @@ module.exports.filterRAM = (req, res, next) => {
         next(error);
     }
 }
+
+module.exports.filterGEPin = (req, res, next) => {
+    try {
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            let { pin } = req.query;
+            con.query(`
+                SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
+                FROM LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
+                WHERE 
+                    LOAI_DIEN_THOAI.LDT_DUNG_LUONG_PIN >= ${pin}
+                    AND NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
+                    AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+                (err, result) => {
+                    if (err) throw new Error(err);
+                    con.end();
+                    res.json(result.map(phone => {
+                        phone.LDT_GIA = phone.LDT_GIA.toLocaleString('vi-VN');
+                        return phone;
+                    }));
+                });
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports.filterLTPin = (req, res, next) => {
+    try {
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            let { pin } = req.query;
+            con.query(`
+                SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
+                FROM LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
+                WHERE 
+                    LOAI_DIEN_THOAI.LDT_DUNG_LUONG_PIN < ${pin}
+                    AND NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
+                    AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+                (err, result) => {
+                    if (err) throw new Error(err);
+                    con.end();
+                    res.json(result.map(phone => {
+                        phone.LDT_GIA = phone.LDT_GIA.toLocaleString('vi-VN');
+                        return phone;
+                    }));
+                });
+        });
+    } catch (error) {
+        next(error)
+    }
+}

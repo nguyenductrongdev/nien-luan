@@ -24,4 +24,11 @@ router
 router
     .get('/filter-RAM', controller.filterRAM);
 
+router
+    .get('/filter-ge-pin', controller.filterGEPin);
+
+router
+    .get('/filter-lt-pin', controller.filterLTPin);
+
+
 module.exports = router;

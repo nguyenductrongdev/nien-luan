@@ -114,22 +114,9 @@ module.exports.postLogin = (req, res, next) => {
                         else {
                             let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
                             if (isMatchMatKhau) {
-                                switch (result[0].VT_MA) {
-                                    case 'ND':
-                                        // set cookie after valid login
-                                        res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
-                                        res.cookie('avatar', `${result[0].ND_AVATAR}`);
-                                        res.redirect('/');
-                                        return;
-                                    case 'AD':
-                                        res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
-                                        res.cookie('avatar', `${result[0].ND_AVATAR}`);
-                                        res.redirect('/');
-                                        res.render('users/admin', {
-                                            layout: 'admin'
-                                        });
-                                        return;
-                                }
+                                res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
+                                res.cookie('avatar', `${result[0].ND_AVATAR}`);
+                                res.redirect('/');
                             }
                             else {
                                 res.render('users/login', {

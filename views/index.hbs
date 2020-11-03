@@ -13,6 +13,7 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="/asset/images/slider/slider-1.jpg" class="d-block w-100" alt="...">
+                        {{!-- <img src="/home/trongnguyen/Downloads/bc-yeu/bc-yeu-1.jpg" class="d-block w-100" alt="..."> --}}
                     </div>
                     <div class="carousel-item">
                         <img src="/asset/images/slider/slider-2.jpeg" class="d-block w-100" alt="...">
@@ -133,9 +134,23 @@
                             </label>
                         </li>
                     </ul>
+                    <ul class="list-unstyled d-inline-block">
+                        <span class="font-weight-bold">Dung lượng pin:</span>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtPin" id="txtPin-0" value="<4000">
+                                &lt; 4000 mAh
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label">
+                                <input type="checkbox" name="txtPin" id="txtPin-1" value=">=4000">
+                                &ge; 4000 mAh
+                            </label>
+                        </li>
+                    </ul>
                 </div>
             </li>
-
         </ul>
     </div>
 </nav>
@@ -164,14 +179,6 @@
         .then(response => response.data)
         .then(function (products) {
             $(async function () {
-
-                //////////
-                $('.filter').click(function () {
-                    console.log('filter');
-                });
-                ///////////
-
-
                 const productField = $('.product-field');
 
                 let viewProducts = JSON.parse(JSON.stringify(products));
@@ -179,7 +186,8 @@
                 let filter = {
                     brands: [],
                     rams: [],
-                    roms: []
+                    roms: [],
+                    pins: []
                 }
 
                 let PRODUCT_LENGTH = await axios.get('/api/products/getNbProducts')
@@ -212,7 +220,8 @@
                 async function filterProducts() {
                     if (filter.brands.length === 0 &&
                         filter.rams.length === 0 &&
-                        filter.roms.length === 0) {
+                        filter.roms.length === 0 &&
+                        filter.pins.length === 0) {
                         drawPagination();
                         return await getProductOfPage(1);
                     }
@@ -220,6 +229,7 @@
                     let filterByBrand = [];
                     let filterByRAM = [];
                     let filterByROM = [];
+                    let filterByPin = [];
 
                     for (let brand of filter.brands) {
                         filterByBrand.push(
@@ -240,19 +250,32 @@
                             ...await axios.get(`/api/products/filter-ROM?ROM=${rom}`).then(res => res.data)
                         );
                     }
-
                     filterByROM = filterByROM.map(item => JSON.stringify(item));
+
+                    // add all pin range option
+                    if (filter.pins.includes('<4000')) {
+                        filterByPin.push(
+                            ...await axios.get(`/api/products/filter-lt-pin?pin=${4000}`).then(res => res.data)
+                        );
+                    }
+                    if (filter.pins.includes('>=4000')) {
+                        filterByPin.push(
+                            ...await axios.get(`/api/products/filter-ge-pin?pin=${4000}`).then(res => res.data)
+                        );
+                    }
+                    filterByPin = filterByPin.map(item => JSON.stringify(item));
 
                     let unique = [];
                     let result = [];
 
                     // unique array store unique value of all filter getted
-                    unique.push(...Array.from(new Set([].concat(filterByBrand, filterByRAM, filterByROM))));
+                    unique.push(...Array.from(new Set([].concat(filterByBrand, filterByRAM, filterByROM, filterByPin))));
 
                     for (let unit of unique) {
                         if ((filterByBrand.includes(unit) || filter.brands.length === 0)
                             && (filterByRAM.includes(unit) || filter.rams.length === 0)
-                            && (filterByROM.includes(unit) || filter.roms.length === 0))
+                            && (filterByROM.includes(unit) || filter.roms.length === 0)
+                            && (filterByPin.includes(unit) || filter.pins.length === 0))
 
                             result.push(unit);
                     }
@@ -351,6 +374,23 @@
                     }
                     viewProducts = await filterProducts();
                     render(viewProducts);
+                });
+
+                $('input[name="txtPin"]').click(async function () {
+                    emptyPagination();
+                    viewProducts = [];
+                    let pinOptions = [];
+                    $.each($('input[name="txtPin"]:checked'), function () {
+                        pinOptions.push($(this).val());
+                    });
+                    if (pinOptions.length === 0) {
+                        filter.pins = [];
+                    } else {
+                        filter.pins = pinOptions;
+                    }
+                    viewProducts = await filterProducts();
+                    render(viewProducts);
+                    console.log(viewProducts);
                 });
 
                 $('input[name="txtRAM"]').click(async function () {
