@@ -4,8 +4,8 @@ const formidable = require('formidable');
 
 const config = {
     host: "localhost",
-    user: "root",
-    password: "b1709576",
+    user: "trongnguyen",
+    password: "trongnguyen",
     database: "nienluan",
     multipleStatements: true
 }
@@ -26,12 +26,7 @@ module.exports.postAddBrand = (req, res, next) => {
             let txtMa = fields.txtMa;
             let txtTen = fields.txtTen;
 
-            let con = mysql.createConnection({
-                host: "localhost",
-                user: "root",
-                password: "b1709576",
-                database: "nienluan"
-            });
+            let con = mysql.createConnection(config);
             con.connect(function (err) {
                 if (err) throw err;
                 con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
@@ -48,12 +43,7 @@ module.exports.postAddBrand = (req, res, next) => {
 
 module.exports.addProduct = (req, res, next) => {
     try {
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "b1709576",
-            database: "nienluan"
-        });
+        let con = mysql.createConnection(config);
         con.connect(function (err) {
             if (err) throw err;
             con.query('SELECT * FROM NHA_SAN_XUAT', function (err, result) {
@@ -134,12 +124,7 @@ module.exports.postAddProduct = (req, res, next) => {
                 if (err) throw new Error('upload product image error');
             });
 
-            let con = mysql.createConnection({
-                host: "localhost",
-                user: "root",
-                password: "b1709576",
-                database: "nienluan"
-            });
+            let con = mysql.createConnection(config);
             con.connect(function (err) {
                 if (err) throw err;
 
@@ -178,12 +163,7 @@ module.exports.postAddProduct = (req, res, next) => {
 
 module.exports.viewProducts = (req, res, next) => {
     try {
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "b1709576",
-            database: "nienluan"
-        });
+        let con = mysql.createConnection(config);
         con.connect(function (err) {
             if (err) throw err;
             con.query(
@@ -210,12 +190,7 @@ module.exports.viewProducts = (req, res, next) => {
 
 module.exports.addUnit = (req, res, next) => {
     try {
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "b1709576",
-            database: "nienluan"
-        });
+        let con = mysql.createConnection(config);
         con.connect(function (err) {
             if (err) throw err;
             con.query(
@@ -245,12 +220,7 @@ module.exports.postAddUnit = (req, res, next) => {
             let slMa = fields.slMa;
             let txtIMEI = fields.txtIMEI;
 
-            let con = mysql.createConnection({
-                host: "localhost",
-                user: "root",
-                password: "b1709576",
-                database: "nienluan"
-            });
+            let con = mysql.createConnection(config);
             con.connect(function (err) {
                 if (err) throw err;
                 con.query(
@@ -272,12 +242,7 @@ module.exports.postAddUnit = (req, res, next) => {
 module.exports.viewProduct = (req, res, next) => {
     try {
         const LDT_MA = req.query.LDT_MA;
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "b1709576",
-            database: "nienluan"
-        });
+        let con = mysql.createConnection(config);
         con.connect(function (err) {
             if (err) throw err;
             // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);

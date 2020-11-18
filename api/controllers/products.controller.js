@@ -2,8 +2,8 @@ const mysql = require('mysql');
 
 const config = {
     host: "localhost",
-    user: "root",
-    password: "b1709576",
+    user: "trongnguyen",
+    password: "trongnguyen",
     database: "nienluan"
 }
 
@@ -98,12 +98,7 @@ module.exports.addUnit = (req, res) => {
         txtIMEI
     } = req.query;
 
-    let con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "b1709576",
-        database: "nienluan"
-    });
+    let con = mysql.createConnection(config);
     con.connect(function (err) {
         if (err) throw err;
         con.query(

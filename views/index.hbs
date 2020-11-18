@@ -284,13 +284,13 @@
 
                 function descCost(products) {
                     return Array.from(products.sort((a, b) => {
-                        return +(b.LDT_GIA.replaceAll(',', '')) - +(a.LDT_GIA.replaceAll(',', ''));
+                        return +(b.LDT_GIA.replaceAll('.', '')) - +(a.LDT_GIA.replaceAll('.', ''));
                     }));
                 }
 
                 function ascCost(products) {
                     return Array.from(products.sort((a, b) => {
-                        return +(a.LDT_GIA.replaceAll(',', '')) - +(b.LDT_GIA.replaceAll(',', ''));
+                        return +(a.LDT_GIA.replaceAll('.', '')) - +(b.LDT_GIA.replaceAll('.', ''));
                     }));
                 }
 

@@ -2,6 +2,13 @@ const mysql = require('mysql');
 const fs = require('fs');
 const formidable = require('formidable');
 
+const config = {
+    host: "localhost",
+    user: "trongnguyen",
+    password: "trongnguyen",
+    database: "nienluan",
+    multipleStatements: true
+}
 
 module.exports.index = (req, res, next) => {
     try {
@@ -40,12 +47,7 @@ module.exports.postRegister = (req, res, next) => {
                 if (err) throw new Error('upload avatar error');
             });
 
-            let con = mysql.createConnection({
-                host: "localhost",
-                user: "root",
-                password: "b1709576",
-                database: "nienluan"
-            });
+            let con = mysql.createConnection(config);
             con.connect(function (err) {
                 if (err) throw err;
 
@@ -89,12 +91,7 @@ module.exports.postLogin = (req, res, next) => {
             let txtTenDangNhap = fields.txtTenDangNhap;
             let txtMatKhau = fields.txtMatKhau;
 
-            let con = mysql.createConnection({
-                host: "localhost",
-                user: "root",
-                password: "b1709576",
-                database: "nienluan"
-            });
+            let con = mysql.createConnection(config);
             con.connect(function (err) {
                 if (err) throw err;
                 con.query(
