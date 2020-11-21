@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Các chương trình khuyến mãi</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Hệ số</th>
+                        <th>Ngày kết thúc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each discounts }}
+                    <tr>
+                        <td>{{ this.CTKM_MA }}</td>
+                        <td>{{ this.CTKN_TEN }}</td>
+                        <td>{{ this.CTKM_HESO }}</td>
+                        <td>{{ this.CTKM_NGAYKETTHUC }}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 const hbs = require('express-handlebars');
 const port = 8080;
 
-
 app.engine('hbs', hbs({
     extname: 'hbs',
     layoutsDir: './views/layouts/',

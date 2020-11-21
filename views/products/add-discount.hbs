@@ -17,8 +17,11 @@
                 novalidate>
                 <div class="form-group">
                     <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến mãi</label>
-                    <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
-                        autofocus>
+                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
+                        autofocus> --}}
+                    <script>
+                        document.write(`<input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai" value="${+new Date()}" disabled>`)
+                    </script>
                 </div>
                 <div class="form-group">
                     <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến mãi</label>
@@ -65,7 +68,7 @@
                 if ($(this).val() === '') isValid = false;
                 switch ($(this).attr('name')) {
                     case 'heSoChuongTrinhKhuyenMai':
-                        if (+$(this).val() <= 0.1 || +$(this).val() >= 0.9)
+                        if (+$(this).val() < 0.1 || +$(this).val() > 0.9)
                             isValid = false;
                         break;
                 }
@@ -91,14 +94,15 @@
                         maSanPhams: discountProductIDs.join()
                     },
                     function (data, status) {
+                        console.log(data, status);
                         if (data === 'OK') {
-                            $('#msg-filed').html(
+                            $('#msg-field').html(
                                 `<div class="alert alert-success" role="alert">
                                     Thêm thành công
                                 </div>`
                             );
                         } else if (data === 'ERROR') {
-                            $('#msg-filed').html(
+                            $('#msg-field').html(
                                 `<div class="alert alert-success" role="alert">
                                     Thêm thất bại
                                 </div>`

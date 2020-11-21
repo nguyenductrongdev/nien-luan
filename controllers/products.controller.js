@@ -437,3 +437,20 @@ module.exports.addDiscount = (req, res) => {
         });
     });
 }
+
+module.exports.viewDiscounts = (req, res, next) => {
+    try {
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query(`SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`, (err, field) => {
+                res.render('products/view-discounts', {
+                    discounts: field
+                });
+                con.end();
+            });
+        });
+    } catch (error) {
+        next(error)
+    }
+}

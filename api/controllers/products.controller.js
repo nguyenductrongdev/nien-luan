@@ -247,39 +247,86 @@ module.exports.filterLTPin = (req, res, next) => {
     }
 }
 
+// module.exports.postAddDiscount = (req, res, next) => {
+//     try {
+//         let {
+//             maChuongTrinhKhuyenMai,
+//             tenChuongTrinhKhuyenMai,
+//             heSoChuongTrinhKhuyenMai,
+//             ngayKetThucChuongTrinhKhuyenMai,
+//             maSanPhams
+//         } = req.query;
+//         let produdctIDs = maSanPhams.split(',');
+//         con = mysql.createConnection(config);
+//         con.connect(err => {
+//             con.query(
+//                 `INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
+//                     VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`,
+//                 (err, result) => {
+//                     if (err) res.json('ERROR');
+//                     res.json('OK');
+//                 }
+//             );
+//             for (let ID in produdctIDs) {
+//                 con.query(
+//                     `UPDATE LOAI_DIEN_THOAI 
+//                     SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
+//                     WHERE LDT_MA = '${ID}'`,
+//                     err => {
+//                         if (err) {
+//                             throw new Error('Add product to discount error');
+//                         }
+//                     }
+//                 );
+//             }
+//             con.close();
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
+const formidable = require('formidable');
 module.exports.postAddDiscount = (req, res, next) => {
     try {
-        let {
-            maChuongTrinhKhuyenMai,
-            tenChuongTrinhKhuyenMai,
-            heSoChuongTrinhKhuyenMai,
-            ngayKetThucChuongTrinhKhuyenMai,
-            maSanPhams
-        } = req.query;
-        let produdctIDs = maSanPhams.split(',');
-        con = mysql.createConnection(config);
-        con.connect(err => {
-            con.query(
-                `INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKM_TEN, CTKM_NGAY_KET_THUC, CTKM_HE_SO) 
+        let form = formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let {
+                maChuongTrinhKhuyenMai,
+                tenChuongTrinhKhuyenMai,
+                heSoChuongTrinhKhuyenMai,
+                ngayKetThucChuongTrinhKhuyenMai,
+                maSanPhams
+            } = fields;
+            let produdctIDs = [...maSanPhams.split(',')];
+            console.log(`INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
+            VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`);
+            let con = mysql.createConnection(config);
+            con.connect(err => {
+                con.query(`INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
                     VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`,
-                (err, result) => {
-                    if (err) res.json('ERROR');
-                    res.json('OK');
-                }
-            );
-            for (let ID in produdctIDs) {
-                con.query(
-                    `UPDATE LOAI_DIEN_THOAI 
-                    SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
-                    WHERE LDT_MA = '${ID}'`,
-                    err => {
+                    (err, result) => {
                         if (err) {
-                            throw new Error('Add product to discount error');
-                        }
+                            res.json('ERROR');
+                            return;
+                        };
+                        res.json('OK');
                     }
                 );
-            }
-            con.close();
+                for (let ID of produdctIDs) {
+                    con.query(
+                        `UPDATE LOAI_DIEN_THOAI 
+                            SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
+                        WHERE LDT_MA = '${ID}'`,
+                        err => {
+                            if (err) {
+                                throw new Error('Add psroduct to discount error');
+                            }
+                        }
+                    );
+                }
+                con.end();
+            });
         });
     } catch (error) {
         next(error);
