@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    admin layout
+    {{!-- admin layout --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top py-0">
         <a class="navbar-brand pl-3" href="/">
             <i class="fas fa-home"></i>
@@ -39,7 +39,7 @@
             <ul class="navbar-nav ml-auto">
                 {{#if username}}
                 <li class="nav-item">
-                    <div class="dropdown">
+                    <div class="dropdown dropleft">
                         <a class="dropdown-toggle text-decoration-none" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="{{avatar}}" alt="" class="rounded-circle"
@@ -68,22 +68,40 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <a href="/products/add-brand" class="bg-dark text-light text-decoration-none p-4 rounded btn">
-            Thêm nhà sản xuât
-        </a>
+    <div class="container my-2">
+        <div class="row my-1">
+            <div class="col-12">
+                <a href="/products/add-brand" class="bg-dark text-light text-decoration-none p-4 mr-1 rounded btn">
+                    Thêm nhà sản xuât
+                </a>
 
-        <a href="/products/add-product" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
-            Thêm loại điện thoại
-        </a>
+                <a href="/products/add-product" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                    Thêm loại điện thoại
+                </a>
 
-        <a href="/products/add-unit" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
-            Thêm điện thoại
-        </a>
+                <a href="/products/add-unit" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                    Thêm điện thoại
+                </a>
 
-        <a href="/products/view-products" class="bg-dark text-light text-decoration-none p-4 rounded mx-2 btn">
-            Xem tất cả điên thoại
-        </a>
+                <a href="/products/add-bill" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                    Thêm hóa đơn
+                </a>
+
+                <a href="/products/add-discount" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                    Thêm chương trình giảm giá
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <a href="/products/view-products" class="bg-dark text-light text-decoration-none p-4 rounded btn">
+                    Xem tất cả điên thoại
+                </a>
+            </div>
+        </div>
+
+
 
     </div>
 

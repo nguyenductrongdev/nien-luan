@@ -25,6 +25,9 @@ router
     .get('/filter-RAM', controller.filterRAM);
 
 router
+    .post('/add-discount', controller.postAddDiscount);
+
+router
     .get('/filter-ge-pin', controller.filterGEPin);
 
 router

@@ -1,19 +1,20 @@
+const { query } = require('express');
 const mysql = require('mysql');
 
 const config = {
     host: "localhost",
     user: "trongnguyen",
     password: "trongnguyen",
-    database: "nienluan"
+    database: "nienluan",
 }
 
 module.exports.getNbProducts = (req, res) => {
     let con = mysql.createConnection(config);
-    con.connect(function (err) {
+    con.connect(function(err) {
         if (err) throw err;
         con.query(
             `SELECT COUNT(LOAI_DIEN_THOAI.LDT_MA) AS LDT_LENGTH FROM LOAI_DIEN_THOAI`,
-            function (err, result) {
+            function(err, result) {
                 if (err) throw new Error('count ldt error');
                 con.end();
                 res.json(result);
@@ -28,7 +29,7 @@ module.exports.page = (req, res) => {
     let startPoint = (page - 1) * productsPerPage;
 
     let con = mysql.createConnection(config);
-    con.connect(function (err) {
+    con.connect(function(err) {
         if (err) throw err;
         con.query(
             `SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
@@ -37,7 +38,7 @@ module.exports.page = (req, res) => {
                 NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
                 AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
             LIMIT ${startPoint}, ${productsPerPage}`,
-            function (err, result) {
+            function(err, result) {
                 if (err) throw new Error('get page error');
                 con.end();
                 result = result.map(item => {
@@ -71,16 +72,15 @@ module.exports.addBrand = (req, res) => {
     }
 
     let con = mysql.createConnection(config);
-    con.connect(function (err) {
+    con.connect(function(err) {
         if (err) throw err;
         con.query(
             `INSERT INTO NHA_SAN_XUAT(NSX_MA, NSX_TEN) VALUES('${txtMa}', '${txtTen}')`,
-            function (err) {
+            function(err) {
                 if (err) {
                     result.status = 'error';
                     result.message.push(`Thêm không thành công, nhà sản xuất có mã ${txtMa} đã tôn tại`);
-                }
-                else {
+                } else {
                     result.status = 'success';
                     result.message.push('Thêm thành công');
                 }
@@ -99,12 +99,12 @@ module.exports.addUnit = (req, res) => {
     } = req.query;
 
     let con = mysql.createConnection(config);
-    con.connect(function (err) {
+    con.connect(function(err) {
         if (err) throw err;
         con.query(
             `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
                     VALUES('${txtIMEI}', '${slMa}')`,
-            function (err) {
+            function(err) {
                 let resObj = {};
                 if (err)
                     resObj.status = 'error'
@@ -120,7 +120,7 @@ module.exports.addUnit = (req, res) => {
 module.exports.filterBrand = (req, res) => {
     let { brandName } = req.query;
     let con = mysql.createConnection(config);
-    con.connect(function (err) {
+    con.connect(function(err) {
         if (err) throw err;
         con.query(
             `SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
@@ -129,7 +129,7 @@ module.exports.filterBrand = (req, res) => {
                 NHA_SAN_XUAT.NSX_MA = '${brandName}'
                 AND NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
                 AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
-            function (err, result) {
+            function(err, result) {
                 if (err) throw err;
                 con.end();
                 result = result.map(item => {
@@ -244,5 +244,44 @@ module.exports.filterLTPin = (req, res, next) => {
         });
     } catch (error) {
         next(error)
+    }
+}
+
+module.exports.postAddDiscount = (req, res, next) => {
+    try {
+        let {
+            maChuongTrinhKhuyenMai,
+            tenChuongTrinhKhuyenMai,
+            heSoChuongTrinhKhuyenMai,
+            ngayKetThucChuongTrinhKhuyenMai,
+            maSanPhams
+        } = req.query;
+        let produdctIDs = maSanPhams.split(',');
+        con = mysql.createConnection(config);
+        con.connect(err => {
+            con.query(
+                `INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKM_TEN, CTKM_NGAY_KET_THUC, CTKM_HE_SO) 
+                    VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`,
+                (err, result) => {
+                    if (err) res.json('ERROR');
+                    res.json('OK');
+                }
+            );
+            for (let ID in produdctIDs) {
+                con.query(
+                    `UPDATE LOAI_DIEN_THOAI 
+                    SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
+                    WHERE LDT_MA = '${ID}'`,
+                    err => {
+                        if (err) {
+                            throw new Error('Add product to discount error');
+                        }
+                    }
+                );
+            }
+            con.close();
+        });
+    } catch (error) {
+        next(error);
     }
 }

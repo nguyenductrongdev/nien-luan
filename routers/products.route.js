@@ -25,4 +25,10 @@ router
     .get('/edit-product', controller.editProduct)
     .post('/edit-product', controller.postEditProduct);
 
+router
+    .get('/add-bill', controller.addBill);
+
+router
+    .get('/add-discount', controller.addDiscount);
+
 module.exports = router;

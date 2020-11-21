@@ -27,9 +27,9 @@ module.exports.postAddBrand = (req, res, next) => {
             let txtTen = fields.txtTen;
 
             let con = mysql.createConnection(config);
-            con.connect(function (err) {
+            con.connect(function(err) {
                 if (err) throw err;
-                con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function (err) {
+                con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function(err) {
                     if (err) throw new Error('add brand err');
                 });
                 res.redirect('/products/view-products');
@@ -44,9 +44,9 @@ module.exports.postAddBrand = (req, res, next) => {
 module.exports.addProduct = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
-        con.connect(function (err) {
+        con.connect(function(err) {
             if (err) throw err;
-            con.query('SELECT * FROM NHA_SAN_XUAT', function (err, result) {
+            con.query('SELECT * FROM NHA_SAN_XUAT', function(err, result) {
                 if (err) throw new Error('add product err');
                 nhaSanXuatOptions = [];
                 for (let i = 0; i < result.length; i++) {
@@ -125,7 +125,7 @@ module.exports.postAddProduct = (req, res, next) => {
             });
 
             let con = mysql.createConnection(config);
-            con.connect(function (err) {
+            con.connect(function(err) {
                 if (err) throw err;
 
                 let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
@@ -164,13 +164,13 @@ module.exports.postAddProduct = (req, res, next) => {
 module.exports.viewProducts = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
-        con.connect(function (err) {
+        con.connect(function(err) {
             if (err) throw err;
             con.query(
                 `SELECT LDT_MA, LDT_TEN, NSX_TEN, LDT_GIA, CTKM_MA 
                 FROM NHA_SAN_XUAT, LOAI_DIEN_THOAI
                 WHERE NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA`,
-                function (err, result) {
+                function(err, result) {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
                         products: result,
@@ -191,12 +191,12 @@ module.exports.viewProducts = (req, res, next) => {
 module.exports.addUnit = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
-        con.connect(function (err) {
+        con.connect(function(err) {
             if (err) throw err;
             con.query(
                 `SELECT LDT_MA, LDT_TEN
                 FROM LOAI_DIEN_THOAI`,
-                function (err, result) {
+                function(err, result) {
                     if (err) throw new Error('add unit err');
                     res.render('products/add-unit', {
                         brands: result,
@@ -221,12 +221,12 @@ module.exports.postAddUnit = (req, res, next) => {
             let txtIMEI = fields.txtIMEI;
 
             let con = mysql.createConnection(config);
-            con.connect(function (err) {
+            con.connect(function(err) {
                 if (err) throw err;
                 con.query(
                     `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
                     VALUES('${txtIMEI}', '${slMa}')`,
-                    function (err) {
+                    function(err) {
                         if (err) throw new Error('add unit err');
                         res.redirect('/products/add-unit');
                     }
@@ -243,7 +243,7 @@ module.exports.viewProduct = (req, res, next) => {
     try {
         const LDT_MA = req.query.LDT_MA;
         let con = mysql.createConnection(config);
-        con.connect(function (err) {
+        con.connect(function(err) {
             if (err) throw err;
             // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);
             con.query(
@@ -254,7 +254,7 @@ module.exports.viewProduct = (req, res, next) => {
                     '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
                     AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
                     AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
-                function (err, result) {
+                function(err, result) {
                     if (err) throw new Error(err);
                     con.end();
 
@@ -281,7 +281,7 @@ module.exports.editProduct = (req, res, next) => {
         const LDT_MA = req.query.LDT_MA;
         let con = mysql.createConnection(config);
 
-        con.connect(function (err) {
+        con.connect(function(err) {
             if (err) throw new Error(err);
             con.query(
                 `SELECT *
@@ -294,7 +294,7 @@ module.exports.editProduct = (req, res, next) => {
                 SELECT * 
                 FROM 
                     NHA_SAN_XUAT`,
-                function (err, result) {
+                function(err, result) {
                     let productInfo = result[0];
                     let providerInfo = result[1];
                     if (err) throw new Error(err);
@@ -400,4 +400,40 @@ module.exports.postEditProduct = (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+module.exports.addBill = (req, res, next) => {
+    try {
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query('SELECT * FROM LOAI_DIEN_THOAI', (err, result) => {
+                if (err) throw new Error(err);
+                res.render('products/add-bill', {
+                    products: result,
+                    username: req.cookies.username,
+                    avatar: req.cookies.avatar,
+                    layout: 'admin'
+                });
+            });
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports.addDiscount = (req, res) => {
+    let con = mysql.createConnection(config);
+    con.connect(err => {
+        if (err) throw new Error(err);
+        con.query('SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA IS NULL', (err, result) => {
+            if (err) throw new Error(err);
+            res.render('products/add-discount', {
+                products: result,
+                username: req.cookies.username,
+                avatar: req.cookies.avatar,
+                layout: 'admin'
+            });
+        });
+    });
 }

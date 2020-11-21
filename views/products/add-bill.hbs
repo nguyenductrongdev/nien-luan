@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm hóa đơn</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <h1 class="text-center h1" style="font-size: 3vw !important;">Thêm hóa đơn bán ra</h1>
+                <form action="#" method="POST" class="shadow-lg p-5">
+                    <div class="form-group">
+                        <label>Tên điện thoại:</label>
+                        <select name="sltMaLoaiDienThoai" id="sltMaLoaiDienThoai" class="custom-select">
+                            {{#each products }}
+                            <option value="{{this.LDT_MA}}">{{LDT_TEN}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary form-control">Thêm hóa đơn</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
