@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Mã chương trình: {{ discount.CTKM_MA }}</h1>
+            <h3 class="text-center">Tên chương trình: {{ discount.CTKN_TEN }}</h3>
+            <h3 class="text-center">Hệ số: {{ discount.CTKM_HESO }}</h3>
+            <h4>Các loại điện thoại trong chương trình: </h4>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Tên điện thoại</th>
+                        <th>Giá bán trước giảm</th>
+                        <th>Giá bán sau giảm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each products }}
+                    <tr>
+                        <td><b> {{ this.LDT_TEN }} </b></td>
+                        <td class="text-right text-primary">{{ this.LDT_GIA }}</td>
+                        <td class="text-right text-warning">{{ this.LDT_GIA_DISCOUNTED }}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

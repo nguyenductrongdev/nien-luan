@@ -32,6 +32,11 @@ router
     .get('/add-discount', controller.addDiscount);
 
 router
+    .get('/view-discount', controller.viewDiscount);
+
+router
     .get('/view-discounts', controller.viewDiscounts);
+
+
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const fs = require('fs');
 const formidable = require('formidable');
+const { query } = require('express');
 
 const config = {
     host: "localhost",
@@ -445,12 +446,50 @@ module.exports.viewDiscounts = (req, res, next) => {
             if (err) throw new Error(err);
             con.query(`SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`, (err, field) => {
                 res.render('products/view-discounts', {
-                    discounts: field
+                    discounts: field,
+                    username: req.cookies.username,
+                    avatar: req.cookies.avatar,
+                    layout: 'admin',
                 });
                 con.end();
             });
         });
     } catch (error) {
         next(error)
+    }
+}
+
+module.exports.viewDiscount = (req, res, next) => {
+    try {
+        let { ma } = req.query
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query(
+                `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}';
+                SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA =  '${ma}'`,
+                (err, fields) => {
+                    if (err) throw new Error(err);
+                    // console.log([...fields[1]]);
+                    let ctkm_heso = fields[0][0].CTKM_HESO;
+                    fields[1] = fields[1].map(row => {
+                        row['LDT_GIA_DISCOUNTED'] = row.LDT_GIA - (row.LDT_GIA * ctkm_heso);
+                        return row;
+                    })
+                    res.render('products/view-discount', {
+                        discount: fields[0][0],
+                        products: fields[1].map(product => {
+                            product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
+                            product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
+                            return product;
+                        }),
+                        layout: 'admin'
+                    });
+                    con.end();
+                }
+            );
+        });
+    } catch (error) {
+        next(error);
     }
 }
