@@ -302,7 +302,7 @@ module.exports.postAddDiscount = (req, res, next) => {
 
 module.exports.postEditDiscount = (req, res, next) => {
     try {
-        res.setHeader('Content-Type', 'text/json');
+        res.setHeader('Content-Type', 'application/json');
         let form = formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
             let {
@@ -321,10 +321,10 @@ module.exports.postEditDiscount = (req, res, next) => {
                         CTKM_TEN = '${tenChuongTrinhKhuyenMai}',
                         CTKM_NGAY_KET_THUC = '${ngayKetThucChuongTrinhKhuyenMai}',
                         CTKM_HE_SO = ${heSoChuongTrinhKhuyenMai}
-                    WHERE CKTM_MA = '${maChuongTrinhKhuyenMai}'`,
+                    WHERE CTKM_MA = '${maChuongTrinhKhuyenMai}'`,
                     (err) => {
                         if (err) {
-                            res.json('ERROR');
+                            res.json({ result: 'ERROR' });
                             return;
                         };
                     }
@@ -349,7 +349,7 @@ module.exports.postEditDiscount = (req, res, next) => {
                                 }
                             );
                         }
-                        res.json('OK');
+                        res.json({ result: 'OK' });
                         con.end();
                     }
                 );

@@ -95,13 +95,13 @@
                     },
                     function (data, status) {
                         console.log(data, status);
-                        if (data === 'OK') {
+                        if (data.result === 'OK') {
                             $('#msg-field').html(
                                 `<div class="alert alert-success" role="alert">
                                     Thêm thành công
                                 </div>`
                             );
-                        } else if (data === 'ERROR') {
+                        } else if (data.result === 'ERROR') {
                             $('#msg-field').html(
                                 `<div class="alert alert-danger" role="alert">
                                     Thêm thất bại
