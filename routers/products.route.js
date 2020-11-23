@@ -28,6 +28,8 @@ router
 router
     .get('/add-bill', controller.addBill);
 
+
+
 router
     .get('/add-discount', controller.addDiscount);
 
@@ -36,6 +38,11 @@ router
 
 router
     .get('/edit-discount', controller.editDiscount);
+
+router
+    .get('/delete-discount', controller.deleteDiscount);
+
+
 
 router
     .get('/view-discounts', controller.viewDiscounts);

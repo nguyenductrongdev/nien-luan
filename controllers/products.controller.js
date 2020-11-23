@@ -541,3 +541,23 @@ module.exports.editDiscount = (req, res, next) => {
         next(error);
     }
 }
+
+module.exports.deleteDiscount = (req, res, next) => {
+    try {
+        let { ma } = req.query;
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query(
+                `UPDATE LOAI_DIEN_THOAI SET CTKM_MA = ${null} WHERE CTKM_MA = '${ma}';
+                DELETE FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}'`,
+                (err) => {
+                    if (err) throw new Error(err);
+                    res.redirect('/products/view-discounts');
+                }
+            );
+        });
+    } catch (error) {
+        next(error);
+    }
+}
