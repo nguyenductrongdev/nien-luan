@@ -19,9 +19,15 @@
                         <td>{{ this.CTKN_TEN }}</td>
                         <td>{{ this.CTKM_HESO }}</td>
                         <td>{{ this.CTKM_NGAYKETTHUC }}</td>
-                        <td><a href="/products/view-discount?ma={{ this.CTKM_MA }}"
-                                class="text-decoration-none alert-dark bg-info text-dark p-1 rounded">
-                                <i class="fas fa-eye" title="Xem chi tiết"></i>
+                        <td>
+                            <a href="/products/view-discount?ma={{ this.CTKM_MA }}"
+                                class="fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded">
+                            </a>
+                            <a href="/products/edit-discount?ma={{ this.CTKM_MA }}"
+                                class="fas fa-pen text-decoration-none bg-warning text-light p-1 rounded">
+                            </a>
+                            <a href="/products/delete-discount?ma={{ this.CTKM_MA }}"
+                                class="fas fa-trash-alt text-decoration-none bg-danger text-light p-1 rounded">
                             </a>
                         </td>
                     </tr>

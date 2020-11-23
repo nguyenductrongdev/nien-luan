@@ -101,9 +101,14 @@
                     <label for="txtThongTinCuongLuc">Thông tin cường lực</label>
                     <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc">
                 </div>
-                {{!-- gia --}}
+                {{!-- gia mua --}}
                 <div class="form-group">
-                    <label for="txtGia">Giá</label>
+                    <label for="txtGiaMua">Giá mua vào</label>
+                    <input type="number" class="form-control" name="txtGiaMua" id="txtGiaMua" min="0">
+                </div>
+                {{!-- gia ban --}}
+                <div class="form-group">
+                    <label for="txtGia">Giá bán ra</label>
                     <input type="number" class="form-control" name="txtGia" id="txtGia" min="0">
                 </div>
                 {{!-- loai man hinh --}}
@@ -189,6 +194,9 @@
 
 
         $('#frmAddProduct').submit(function (event) {
+            let isMissValue = false;
+            let errorValue = false;
+
             fields = [
                 ma = $('#txtMa'),
                 ten = $('#txtTen'),
@@ -201,12 +209,12 @@
                 DungLuongRAM = $('#txtDungLuongRAM'),
                 DungLuongROM = $('#txtDungLuongROM'),
                 thongTinCuongLuc = $('#txtThongTinCuongLuc'),
+                giaMua = $('#txtGiaMua'),
                 gia = $('#txtGia'),
                 loaiManHinh = $('input[name=rdLoaiManHinh]:checked'),
                 slDoPhanGiai = $('#slDoPhanGiai'),
                 fHinhAnh = $('#fHinhAnh')
             ];
-            let isMissValue = false;
             for (field of fields) {
                 if (field.val() === '') {
                     field.remove('is-valid');
@@ -218,7 +226,18 @@
                     field.addClass('is-valid');
                 };
             }
-            if (isMissValue) {
+            if (+$('#txtGiaMua').val() === 0 || +$('#txtGia').val() === 0) {
+                errorValue = true;
+            }
+            else if (+$('#txtGiaMua').val() >= +$('#txtGia').val()) {
+                $('#txtGiaMua').removeClass('is-valid').addClass('is-invalid');
+                $('#txtGia').removeClass('is-valid').addClass('is-invalid');
+                errorValue = true;
+            } else {
+                $('#txtGiaMua').removeClass('is-invalid').addClass('is-valid');
+                $('#txtGia').removeClass('is-invalid').addClass('is-valid');
+            }
+            if (isMissValue || errorValue) {
                 event.preventDefault();
                 return false;
             }

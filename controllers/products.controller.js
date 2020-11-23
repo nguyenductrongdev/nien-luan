@@ -3,10 +3,18 @@ const fs = require('fs');
 const formidable = require('formidable');
 const { query } = require('express');
 
+// const config = {
+//     host: "localhost",
+//     user: "trongnguyen",
+//     password: "trongnguyen",
+//     database: "nienluan",
+//     multipleStatements: true
+// }
+
 const config = {
     host: "localhost",
-    user: "trongnguyen",
-    password: "trongnguyen",
+    user: "root",
+    password: "",
     database: "nienluan",
     multipleStatements: true
 }
@@ -112,6 +120,7 @@ module.exports.postAddProduct = (req, res, next) => {
             let txtDungLuongRAM = fields.txtDungLuongRAM;
             let txtDungLuongROM = fields.txtDungLuongROM;
             let txtThongTinCuongLuc = fields.txtThongTinCuongLuc;
+            let txtGiaMua = fields.txtGiaMua;
             let txtGia = fields.txtGia;
             let rdLoaiManHinh = fields.rdLoaiManHinh;
             let slDoPhanGiai = fields.slDoPhanGiai;
@@ -131,13 +140,14 @@ module.exports.postAddProduct = (req, res, next) => {
 
                 let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
                     LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
-                    LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, 
+                    LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, LDT_GIA_MUA,
                     LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI)
                     VALUES 
                     ('${txtMa}', '${slNhaSanXuat}', '${txtTen}', 
                     '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
-                    '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac},
+                    '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac}, ${txtGiaMua},
                     ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}')`;
+                console.log(qr);
                 con.query(qr, err => {
                     let isExist = false;
                     if (err) {
@@ -336,6 +346,7 @@ module.exports.postEditProduct = (req, res, next) => {
                 txtDungLuongRAM,
                 txtDungLuongROM,
                 txtThongTinCuongLuc,
+                txtGiaMua,
                 txtGia,
                 rdLoaiManHinh,
                 slDoPhanGiai
@@ -355,6 +366,7 @@ module.exports.postEditProduct = (req, res, next) => {
                         LDT_THONG_TIN_CUONG_LUC = '${txtThongTinCuongLuc}',
                         LDT_JACK_TAI_NGHE = ${rdJackTaiNghe},
                         LDT_TOC_DO_SAC = ${txtTocDoSac},
+                        LDT_GIA_MUA = ${txtGiaMua},
                         LDT_GIA = ${txtGia},
                         LDT_LOAI_PIN = '${rdLoaiPin}',
                         LDT_LOAI_MAN_HINH = '${rdLoaiManHinh}',
@@ -471,7 +483,7 @@ module.exports.viewDiscount = (req, res, next) => {
                 (err, fields) => {
                     if (err) throw new Error(err);
                     // console.log([...fields[1]]);
-                    let ctkm_heso = fields[0][0].CTKM_HESO;
+                    let ctkm_heso = fields[0][0].CTKM_HE_SO;
                     fields[1] = fields[1].map(row => {
                         row['LDT_GIA_DISCOUNTED'] = row.LDT_GIA - (row.LDT_GIA * ctkm_heso);
                         return row;
@@ -489,6 +501,42 @@ module.exports.viewDiscount = (req, res, next) => {
                 }
             );
         });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.editDiscount = (req, res, next) => {
+    try {
+        try {
+            let { ma } = req.query
+            let con = mysql.createConnection(config);
+            con.connect(err => {
+                if (err) throw new Error(err);
+                con.query(
+                    `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}';
+                    SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA = '${ma}';
+                    SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA IS NULL`,
+                    (err, fields) => {
+                        if (err) throw new Error(err);
+                        let ctkm_heso = fields[0][0].CTKM_HE_SO;
+                        fields[1] = fields[1].map(row => {
+                            row['LDT_GIA_DISCOUNTED'] = row.LDT_GIA - (row.LDT_GIA * ctkm_heso);
+                            return row;
+                        })
+                        res.render('products/edit-discount', {
+                            discount: fields[0][0],
+                            productsDiscounted: fields[1],
+                            productsDiscountable: fields[2],
+                            layout: 'admin'
+                        });
+                        con.end();
+                    }
+                );
+            });
+        } catch (error) {
+            next(error);
+        }
     } catch (error) {
         next(error);
     }

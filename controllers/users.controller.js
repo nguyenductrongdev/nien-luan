@@ -2,10 +2,18 @@ const mysql = require('mysql');
 const fs = require('fs');
 const formidable = require('formidable');
 
+// const config = {
+//     host: "localhost",
+//     user: "trongnguyen",
+//     password: "trongnguyen",
+//     database: "nienluan",
+//     multipleStatements: true
+// }
+
 const config = {
     host: "localhost",
-    user: "trongnguyen",
-    password: "trongnguyen",
+    user: "root",
+    password: "",
     database: "nienluan",
     multipleStatements: true
 }
@@ -48,7 +56,7 @@ module.exports.postRegister = (req, res, next) => {
             });
 
             let con = mysql.createConnection(config);
-            con.connect(function (err) {
+            con.connect(function(err) {
                 if (err) throw err;
 
                 con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
@@ -92,13 +100,13 @@ module.exports.postLogin = (req, res, next) => {
             let txtMatKhau = fields.txtMatKhau;
 
             let con = mysql.createConnection(config);
-            con.connect(function (err) {
+            con.connect(function(err) {
                 if (err) throw err;
                 con.query(
                     `SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA 
                     FROM NGUOI_DUNG 
                     WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`,
-                    function (err, result) {
+                    function(err, result) {
                         if (err) throw new Error('login err');
                         let isExist = result.length === 1;
 
@@ -107,15 +115,13 @@ module.exports.postLogin = (req, res, next) => {
                                 existErr: true
                             });
                             return;
-                        }
-                        else {
+                        } else {
                             let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
                             if (isMatchMatKhau) {
                                 res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
                                 res.cookie('avatar', `${result[0].ND_AVATAR}`);
                                 res.redirect('/');
-                            }
-                            else {
+                            } else {
                                 res.render('users/login', {
                                     matchMatKhauErr: true
                                 });

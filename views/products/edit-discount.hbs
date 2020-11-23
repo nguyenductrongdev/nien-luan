@@ -5,10 +5,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
+        <div class="col-4">
             <h1 class="textcenter">Các sản phẩm</h1><br>
             <ul class="list-unstyled d-block shadow-lg p-5" id="added-list">
-
+                {{#each productsDiscounted }}
+                <li data-ma="{{ this.LDT_MA }}">
+                    <b> {{ this.LDT_TEN }} </b>
+                    <button type="button" class="btn btn-danger btn-unselect">&times;</button>
+                </li>
+                {{/each}}
             </ul>
         </div>
         <div class="col-6 mx-auto">
@@ -17,33 +22,31 @@
                 novalidate>
                 <div class="form-group">
                     <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến mãi</label>
-                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
-                        autofocus> --}}
-                    <script>
-                        document.write(`<input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai" value="${+new Date()}" disabled>`)
-                    </script>
+                    <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
+                        value="{{ discount.CTKM_MA }}" disabled>
                 </div>
                 <div class="form-group">
                     <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến mãi</label>
-                    <input type="text" name="tenChuongTrinhKhuyenMai" class="form-control" id="tenChuongTrinhKhuyenMai">
+                    <input type="text" name="tenChuongTrinhKhuyenMai" class="form-control" id="tenChuongTrinhKhuyenMai"
+                        value="{{ discount.CTKM_TEN }}">
                 </div>
                 <div class="form-group">
                     <label for="heSoChuongTrinhKhuyenMai">Hệ số khuyến mãi</label>
                     <input type="number" name="heSoChuongTrinhKhuyenMai" class="form-control"
-                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1" max="0.9">
+                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1" max="0.9" value="{{ discount.CTKM_HE_SO }}">
                     <small class="form-text text-muted">Hệ số từ 0.1 đến 0.9.</small>
                 </div>
                 <div class="form-group">
                     <label for="ngayKetThucChuongTrinhKhuyenMai">Ngày kết thúc</label>
                     <input type="date" name="ngayKetThucChuongTrinhKhuyenMai" class="form-control"
-                        id="ngayKetThucChuongTrinhKhuyenMai">
+                        id="ngayKetThucChuongTrinhKhuyenMai" value="{{ discount.CTKM_NGAY_KET_THUC }}">
                 </div>
                 <div class="form-group">
                     <label>Các loại điện thoại trong chương trình</label>
                     <div class="d-flex">
                         <select name="maLoaiDienThoai" id="maLoaiDienThoai" class="custom-select">
                             <option value="">Chọn tên loại điện thoại</option>
-                            {{#each products }}
+                            {{#each productsDiscountable }}
                             <option value="{{ this.LDT_MA }}">{{ LDT_TEN }}</option>
                             {{/each}}
                         </select>
@@ -60,14 +63,10 @@
 
 <script>
     $(function () {
-        $('#tenChuongTrinhKhuyenMai').val('Trung thu 2020');
-        $('#heSoChuongTrinhKhuyenMai').val('0.2');
-        $('#ngayKetThucChuongTrinhKhuyenMai').val('2020-11-25');
-
         $('.btn-submit').click(function () {
             let isValid = true;
             // Validate
-            $.each($('#frmAddDiscount input, #frmAddDiscount select'), function () {
+            $.each($('#frmAddDiscount input'), function () {
                 isValid = true;
                 if ($(this).val() === '') isValid = false;
                 switch ($(this).attr('name')) {
@@ -79,9 +78,6 @@
                 if (isValid) $(this).removeClass('is-invalid').addClass('is-valid');
                 else $(this).removeClass('is-valid').addClass('is-invalid');
             });
-            if ($('#added-list li').length === 0) {
-                isValid = false;
-            }
             if (isValid) {
                 let discountProductIDs = [];
                 // get all id of discounted products
@@ -89,7 +85,7 @@
                     discountProductIDs.push($(this).attr('data-ma'));
                 });
 
-                $.post('/api/products/add-discount',
+                $.post('/api/products/edit-discount',
                     {
                         maChuongTrinhKhuyenMai: $('#maChuongTrinhKhuyenMai').val(),
                         tenChuongTrinhKhuyenMai: $('#tenChuongTrinhKhuyenMai').val(),
@@ -116,13 +112,21 @@
                 );
             }
         });
-
         $('#btn-add').click(function () {
             let maAdded = $('#maLoaiDienThoai').val();
             let tenAdded = $(`#maLoaiDienThoai option[value="${maAdded}"]`).html();
             if (maAdded !== '') {
-                $('#added-list').append(`<li data-ma="${maAdded}">${tenAdded}</li>`);
+                $('#added-list').append(
+                    `<li data-ma="${maAdded}">
+                        <b>${tenAdded}</b>
+                        <button type="button" class="btn btn-danger btn-unselect">&times;</button>
+                    </li>`
+                );
             }
+        });
+
+        $(document).on('click', '.btn-unselect', function () {
+            $(this).parents('li').remove();
         });
     });
 

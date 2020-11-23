@@ -23,10 +23,13 @@ router
 
 router
     .get('/filter-RAM', controller.filterRAM);
-
+// discount start
 router
     .post('/add-discount', controller.postAddDiscount);
 
+router
+    .post('/edit-discount', controller.postEditDiscount);
+// discount end
 router
     .get('/filter-ge-pin', controller.filterGEPin);
 

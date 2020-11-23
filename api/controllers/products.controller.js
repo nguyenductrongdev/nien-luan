@@ -1,10 +1,16 @@
 const { query } = require('express');
 const mysql = require('mysql');
+// const config = {
+//     host: "localhost",
+//     user: "trongnguyen",
+//     password: "trongnguyen",
+//     database: "nienluan",
+// }
 
 const config = {
     host: "localhost",
-    user: "trongnguyen",
-    password: "trongnguyen",
+    user: "root",
+    password: "",
     database: "nienluan",
 }
 
@@ -247,45 +253,6 @@ module.exports.filterLTPin = (req, res, next) => {
     }
 }
 
-// module.exports.postAddDiscount = (req, res, next) => {
-//     try {
-//         let {
-//             maChuongTrinhKhuyenMai,
-//             tenChuongTrinhKhuyenMai,
-//             heSoChuongTrinhKhuyenMai,
-//             ngayKetThucChuongTrinhKhuyenMai,
-//             maSanPhams
-//         } = req.query;
-//         let produdctIDs = maSanPhams.split(',');
-//         con = mysql.createConnection(config);
-//         con.connect(err => {
-//             con.query(
-//                 `INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
-//                     VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`,
-//                 (err, result) => {
-//                     if (err) res.json('ERROR');
-//                     res.json('OK');
-//                 }
-//             );
-//             for (let ID in produdctIDs) {
-//                 con.query(
-//                     `UPDATE LOAI_DIEN_THOAI 
-//                     SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
-//                     WHERE LDT_MA = '${ID}'`,
-//                     err => {
-//                         if (err) {
-//                             throw new Error('Add product to discount error');
-//                         }
-//                     }
-//                 );
-//             }
-//             con.close();
-//         });
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-
 const formidable = require('formidable');
 module.exports.postAddDiscount = (req, res, next) => {
     try {
@@ -299,11 +266,10 @@ module.exports.postAddDiscount = (req, res, next) => {
                 maSanPhams
             } = fields;
             let produdctIDs = [...maSanPhams.split(',')];
-            console.log(`INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
-            VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`);
             let con = mysql.createConnection(config);
             con.connect(err => {
-                con.query(`INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKN_TEN, CTKM_NGAYKETTHUC, CTKM_HESO) 
+                con.query(`
+                    INSERT INTO CHUONG_TRINH_KHUYEN_MAI(CTKM_MA, CTKM_TEN, CTKM_NGAY_KET_THUC, CTKM_HE_SO) 
                     VALUES('${maChuongTrinhKhuyenMai}', '${tenChuongTrinhKhuyenMai}', '${ngayKetThucChuongTrinhKhuyenMai}', ${heSoChuongTrinhKhuyenMai})`,
                     (err, result) => {
                         if (err) {
@@ -316,16 +282,77 @@ module.exports.postAddDiscount = (req, res, next) => {
                 for (let ID of produdctIDs) {
                     con.query(
                         `UPDATE LOAI_DIEN_THOAI 
-                            SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
+                        SET 
+                            CTKM_MA = '${maChuongTrinhKhuyenMai}' 
                         WHERE LDT_MA = '${ID}'`,
                         err => {
                             if (err) {
-                                throw new Error('Add psroduct to discount error');
+                                throw new Error('Add product to discount error');
                             }
                         }
                     );
                 }
                 con.end();
+            });
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.postEditDiscount = (req, res, next) => {
+    try {
+        res.setHeader('Content-Type', 'text/json');
+        let form = formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let {
+                maChuongTrinhKhuyenMai,
+                tenChuongTrinhKhuyenMai,
+                heSoChuongTrinhKhuyenMai,
+                ngayKetThucChuongTrinhKhuyenMai,
+                maSanPhams
+            } = fields;
+            let produdctIDs = [...maSanPhams.split(',')];
+            let con = mysql.createConnection(config);
+            con.connect(err => {
+                con.query(
+                    `UPDATE CHUONG_TRINH_KHUYEN_MAI
+                    SET 
+                        CTKM_TEN = '${tenChuongTrinhKhuyenMai}',
+                        CTKM_NGAY_KET_THUC = '${ngayKetThucChuongTrinhKhuyenMai}',
+                        CTKM_HE_SO = ${heSoChuongTrinhKhuyenMai}
+                    WHERE CKTM_MA = '${maChuongTrinhKhuyenMai}'`,
+                    (err) => {
+                        if (err) {
+                            res.json('ERROR');
+                            return;
+                        };
+                    }
+                );
+                // set all Dien thoai has CTKM equal maChuongTrinhKhuyenMai is null
+                con.query(
+                    `UPDATE LOAI_DIEN_THOAI 
+                        SET CTKM_MA = ${null} 
+                    WHERE CTKM_MA = '${maChuongTrinhKhuyenMai}'`,
+                    (err) => {
+                        if (err) throw new Error(err);
+                        // update maChuongTrinhKhuyenMai all Dien thoai after re-choose
+                        for (let ID of produdctIDs) {
+                            con.query(
+                                `UPDATE LOAI_DIEN_THOAI 
+                                    SET CTKM_MA = '${maChuongTrinhKhuyenMai}' 
+                                WHERE LDT_MA = '${ID}'`,
+                                err => {
+                                    if (err) {
+                                        throw new Error('Add psroduct to discount error');
+                                    }
+                                }
+                            );
+                        }
+                        res.json('OK');
+                        con.end();
+                    }
+                );
             });
         });
     } catch (error) {

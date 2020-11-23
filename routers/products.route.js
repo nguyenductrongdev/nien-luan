@@ -35,6 +35,9 @@ router
     .get('/view-discount', controller.viewDiscount);
 
 router
+    .get('/edit-discount', controller.editDiscount);
+
+router
     .get('/view-discounts', controller.viewDiscounts);
 
 
