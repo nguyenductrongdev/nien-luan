@@ -54,8 +54,7 @@
                     </div>
 
                 </div>
-                <button type="button" class="btn btn-primary form-control btn-submit">Thêm chương trình giảm
-                    giá</button>
+                <button type="button" class="btn btn-primary form-control btn-submit">Áp dụng chỉnh sửa</button>
             </form>
         </div>
     </div>
@@ -94,17 +93,16 @@
                         maSanPhams: discountProductIDs.join()
                     },
                     function (data, status) {
-                        console.log(data, status);
                         if (data.result === 'OK') {
                             $('#msg-field').html(
                                 `<div class="alert alert-success" role="alert">
-                                    Thêm thành công
+                                    Sửa thành công
                                 </div>`
                             );
                         } else if (data.result === 'ERROR') {
                             $('#msg-field').html(
                                 `<div class="alert alert-danger" role="alert">
-                                    Thêm thất bại
+                                    Sửa thất bại
                                 </div>`
                             );
                         }

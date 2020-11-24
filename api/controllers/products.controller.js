@@ -1,5 +1,7 @@
 const { query } = require('express');
 const mysql = require('mysql');
+const formidable = require('formidable');
+
 // const config = {
 //     host: "localhost",
 //     user: "trongnguyen",
@@ -38,16 +40,24 @@ module.exports.page = (req, res) => {
     con.connect(function(err) {
         if (err) throw err;
         con.query(
-            `SELECT LOAI_DIEN_THOAI.LDT_MA, LDT_TEN, LDT_GIA, HINH_ANH.HA_URL, NHA_SAN_XUAT.NSX_MA
-            FROM LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
-            WHERE 
-                NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA
-                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
+            `SELECT
+                LOAI_DIEN_THOAI.LDT_MA,
+                LOAI_DIEN_THOAI.LDT_TEN,
+                HINH_ANH.HA_URL,
+                LOAI_DIEN_THOAI.LDT_GIA,
+                IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HESO
+            FROM
+                LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
+            WHERE
+                (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+                OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
+                AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
             LIMIT ${startPoint}, ${productsPerPage}`,
             function(err, result) {
                 if (err) throw new Error('get page error');
                 con.end();
                 result = result.map(item => {
+                    item.LDT_GIA -= (item.LDT_GIA * item.CTKM_HESO);
                     item.LDT_GIA = item.LDT_GIA.toLocaleString('vi-VN');
                     return item;
                 });
@@ -253,7 +263,6 @@ module.exports.filterLTPin = (req, res, next) => {
     }
 }
 
-const formidable = require('formidable');
 module.exports.postAddDiscount = (req, res, next) => {
     try {
         let form = formidable.IncomingForm();

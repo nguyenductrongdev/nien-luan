@@ -7,159 +7,175 @@
 </style>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-5 d-flex flex-column align-items-center">
-            <label class="position-relative my-5" for="fHinhAnh" role="button">
-                <i class="d-none position-absolute fas fa-camera" id="camera-icon"></i>
-                <img id="phone-image" class="img-fluid border border-dark shadow-lg" src="{{product.HA_URL}}" alt="x">
-                <p class="text-center my-3" style="height: 0;">Chọn ảnh sản phẩm</p>
-            </label>
-        </div>
-        <div class="col-md-6 mx-auto">
-            <h1 class="text-center">Thêm loại điện thoại</h1>
-            <form name="frmAddProduct" action="/products/edit-product" method="POST" id="frmAddProduct"
-                class="shadow-lg p-5 my-3" enctype="multipart/form-data" novalidate>
-                <input type="hidden" class="form-control" name="txtMa" id="txtMa" value="{{product.LDT_MA}}">
-                <div class="form-group">
-                    <label for="txtTen">Tên</label>
-                    <input type="text" class="form-control" name="txtTen" id="txtTen" value="{{product.LDT_TEN}}">
-                </div>
-                {{!-- nha san xuat --}}
-                <div class="form-group">
-                    <label for="slNhaSanXuat">Nhà sản xuất</label>
-                    <select class="custom-select" name="slNhaSanXuat" id="slNhaSanXuat">
-                        <option value="">Choose...</option>
-                        {{#each nhaSanXuatOptions}}
-                        <option value="{{this.NSX_MA}}">{{this.NSX_TEN}}</option>
-                        {{/each}}
-                    </select>
-                    <script>
-                        let nhaSanXuatVal = "{{product.NSX_MA}}";
-                        $(`option[value="${nhaSanXuatVal}"]`).attr('selected', '');
-                    </script>
-                </div>
+    <form name="frmAddProduct" action="/products/edit-product" method="POST" id="frmAddProduct"
+        class="shadow-lg p-5 my-3" enctype="multipart/form-data" novalidate>
+        <div class="row">
+            <div class="col-md-4 col-md-5 d-flex flex-column align-items-center">
+                <label class="position-relative my-5" for="fHinhAnh" role="button">
+                    <i class="d-none position-absolute fas fa-camera" id="camera-icon"></i>
+                    <img id="phone-image" class="img-fluid border border-dark shadow-lg" src="{{product.HA_URL}}"
+                        alt="x">
+                    <p class="text-center my-3" style="height: 0;">Chọn ảnh sản phẩm</p>
+                </label>
+            </div>
+            <div class="col-md-6 mx-auto">
+                <h1 class="text-center">Thêm loại điện thoại</h1>
+                {{!-- <form name="frmAddProduct" action="/products/edit-product" method="POST" id="frmAddProduct"
+                class="shadow-lg p-5 my-3" enctype="multipart/form-data" novalidate> --}}
+                <div class="shadow-lg p-5">
+                    <input type="hidden" class="form-control" name="txtMa" id="txtMa" value="{{product.LDT_MA}}">
+                    <div class="form-group">
+                        <label for="txtTen">Tên</label>
+                        <input type="text" class="form-control" name="txtTen" id="txtTen" value="{{product.LDT_TEN}}">
+                    </div>
+                    {{!-- nha san xuat --}}
+                    <div class="form-group">
+                        <label for="slNhaSanXuat">Nhà sản xuất</label>
+                        <select class="custom-select" name="slNhaSanXuat" id="slNhaSanXuat">
+                            <option value="">Choose...</option>
+                            {{#each nhaSanXuatOptions}}
+                            <option value="{{this.NSX_MA}}">{{this.NSX_TEN}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            let nhaSanXuatVal = "{{product.NSX_MA}}";
+                            $(`option[value="${nhaSanXuatVal}"]`).attr('selected', '');
+                        </script>
+                    </div>
 
-                {{!-- tên chip --}}
-                <div class="form-group">
-                    <label for="txtTenChip">Tên chip</label>
-                    <input type="text" class="form-control" name="txtTenChip" id="txtTenChip"
-                        value="{{product.LDT_TEN_CHIP}}">
-                </div>
-                {{!-- jack tai nghe --}}
-                <div class="form-group">
-                    <label>Jack tai nghe</label>
-                    <div class="form-check">
-                        <label class="form-check-label mx-5">Có
-                            <input checked type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-1" value="true">
-                        </label>
-                        <label class="form-check-label">Không
-                            <input type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-2" value="false">
-                        </label>
+                    {{!-- tên chip --}}
+                    <div class="form-group">
+                        <label for="txtTenChip">Tên chip</label>
+                        <input type="text" class="form-control" name="txtTenChip" id="txtTenChip"
+                            value="{{product.LDT_TEN_CHIP}}">
                     </div>
-                </div>
-                {{!-- loại pin --}}
-                <div class="form-group">
-                    <label for="chkLoaiPin">Loại pin</label>
-                    <div class="form-check">
-                        <label class="form-check-label mx-5">Li-po
-                            <input checked type="radio" name="rdLoaiPin" id="rdLoaiPin-1" value="li-ion">
-                        </label>
-                        <label class=" form-check-label">Li-ion
-                            <input type="radio" name="rdLoaiPin" id="rdLoaiPin-2" value="li-po">
-                        </label>
+                    {{!-- jack tai nghe --}}
+                    <div class="form-group">
+                        <label>Jack tai nghe</label>
+                        <div class="form-check">
+                            <label class="form-check-label mx-5">Có
+                                <input checked type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-1" value="true">
+                            </label>
+                            <label class="form-check-label">Không
+                                <input type="radio" name="rdJackTaiNghe" id="rdJackTaiNghe-2" value="false">
+                            </label>
+                        </div>
                     </div>
-                </div>
-                {{!-- dung lượng pin --}}
-                <div class="form-group">
-                    <label for="txtDungLuongPin">Dung lượng pin</label>
-                    <input type="number" class="form-control" name="txtDungLuongPin" id="txtDungLuongPin"
-                        value="{{product.LDT_DUNG_LUONG_PIN}}">
-                </div>
-                {{!-- toc do sac --}}
-                <div class=" form-group">
-                    <label for="txtTocDoSac">Tốc độ sạc</label>
-                    <input type="number" class="form-control" name="txtTocDoSac" id="txtTocDoSac" min="0"
-                        value="{{product.LDT_TOC_DO_SAC}}">
-                </div>
+                    {{!-- loại pin --}}
+                    <div class="form-group">
+                        <label for="chkLoaiPin">Loại pin</label>
+                        <div class="form-check">
+                            <label class="form-check-label mx-5">Li-po
+                                <input checked type="radio" name="rdLoaiPin" id="rdLoaiPin-1" value="li-ion">
+                            </label>
+                            <label class=" form-check-label">Li-ion
+                                <input type="radio" name="rdLoaiPin" id="rdLoaiPin-2" value="li-po">
+                            </label>
+                        </div>
+                    </div>
+                    {{!-- dung lượng pin --}}
+                    <div class="form-group">
+                        <label for="txtDungLuongPin">Dung lượng pin</label>
+                        <input type="number" class="form-control" name="txtDungLuongPin" id="txtDungLuongPin"
+                            value="{{product.LDT_DUNG_LUONG_PIN}}">
+                    </div>
+                    {{!-- toc do sac --}}
+                    <div class=" form-group">
+                        <label for="txtTocDoSac">Tốc độ sạc</label>
+                        <input type="number" class="form-control" name="txtTocDoSac" id="txtTocDoSac" min="0"
+                            value="{{product.LDT_TOC_DO_SAC}}">
+                    </div>
 
-                {{!-- ram --}}
-                <div class="form-group">
-                    <label for="txtDungLuongRAM">Dung lượng RAM</label>
-                    <input type="number" class="form-control" name="txtDungLuongRAM" id="txtDungLuongRAM" min="0"
-                        value="{{product.LDT_DUNG_LUONG_RAM}}">
-                </div>
-                {{!-- rom --}}
-                <div class="form-group">
-                    <label for="txtDungLuongROM">Dung lượng ROM</label>
-                    <input type="number" class="form-control" name="txtDungLuongROM" id="txtDungLuongROM" min="0"
-                        value="{{product.LDT_DUNG_LUONG_ROM}}">
-                </div>
-                {{!-- cuong luc --}}
-                <div class="form-group">
-                    <label for="txtThongTinCuongLuc">Thông tin cường lực</label>
-                    <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc"
-                        value="{{product.LDT_THONG_TIN_CUONG_LUC}}">
-                </div>
-                {{!-- gia mua --}}
-                <div class="form-group">
-                    <label for="txtGiaMua">Giá mua vào</label>
-                    <input type="number" class="form-control" name="txtGiaMua" id="txtGiaMua" min="0"
-                        value="{{ product.LDT_GIA_MUA }}">
-                </div>
-                {{!-- gia ban --}}
-                <div class="form-group">
-                    <label for="txtGia">Giá bán ra</label>
-                    <input type="number" class="form-control" name="txtGia" id="txtGia" min="0"
-                        value="{{ product.LDT_GIA }}">
-                </div>
-                {{!-- loai man hinh --}}
-                <div class=" form-group">
-                    <label>Loại màn hình</label>
-                    <div class="form-check">
-                        <label class="form-check-label">LCD
-                            <input checked type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-1" value="LCD">
-                        </label>
-                        <label class="form-check-label mx-3">AMOLED
-                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-2" value="AMOLED">
-                        </label>
-                        <label class="form-check-label">SUPER AMOLED
-                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="SUPPER AMOLED">
-                        </label>
-                        <label class="form-check-label mx-3">OLED
-                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="OLED">
-                        </label>
-                        <label class="form-check-label">Khác
-                            <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="Không rõ">
-                        </label>
+                    {{!-- ram --}}
+                    <div class="form-group">
+                        <label for="txtDungLuongRAM">Dung lượng RAM</label>
+                        <input type="number" class="form-control" name="txtDungLuongRAM" id="txtDungLuongRAM" min="0"
+                            value="{{product.LDT_DUNG_LUONG_RAM}}">
                     </div>
-                    <script>
-                        let loaiManHinhVal = "{{product.LDT_LOAI_MAN_HINH}}";
-                        $.each($('input[name="rdLoaiManHinh"]'), function () {
-                            if ($(this).val() === loaiManHinhVal) $(this).attr('checked', '');
-                        });
-                    </script>
+                    {{!-- rom --}}
+                    <div class="form-group">
+                        <label for="txtDungLuongROM">Dung lượng ROM</label>
+                        <input type="number" class="form-control" name="txtDungLuongROM" id="txtDungLuongROM" min="0"
+                            value="{{product.LDT_DUNG_LUONG_ROM}}">
+                    </div>
+                    {{!-- cuong luc --}}
+                    <div class="form-group">
+                        <label for="txtThongTinCuongLuc">Thông tin cường lực</label>
+                        <input type="text" class="form-control" name="txtThongTinCuongLuc" id="txtThongTinCuongLuc"
+                            value="{{product.LDT_THONG_TIN_CUONG_LUC}}">
+                    </div>
+                    {{!-- gia mua --}}
+                    <div class="form-group">
+                        <label for="txtGiaMua">Giá mua vào</label>
+                        <input type="number" class="form-control" name="txtGiaMua" id="txtGiaMua" min="0"
+                            value="{{ product.LDT_GIA_MUA }}">
+                    </div>
+                    {{!-- gia ban --}}
+                    <div class="form-group">
+                        <label for="txtGia">Giá bán ra</label>
+                        <input type="number" class="form-control" name="txtGia" id="txtGia" min="0"
+                            value="{{ product.LDT_GIA }}">
+                    </div>
+                    {{!-- loai man hinh --}}
+                    <div class=" form-group">
+                        <label>Loại màn hình</label>
+                        <div class="form-check">
+                            <label class="form-check-label">LCD
+                                <input checked type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-1" value="LCD">
+                            </label>
+                            <label class="form-check-label mx-3">AMOLED
+                                <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-2" value="AMOLED">
+                            </label>
+                            <label class="form-check-label">SUPER AMOLED
+                                <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="SUPPER AMOLED">
+                            </label>
+                            <label class="form-check-label mx-3">OLED
+                                <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="OLED">
+                            </label>
+                            <label class="form-check-label">Khác
+                                <input type="radio" name="rdLoaiManHinh" id="rdLoaiManHinh-3" value="Không rõ">
+                            </label>
+                        </div>
+                        <script>
+                            let loaiManHinhVal = "{{product.LDT_LOAI_MAN_HINH}}";
+                            $.each($('input[name="rdLoaiManHinh"]'), function () {
+                                if ($(this).val() === loaiManHinhVal) $(this).attr('checked', '');
+                            });
+                        </script>
+                    </div>
+                    {{!-- do phan giai --}}
+                    <div class="form-group">
+                        <label>Độ phân giải màn hình</label>
+                        <select class="custom-select" name="slDoPhanGiai" id="slDoPhanGiai">
+                            <option value="HD">HD</option>
+                            <option value="HD+">HD+</option>
+                            <option value="Full HD">Full HD</option>
+                            <option value="Full HD+">Full HD+</option>
+                            <option value="2K">2K</option>
+                        </select>
+                        <script>
+                            let doPhanGiaiVal = "{{product.LDT_DO_PHAN_GIAI}}";
+                            $(`option[value="${doPhanGiaiVal}"]`).attr('selected', '');
+                        </script>
+                    </div>
+                    <input type="file" class="d-none" name="fHinhAnh" id="fHinhAnh" value="{{product.HA_URL}}">
                 </div>
-                {{!-- do phan giai --}}
-                <div class="form-group">
-                    <label>Độ phân giải màn hình</label>
-                    <select class="custom-select" name="slDoPhanGiai" id="slDoPhanGiai">
-                        <option value="HD">HD</option>
-                        <option value="HD+">HD+</option>
-                        <option value="Full HD">Full HD</option>
-                        <option value="Full HD+">Full HD+</option>
-                        <option value="2K">2K</option>
-                    </select>
-                    <script>
-                        let doPhanGiaiVal = "{{product.LDT_DO_PHAN_GIAI}}";
-                        $(`option[value="${doPhanGiaiVal}"]`).attr('selected', '');
-                    </script>
-                </div>
-                <input type="file" class="d-none" name="fHinhAnh" id="fHinhAnh" value="{{product.HA_URL}}">
-                <button type="submit" class="btn btn-primary form-control btn-edit">Thêm</button>
-            </form>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-12 mx-auto">
+                <textarea name="txtMoTa" class="w-100 d-block mx-auto" id="txtMoTa"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary p-3 d-block mx-auto mb-2 w-75">Sửa</button>
+        </div>
+    </form>
 </div>
+
+{{!-- Using ckeditor --}}
+<script src="/vendor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('txtMoTa');
+</script>
 
 <script>
     $(function () {

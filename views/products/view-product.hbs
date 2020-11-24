@@ -54,4 +54,16 @@
             </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <i>Mô tả sản phẩm:</i>
+            <div class="border p-3 mb-3 rounded shadow">
+                {{#if product.LDT_MO_TA}}
+                {{{ product.LDT_MO_TA }}}
+                {{else}}
+                <span class="text-secondary">Đang cập nhật...</span>
+                {{/if}}
+            </div>
+        </div>
+    </div>
 </div>

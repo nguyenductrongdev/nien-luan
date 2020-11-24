@@ -124,6 +124,7 @@ module.exports.postAddProduct = (req, res, next) => {
             let txtGia = fields.txtGia;
             let rdLoaiManHinh = fields.rdLoaiManHinh;
             let slDoPhanGiai = fields.slDoPhanGiai;
+            let txtMoTa = fields.txtMoTa;
 
             let tempPath = files.fHinhAnh.path;
             let dbPath = `/uploads/${txtMa}_${files.fHinhAnh.name}`;
@@ -141,12 +142,12 @@ module.exports.postAddProduct = (req, res, next) => {
                 let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
                     LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
                     LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, LDT_GIA_MUA,
-                    LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI)
+                    LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI, LDT_MO_TA)
                     VALUES 
                     ('${txtMa}', '${slNhaSanXuat}', '${txtTen}', 
                     '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
                     '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac}, ${txtGiaMua},
-                    ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}')`;
+                    ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}', '${txtMoTa}')`;
                 console.log(qr);
                 con.query(qr, err => {
                     let isExist = false;
@@ -184,7 +185,10 @@ module.exports.viewProducts = (req, res, next) => {
                 function(err, result) {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
-                        products: result,
+                        products: result = result.map(product => {
+                            product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
+                            return product;
+                        }),
                         layout: 'admin',
                         username: req.cookies.username,
                         avatar: req.cookies.avatar
@@ -349,7 +353,8 @@ module.exports.postEditProduct = (req, res, next) => {
                 txtGiaMua,
                 txtGia,
                 rdLoaiManHinh,
-                slDoPhanGiai
+                slDoPhanGiai,
+                txtMoTa
             } = fields;
             let con = mysql.createConnection(config);
             con.connect(err => {
@@ -370,7 +375,8 @@ module.exports.postEditProduct = (req, res, next) => {
                         LDT_GIA = ${txtGia},
                         LDT_LOAI_PIN = '${rdLoaiPin}',
                         LDT_LOAI_MAN_HINH = '${rdLoaiManHinh}',
-                        LDT_DO_PHAN_GIAI = '${slDoPhanGiai}'
+                        LDT_DO_PHAN_GIAI = '${slDoPhanGiai}',
+                        LDT_MO_TA = '${txtMoTa}'
                     WHERE LDT_MA = '${txtMa}'`,
                     (err, result) => {
                         if (err) throw new Error(err);
