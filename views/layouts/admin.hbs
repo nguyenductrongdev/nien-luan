@@ -8,12 +8,14 @@
         {{#if title}}
         {{title}}
         {{else}}
-        Trọng Ý Mobile
+        {{!-- Trọng Ý Mobile --}}
+        Project X
         {{/if}}
     </title>
     <link rel="icon" href="/asset/images/favicon.png" type="image/icon" />
     <link href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <script src="/vendor/jquery/jquery.min.js"></script>
+
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="/asset/css/style.css" type="text/css">
@@ -28,7 +30,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top py-0">
         <a class="navbar-brand pl-3" href="/">
             <i class="fas fa-home"></i>
-            <span class="shop-name"> Trọng Ý Mobile</span>
+            <span class="shop-name">
+                {{!-- Trọng Ý Mobile --}}
+                Project X
+            </span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,49 +76,37 @@
     <div class="container my-2">
         <div class="row my-1">
             <div class="col-12">
-                <a href="/products/add-brand" class="bg-dark text-light text-decoration-none p-4 mr-1 rounded btn">
+                <a href="/products/add-brand" class="bg-dark text-light text-decoration-none p-4 mr-1 rounded btn w-25">
                     Thêm nhà sản xuât
                 </a>
 
-                <a href="/products/add-product" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
-                    Thêm loại điện thoại
-                </a>
-
-                <a href="/products/add-unit" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                <a href="/products/add-unit" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn w-25">
                     Thêm điện thoại
                 </a>
 
-                <a href="/products/add-bill" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
+                <a href="/products/add-bill" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn w-25">
                     Thêm hóa đơn
-                </a>
-
-                <a href="/products/add-discount" class="bg-dark text-light text-decoration-none p-4 mx-1 rounded btn">
-                    Thêm chương trình giảm giá
                 </a>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12">
-                <a href="/products/view-products" class="bg-dark text-light text-decoration-none p-4 rounded btn">
+                <a href="/products/view-products"
+                    class="bg-dark text-light text-decoration-none mr-1 p-4 rounded btn w-25">
                     Xem tất cả điên thoại
                 </a>
-                <a href="/products/view-discounts" class="bg-dark text-light text-decoration-none p-4 rounded btn">
+                <a href="/products/view-discounts" class="bg-dark text-light text-decoration-none mx-1 p-4 rounded btn">
                     Xem tất cả chương trình khuyến mãi
                 </a>
             </div>
         </div>
-
-
-
     </div>
-
-
-    {{{ body }}}
-
 
     <script src="/vendor/popper/popper.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    {{{ body }}}
+
 </body>
 
 </html>

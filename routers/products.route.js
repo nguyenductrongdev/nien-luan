@@ -14,6 +14,10 @@ router
 router
     .get('/view-products', controller.viewProducts);
 
+// router
+//     .get('/delete-product', controller.deleteProduct);
+
+
 router
     .get('/add-unit', controller.addUnit)
     .post('/add-unit', controller.postAddUnit);
@@ -24,6 +28,9 @@ router
 router
     .get('/edit-product', controller.editProduct)
     .post('/edit-product', controller.postEditProduct);
+
+
+
 
 router
     .get('/add-bill', controller.addBill);

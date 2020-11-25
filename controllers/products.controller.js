@@ -179,13 +179,27 @@ module.exports.viewProducts = (req, res, next) => {
         con.connect(function(err) {
             if (err) throw err;
             con.query(
-                `SELECT LDT_MA, LDT_TEN, NSX_TEN, LDT_GIA, CTKM_MA 
-                FROM NHA_SAN_XUAT, LOAI_DIEN_THOAI
-                WHERE NHA_SAN_XUAT.NSX_MA = LOAI_DIEN_THOAI.NSX_MA`,
+                `SELECT
+                DISTINCT LOAI_DIEN_THOAI.LDT_MA,
+                LOAI_DIEN_THOAI.LDT_TEN,
+                HINH_ANH.HA_URL,
+                LOAI_DIEN_THOAI.LDT_GIA,
+                IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
+                LOAI_DIEN_THOAI.CTKM_MA
+            FROM
+                LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
+            WHERE
+                (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+                OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
+                AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
+                AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+                OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
                 function(err, result) {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
                         products: result = result.map(product => {
+                            product.LDT_GIA_DISCOUNTED = product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO);
+                            product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
                             product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
                             return product;
                         }),

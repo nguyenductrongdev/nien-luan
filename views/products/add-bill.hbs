@@ -9,24 +9,153 @@
 
 <body>
     <div class="container">
+        <div class="row" id="msg-field">
+
+        </div>
         <div class="row">
-            <div class="col-6 mx-auto">
+            <div class="col-4 shadow-lg p-5">
+                <i>Các sản phẩm đã thêm:</i>
+                <ol id="added-list">
+
+                </ol>
+            </div>
+            <div class="col-8 mx-auto">
                 <h1 class="text-center h1" style="font-size: 3vw !important;">Thêm hóa đơn bán ra</h1>
-                <form action="#" method="POST" class="shadow-lg p-5">
+                <form action="#" name="frmAddBill" id="frmAddBill" method="POST" class="shadow-lg p-5" novalidate>
+                    <div class="form-group">
+                        <label>Thời gian:</label>
+                        <script>
+                            const now = new Date();
+                            m = now.getMonth() + 1;
+                            d = now.getDate();
+                            y = now.getFullYear();
+                            document.write(`<input type="date" name="txtThoiGian" class="form-control" id="txtThoiGian" value="${y}-${m}-${d}" disabled>`)
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label>Người nhập:</label>
+                        <script>
+                            function getCookie(cname) {
+                                var name = cname + "=";
+                                var decodedCookie = decodeURIComponent(document.cookie);
+                                var ca = decodedCookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') {
+                                        c = c.substring(1);
+                                    }
+                                    if (c.indexOf(name) == 0) {
+                                        return c.substring(name.length, c.length);
+                                    }
+                                }
+                                return "";
+                            }
+                            const username = getCookie('username');
+                            document.write(`<input type="text" name="txtNguoiNhap" class="form-control" id="txtNguoiNhap" value="${username}" disabled>`)
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtMaHoaDon">Mã hóa đơn:</label>
+                        <input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control">
+                    </div>
                     <div class="form-group">
                         <label>Tên điện thoại:</label>
-                        <select name="sltMaLoaiDienThoai" id="sltMaLoaiDienThoai" class="custom-select">
+                        <div class="d-flex">
+                            <select name="slMaLoaiDienThoai" id="slMaLoaiDienThoai" class="custom-select w-75" />
                             {{#each products }}
-                            <option value="{{this.LDT_MA}}">{{LDT_TEN}}</option>
+                            <option value="{{ this.LDT_MA }}">{{ LDT_TEN }}</option>
                             {{/each}}
-                        </select>
+                            </select>
+                            <input type="number" name="txtSoLuong" class="form-control w-25" id="txtSoLuong"
+                                placeholder="Số lượng..." min="1" />
+                            <button type="button" class="btn btn-success d-block ml-3" id="btn-add">+</button>
+                        </div>
                     </div>
 
-                    <button class="btn btn-primary form-control">Thêm hóa đơn</button>
+                    <button type="button" class="btn btn-primary form-control btn-send">Thêm hóa đơn</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $('#btn-add').click(function () {
+                let nb = $('#txtSoLuong').val();
+                let id = $('#slMaLoaiDienThoai').val();
+                let inner = $(`#slMaLoaiDienThoai option[value='${id}']`).html();
+
+                $('#added-list').append(
+                    `<li data-ma="${id}">
+                        <b>${inner}</b>
+                        <span class="badge badge-danger" data-soLuong="${nb}">${nb}</span>
+                        <button type="button" class="btn btn-sm btn-danger btn-unselect">&times;</button>
+                    </li>`
+                );
+            });
+
+            $(document).on('click', '.btn-unselect', function () {
+                $(this).parents('li').remove();
+            });
+
+            $('#frmAddBill .btn-send').click(function () {
+                let isValid = true;
+                let maHoaDon = $('#txtMaHoaDon').val();
+                let billProductIDs = [];
+                let billProductNbs = [];
+
+                if (maHoaDon === '') {
+                    $('#txtMaHoaDon').removeClass('is-valid').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#txtMaHoaDon').removeClass('is-invalid').addClass('is-valid');
+                }
+                if ($('#added-list').children().length === 0) {
+                    $('#added-list').parent().css({ 'outline': 'solid 1px red' });
+                    isValid = false;
+                } else {
+                    $('#added-list').parent().css({ 'outline': 'solid 1px green' });
+                }
+
+                $.each($('#added-list li'), function () {
+                    billProductIDs.push($(this).attr('data-ma'));
+                    billProductNbs.push($(this).children('span.badge').attr('data-soLuong'));
+                });
+
+                if (isValid) {
+                    $.post('/api/products/add-bill',
+                        {
+                            billID: maHoaDon,
+                            billProductIDs: billProductIDs.join(),
+                            billProductNbs: billProductNbs.join(),
+                            typerName: txtNguoiNhap
+                        },
+                        (data, status) => {
+                            console.log(data.result);
+                            switch (data.result) {
+                                case 'ERROR':
+                                    $('#msg-field').html(
+                                        `<div class="alert alert-danger" role="alert">
+                                            Thêm thất bại
+                                        </div>`
+                                    );
+                                    break;
+                                case 'OK':
+                                    $('#msg-field').html(
+                                        `<div class="alert alert-sucess" role="alert">
+                                            Thêm thành công
+                                        </div>`
+                                    );
+                                    $('#added-list').empty();
+                                    $('#frmfrmAddBill #txtMaHoaDon').val('');
+                                    break;
+                            }
+                        }
+                    );
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

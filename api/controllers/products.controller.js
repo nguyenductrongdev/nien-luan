@@ -41,7 +41,7 @@ module.exports.page = (req, res) => {
         if (err) throw err;
         con.query(
             `SELECT
-                LOAI_DIEN_THOAI.LDT_MA,
+                DISTINCT LOAI_DIEN_THOAI.LDT_MA,
                 LOAI_DIEN_THOAI.LDT_TEN,
                 HINH_ANH.HA_URL,
                 LOAI_DIEN_THOAI.LDT_GIA,
@@ -66,6 +66,35 @@ module.exports.page = (req, res) => {
         );
     });
 }
+
+// module.exports.page = (req, res) => {
+//     let page = req.query.page || 1;
+//     let productsPerPage = req.query.productsPerPage || 1;
+//     let startPoint = (page - 1) * productsPerPage;
+
+//     let con = mysql.createConnection(config);
+//     con.connect(function(err) {
+//         if (err) throw err;
+//         con.query(
+//             `SELECT
+//                *
+//             FROM
+//                 LOAI_DIEN_THOAI, HINH_ANH
+//             WHERE
+//                 LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
+//             LIMIT ${startPoint}, ${productsPerPage}`,
+//             function(err, result) {
+//                 if (err) throw new Error('get page error');
+//                 con.end();
+//                 result = result.map(item => {
+//                     item.LDT_GIA = item.LDT_GIA.toLocaleString('vi-VN');
+//                     return item;
+//                 });
+//                 res.json(result);
+//             }
+//         );
+//     });
+// }
 
 module.exports.addBrand = (req, res) => {
     let { txtMa, txtTen } = req.query;
