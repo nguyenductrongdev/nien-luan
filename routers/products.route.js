@@ -14,8 +14,8 @@ router
 router
     .get('/view-products', controller.viewProducts);
 
-// router
-//     .get('/delete-product', controller.deleteProduct);
+router
+    .get('/delete-product', controller.deleteProduct);
 
 
 router

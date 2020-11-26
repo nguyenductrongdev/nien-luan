@@ -581,3 +581,30 @@ module.exports.deleteDiscount = (req, res, next) => {
         next(error);
     }
 }
+
+module.exports.deleteProduct = (req, res, next) => {
+    try {
+        let { LDT_MA } = req.query;
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query(`
+                    SELECT HA_URL FROM HINH_ANH WHERE LDT_MA = '${LDT_MA}';
+                    DELETE FROM DIEN_THOAI WHERE LDT_MA = '${LDT_MA}';
+                    DELETE FROM HINH_ANH WHERE LDT_MA = '${LDT_MA}';
+                    DELETE FROM LOAI_DIEN_THOAI WHERE LDT_MA = '${LDT_MA}'`,
+                (err, fields) => {
+                    if (err) throw new Error(err);
+                    let oldURL = fields[0][0].HA_URL;
+                    fs.unlink(`./public${oldURL}`, err => {
+                        if (err) throw new Error(err);
+                    });
+
+                    res.redirect('/products/view-products');
+                }
+            );
+        });
+    } catch (error) {
+        next(error);
+    }
+}
