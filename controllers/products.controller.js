@@ -28,28 +28,6 @@ module.exports.addBrand = (req, res) => {
     });
 }
 
-module.exports.postAddBrand = (req, res, next) => {
-    try {
-        let form = formidable.IncomingForm();
-        form.parse(req, (err, fields, files) => {
-            let txtMa = fields.txtMa;
-            let txtTen = fields.txtTen;
-
-            let con = mysql.createConnection(config);
-            con.connect(function(err) {
-                if (err) throw err;
-                con.query(`INSERT INTO NHA_SAN_XUAT VALUES ('${txtMa}', '${txtTen}')`, function(err) {
-                    if (err) throw new Error('add brand err');
-                });
-                res.redirect('/products/view-products');
-                con.end();
-            });
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
 module.exports.addProduct = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
@@ -173,6 +151,50 @@ module.exports.postAddProduct = (req, res, next) => {
     }
 }
 
+// module.exports.viewProducts = (req, res, next) => {
+//     try {
+//         let con = mysql.createConnection(config);
+//         con.connect(function(err) {
+//             if (err) throw err;
+//             con.query(
+//                 `SELECT
+//                 DISTINCT LOAI_DIEN_THOAI.LDT_MA,
+//                 LOAI_DIEN_THOAI.LDT_TEN,
+//                 HINH_ANH.HA_URL,
+//                 LOAI_DIEN_THOAI.LDT_GIA,
+//                 IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
+//                 LOAI_DIEN_THOAI.CTKM_MA
+//             FROM
+//                 LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
+//             WHERE
+//                 (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+//                 OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
+//                 AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
+//                 AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+//                 OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
+//                 function(err, result) {
+//                     if (err) throw new Error('view product err');
+//                     res.render('products/view-products', {
+//                         products: result = result.map(product => {
+//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO);
+//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
+//                             product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
+//                             return product;
+//                         }),
+//                         layout: 'admin',
+//                         username: req.cookies.username,
+//                         avatar: req.cookies.avatar
+//                     });
+//                 }
+//             );
+
+//             con.end();
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
 module.exports.viewProducts = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
@@ -180,20 +202,20 @@ module.exports.viewProducts = (req, res, next) => {
             if (err) throw err;
             con.query(
                 `SELECT
-                DISTINCT LOAI_DIEN_THOAI.LDT_MA,
-                LOAI_DIEN_THOAI.LDT_TEN,
-                HINH_ANH.HA_URL,
-                LOAI_DIEN_THOAI.LDT_GIA,
-                IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
-                LOAI_DIEN_THOAI.CTKM_MA
-            FROM
-                LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
-            WHERE
-                (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
-                AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
-                AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
+                    DISTINCT LOAI_DIEN_THOAI.LDT_MA,
+                    LOAI_DIEN_THOAI.LDT_TEN,
+                    HINH_ANH.HA_URL,
+                    LOAI_DIEN_THOAI.LDT_GIA,
+                    IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
+                    LOAI_DIEN_THOAI.CTKM_MA
+                FROM
+                    LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
+                WHERE
+                    (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+                    OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
+                    AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
+                    AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+                    OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
                 function(err, result) {
                     if (err) throw new Error('view product err');
                     res.render('products/view-products', {
@@ -236,32 +258,6 @@ module.exports.addUnit = (req, res, next) => {
                 }
             );
             con.end();
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-module.exports.postAddUnit = (req, res, next) => {
-    try {
-        let form = formidable.IncomingForm();
-        form.parse(req, (err, fields, files) => {
-            let slMa = fields.slMa;
-            let txtIMEI = fields.txtIMEI;
-
-            let con = mysql.createConnection(config);
-            con.connect(function(err) {
-                if (err) throw err;
-                con.query(
-                    `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
-                    VALUES('${txtIMEI}', '${slMa}')`,
-                    function(err) {
-                        if (err) throw new Error('add unit err');
-                        res.redirect('/products/add-unit');
-                    }
-                );
-                con.end();
-            });
         });
     } catch (error) {
         next(error);
@@ -515,6 +511,8 @@ module.exports.viewDiscount = (req, res, next) => {
                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
                             return product;
                         }),
+                        username: req.cookies.username,
+                        avatar: req.cookies.avatar,
                         layout: 'admin'
                     });
                     con.end();

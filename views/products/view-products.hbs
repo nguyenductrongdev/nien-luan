@@ -25,10 +25,10 @@
                         </td>
                         <td>
                             <a href="/products/edit-product?LDT_MA={{this.LDT_MA}}"
-                                class="text-decoration-none fas fa-pen btn-warning text-light p-1 rounded js-btn-edit"
+                                class="text-decoration-none fas fa-pen btn-warning text-light p-1 rounded js-btn-edit btn-tool"
                                 role="button"></a>
                             <a href="/products/delete-product?LDT_MA={{this.LDT_MA}}"
-                                class="fas fa-trash-alt btn-danger text-light p-1 rounded js-btn-delete"
+                                class="fas fa-trash-alt btn-danger text-light p-1 rounded js-btn-delete btn-tool"
                                 role="button"></a>
                         </td>
                         <td>{{ this.LDT_MA }}</td>
@@ -38,10 +38,10 @@
                         <td>
                             {{#if this.CTKM_MA }}
                             <a href="/products/view-discount?ma={{ this.CTKM_MA }}"
-                                class="btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded"></a>
+                                class="btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
                             {{else}}
                             <a href="/products/view-discount?ma={{ this.CTKM_MA }}"
-                                class="disabled btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded"></a>
+                                class="disabled btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
                             {{/if}}
                         </td>
                         {{!-- <td class="text-right">{{ this.LDT_SO_LUONG_CON }}</td> --}}
@@ -66,3 +66,19 @@
     </div>
 
 </div>
+
+<script>
+    /*
+    $(function () {
+        $('.btn-tool').hide();
+
+        $('tbody tr')
+            .mouseenter(function () {
+                $(this).find('.btn-tool').show();
+            })
+            .mouseleave(function () {
+                $(this).find('.btn-tool').hide();
+            });
+    });
+    */
+</script>

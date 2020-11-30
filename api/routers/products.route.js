@@ -10,10 +10,10 @@ router
     .get('/page', controller.page);
 
 router
-    .post('/add-brand', controller.addBrand);
+    .post('/add-brand', controller.postAddBrand);
 
 router
-    .post('/add-unit', controller.addUnit);
+    .post('/add-unit', controller.postAddUnit);
 
 router
     .get('/filter-brand', controller.filterBrand);

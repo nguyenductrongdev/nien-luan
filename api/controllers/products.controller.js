@@ -67,36 +67,7 @@ module.exports.page = (req, res) => {
     });
 }
 
-// module.exports.page = (req, res) => {
-//     let page = req.query.page || 1;
-//     let productsPerPage = req.query.productsPerPage || 1;
-//     let startPoint = (page - 1) * productsPerPage;
-
-//     let con = mysql.createConnection(config);
-//     con.connect(function(err) {
-//         if (err) throw err;
-//         con.query(
-//             `SELECT
-//                *
-//             FROM
-//                 LOAI_DIEN_THOAI, HINH_ANH
-//             WHERE
-//                 LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
-//             LIMIT ${startPoint}, ${productsPerPage}`,
-//             function(err, result) {
-//                 if (err) throw new Error('get page error');
-//                 con.end();
-//                 result = result.map(item => {
-//                     item.LDT_GIA = item.LDT_GIA.toLocaleString('vi-VN');
-//                     return item;
-//                 });
-//                 res.json(result);
-//             }
-//         );
-//     });
-// }
-
-module.exports.addBrand = (req, res) => {
+module.exports.postAddBrand = (req, res) => {
     let { txtMa, txtTen } = req.query;
     let result = {
         status: '',
@@ -137,28 +108,43 @@ module.exports.addBrand = (req, res) => {
     });
 }
 
-module.exports.addUnit = (req, res) => {
-    let {
-        slMa,
-        txtIMEI
-    } = req.query;
 
-    let con = mysql.createConnection(config);
-    con.connect(function(err) {
-        if (err) throw err;
-        con.query(
-            `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
-                    VALUES('${txtIMEI}', '${slMa}')`,
-            function(err) {
-                let resObj = {};
-                if (err)
-                    resObj.status = 'error'
-                else
-                    resObj.status = 'success'
-                res.json(resObj);
-            }
-        );
-        con.end();
+// module.exports.postAddUnit = (req, res) => {
+//     let {
+//         slMa,
+//         txtIMEI
+//     } = req.query;
+
+//     let con = mysql.createConnection(config);
+//     con.connect(function(err) {
+//         if (err) throw err;
+//         con.query(
+//             `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
+//                     VALUES('${txtIMEI}', '${slMa}')`,
+//             function(err) {
+//                 let resObj = {};
+//                 if (err)
+//                     resObj.status = 'error'
+//                 else
+//                     resObj.status = 'success'
+//                 res.json(resObj);
+//             }
+//         );
+//         con.end();
+//     });
+// }
+let dienThoaiModel = require('./../models/dienThoai.model');
+module.exports.postAddUnit = (req, res) => {
+    let {
+        slMa: LDT_MA,
+        txtIMEI: DT_IMEI
+    } = req.query;
+    let result = false;
+    dienThoaiModel.insert({ LDT_MA, DT_IMEI }, err => {
+        if (err)
+            res.json({ status: 'ERROR' });
+        else
+            res.json({ status: 'SUCCESS' });
     });
 }
 

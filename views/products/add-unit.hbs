@@ -52,15 +52,15 @@
                 let txtIMEI = $('input[name="txtIMEI"]').val();
                 $.post(`/api/products/add-unit?slMa=${slMa}&txtIMEI=${txtIMEI}`, (data, stt) => {
                     switch (data.status) {
-                        case 'error':
+                        case 'ERROR':
                             $('.msg').html(`
                                 <div class="alert alert-danger" role="alert">
-                                    IMEI <span class="font-weight-bold">${txtIMEI}</span> của sản phẩm đã đươch thêm
+                                    IMEI <span class="font-weight-bold">${txtIMEI}</span> của sản phẩm đã được thêm
                                 </div>
                             `);
                             console.log('err');
                             break;
-                        case 'success':
+                        case 'SUCCESS':
                             $('.msg').html(`
                                 <div class="alert alert-success" role="alert">
                                     Thêm thành công IMEI <span class="font-weight-bold">${txtIMEI}</span>

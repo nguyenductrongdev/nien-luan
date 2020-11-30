@@ -179,7 +179,7 @@
             $(async function () {
                 const productField = $('.product-field');
 
-                let viewProducts = JSON.parse(JSON.stringify(products));
+                let viewProducts = products;
 
                 let filter = {
                     brands: [],
@@ -274,10 +274,10 @@
                             && (filterByRAM.includes(unit) || filter.rams.length === 0)
                             && (filterByROM.includes(unit) || filter.roms.length === 0)
                             && (filterByPin.includes(unit) || filter.pins.length === 0))
-
-                            result.push(unit);
+                            // parsing string to object and put to result
+                            result.push(JSON.parse(unit));
                     }
-                    return result.map(item => JSON.parse(item));
+                    return result;
                 }
 
                 function descCost(products) {

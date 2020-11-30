@@ -5,7 +5,6 @@ const controller = require('./../controllers/products.controller');
 
 router
     .get('/add-brand', controller.addBrand)
-    .post('/add-brand', controller.postAddBrand);
 
 router
     .get('/add-product', controller.addProduct)
@@ -20,7 +19,6 @@ router
 
 router
     .get('/add-unit', controller.addUnit)
-    .post('/add-unit', controller.postAddUnit);
 
 router
     .get('/view-product', controller.viewProduct)
