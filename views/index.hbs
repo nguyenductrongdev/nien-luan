@@ -282,29 +282,48 @@
 
                 function descCost(products) {
                     return Array.from(products.sort((a, b) => {
-                        return +(b.LDT_GIA.replaceAll('.', '')) - +(a.LDT_GIA.replaceAll('.', ''));
+                        return b.LDT_GIA - a.LDT_GIA;
                     }));
                 }
 
                 function ascCost(products) {
                     return Array.from(products.sort((a, b) => {
-                        return +(a.LDT_GIA.replaceAll('.', '')) - +(b.LDT_GIA.replaceAll('.', ''));
+                        return a.LDT_GIA - b.LDT_GIA;
                     }));
                 }
 
                 function render(products) {
                     productField.empty();
                     for (let product of products) {
-                        productField.append(
-                            `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                        let str = '';
+                        if (product.CTKM_HE_SO) {
+                            str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                                        <div class="card text-center shadow" role="button">
+                                            <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
+                                            <div class="card-body">
+                                                <p class="card-title h5">${product.LDT_TEN}</p>
+                                                <p class="card-text"><del><small class="text-muted font-italic">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
+                                                <p class="card-text cost font-weight-bold">${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')} 
+                                                    <span class="badge bg-danger text-light font-weight-light">${product.CTKM_HE_SO * 100}%</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>`;
+                        }
+                        else {
+                            str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
                                 <div class="card text-center shadow" role="button">
                                     <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>
-                                        <p class="card-text cost">${product.LDT_GIA}</p>
-                                    </div>
-                                </div>
-                            </a>`
+                                        <p class="card-text"><del><small class="text-muted font-italic invi invisible">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
+                                        <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</ >
+                                    </div >
+                                </div >
+                            </a > `;
+                        }
+                        productField.append(
+                            str
                         );
                     }
                 }

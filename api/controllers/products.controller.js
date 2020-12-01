@@ -1,7 +1,8 @@
 const { query } = require('express');
 const mysql = require('mysql');
 const formidable = require('formidable');
-
+const dienThoaiModel = require('./../models/dienThoai.model');
+const loaiDienThoaiModel = require('./../models/loaiDienThoai.model');
 // const config = {
 //     host: "localhost",
 //     user: "trongnguyen",
@@ -34,36 +35,11 @@ module.exports.getNbProducts = (req, res) => {
 module.exports.page = (req, res) => {
     let page = req.query.page || 1;
     let productsPerPage = req.query.productsPerPage || 1;
-    let startPoint = (page - 1) * productsPerPage;
+    let startIndex = (page - 1) * productsPerPage;
+    let endIndex = startIndex + productsPerPage
 
-    let con = mysql.createConnection(config);
-    con.connect(function(err) {
-        if (err) throw err;
-        con.query(
-            `SELECT
-                DISTINCT LOAI_DIEN_THOAI.LDT_MA,
-                LOAI_DIEN_THOAI.LDT_TEN,
-                HINH_ANH.HA_URL,
-                LOAI_DIEN_THOAI.LDT_GIA,
-                IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HESO
-            FROM
-                LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
-            WHERE
-                (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
-                AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
-            LIMIT ${startPoint}, ${productsPerPage}`,
-            function(err, result) {
-                if (err) throw new Error('get page error');
-                con.end();
-                result = result.map(item => {
-                    item.LDT_GIA -= (item.LDT_GIA * item.CTKM_HESO);
-                    item.LDT_GIA = item.LDT_GIA.toLocaleString('vi-VN');
-                    return item;
-                });
-                res.json(result);
-            }
-        );
+    loaiDienThoaiModel.get((err, result) => {
+        res.json(result.slice(startIndex, endIndex));
     });
 }
 
@@ -109,31 +85,6 @@ module.exports.postAddBrand = (req, res) => {
 }
 
 
-// module.exports.postAddUnit = (req, res) => {
-//     let {
-//         slMa,
-//         txtIMEI
-//     } = req.query;
-
-//     let con = mysql.createConnection(config);
-//     con.connect(function(err) {
-//         if (err) throw err;
-//         con.query(
-//             `INSERT INTO DIEN_THOAI(DT_IMEI, LDT_MA)
-//                     VALUES('${txtIMEI}', '${slMa}')`,
-//             function(err) {
-//                 let resObj = {};
-//                 if (err)
-//                     resObj.status = 'error'
-//                 else
-//                     resObj.status = 'success'
-//                 res.json(resObj);
-//             }
-//         );
-//         con.end();
-//     });
-// }
-let dienThoaiModel = require('./../models/dienThoai.model');
 module.exports.postAddUnit = (req, res) => {
     let {
         slMa: LDT_MA,

@@ -23,5 +23,5 @@ module.exports = {
                 callback(err);
             }
         );
-    }
+    },
 }
