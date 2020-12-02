@@ -2,6 +2,8 @@ const mysql = require('mysql');
 const fs = require('fs');
 const formidable = require('formidable');
 const { query } = require('express');
+const loaiDienThoaiModel = require('./../models/loaiDienThoai.model');
+
 
 // const config = {
 //     host: "localhost",
@@ -151,50 +153,6 @@ module.exports.postAddProduct = (req, res, next) => {
     }
 }
 
-// module.exports.viewProducts = (req, res, next) => {
-//     try {
-//         let con = mysql.createConnection(config);
-//         con.connect(function(err) {
-//             if (err) throw err;
-//             con.query(
-//                 `SELECT
-//                 DISTINCT LOAI_DIEN_THOAI.LDT_MA,
-//                 LOAI_DIEN_THOAI.LDT_TEN,
-//                 HINH_ANH.HA_URL,
-//                 LOAI_DIEN_THOAI.LDT_GIA,
-//                 IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
-//                 LOAI_DIEN_THOAI.CTKM_MA
-//             FROM
-//                 LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
-//             WHERE
-//                 (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-//                 OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
-//                 AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
-//                 AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-//                 OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
-//                 function(err, result) {
-//                     if (err) throw new Error('view product err');
-//                     res.render('products/view-products', {
-//                         products: result = result.map(product => {
-//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO);
-//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
-//                             product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
-//                             return product;
-//                         }),
-//                         layout: 'admin',
-//                         username: req.cookies.username,
-//                         avatar: req.cookies.avatar
-//                     });
-//                 }
-//             );
-
-//             con.end();
-//         });
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-
 module.exports.viewProducts = (req, res, next) => {
     try {
         let con = mysql.createConnection(config);
@@ -265,37 +223,61 @@ module.exports.addUnit = (req, res, next) => {
 }
 
 module.exports.viewProduct = (req, res, next) => {
+    // try {
+    //     const LDT_MA = req.query.LDT_MA;
+    //     let con = mysql.createConnection(config);
+    //     con.connect(function(err) {
+    //         if (err) throw err;
+    //         // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);
+    //         con.query(
+    //             `SELECT * 
+    //             FROM 
+    //                 LOAI_DIEN_THOAI, NHA_SAN_XUAT, HINH_ANH
+    //             WHERE
+    //                 '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
+    //                 AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
+    //                 AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+    //             function(err, result) {
+    //                 if (err) throw new Error(err);
+    //                 con.end();
+
+    //                 result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
+    //                 result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
+    //                 res.render('products/view-product', {
+    //                     title: "Thông tin chi tiết",
+    //                     username: req.cookies.username,
+    //                     avatar: req.cookies.avatar,
+    //                     product: result[0],
+    //                     username: req.cookies.username,
+    //                     avatar: req.cookies.avatar
+    //                 });
+    //             }
+    //         );
+    //     });
+    // } catch (error) {
+    //     if (error) next(error);
+    // }
     try {
         const LDT_MA = req.query.LDT_MA;
-        let con = mysql.createConnection(config);
-        con.connect(function(err) {
-            if (err) throw err;
-            // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);
-            con.query(
-                `SELECT * 
-                FROM 
-                    LOAI_DIEN_THOAI, NHA_SAN_XUAT, HINH_ANH
-                WHERE
-                    '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
-                    AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
-                    AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
-                function(err, result) {
-                    if (err) throw new Error(err);
-                    con.end();
+        loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, result) => {
+            console.log(result);
+            if (err) throw new Error(err);
+            result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
+            result[0].LDT_GIA_DISCOUNTED = result[0].LDT_GIA - (result[0].LDT_GIA * result[0].CTKM_HE_SO);
 
-                    result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
-                    result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
-                    res.render('products/view-product', {
-                        title: "Thông tin chi tiết",
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar,
-                        product: result[0],
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar
-                    });
-                }
-            );
+            result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
+            result[0].LDT_GIA_DISCOUNTED = result[0].LDT_GIA_DISCOUNTED.toLocaleString('vi-VN');
+
+            res.render('products/view-product', {
+                title: "Thông tin chi tiết",
+                username: req.cookies.username,
+                avatar: req.cookies.avatar,
+                product: result[0],
+                username: req.cookies.username,
+                avatar: req.cookies.avatar
+            });
         });
+
     } catch (error) {
         if (error) next(error);
     }

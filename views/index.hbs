@@ -304,7 +304,7 @@
                                                 <p class="card-title h5">${product.LDT_TEN}</p>
                                                 <p class="card-text"><del><small class="text-muted font-italic">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
                                                 <p class="card-text cost font-weight-bold">${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')} 
-                                                    <span class="badge bg-danger text-light font-weight-light">${product.CTKM_HE_SO * 100}%</span>
+                                                    <span class="text-danger font-italic font-weight-light">-${product.CTKM_HE_SO * 100}%</span>
                                                 </p>
                                             </div>
                                         </div>

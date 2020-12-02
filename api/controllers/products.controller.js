@@ -90,7 +90,6 @@ module.exports.postAddUnit = (req, res) => {
         slMa: LDT_MA,
         txtIMEI: DT_IMEI
     } = req.query;
-    let result = false;
     dienThoaiModel.insert({ LDT_MA, DT_IMEI }, err => {
         if (err)
             res.json({ status: 'ERROR' });
