@@ -29,7 +29,11 @@
                             m = now.getMonth() + 1;
                             d = now.getDate();
                             y = now.getFullYear();
-                            document.write(`<input type="date" name="txtThoiGian" class="form-control" id="txtThoiGian" value="${y}-${m}-${d}" disabled>`)
+                            // fill 0 for valid format input:date value
+                            d = ('00' + d).substr(-2);
+                            m = ('00' + m).substr(-2);
+                            y = ('0000' + y).substr(-4);
+                            document.write(`<input type="date" name="txtThoiGian" class="form-control" id="txtThoiGian" value="${y}-${m}-${d}" disabled>`);
                         </script>
                     </div>
                     <div class="form-group">
@@ -56,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label for="txtMaHoaDon">Mã hóa đơn:</label>
-                        <input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control">
+                        <input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control" value="mahoadon">
                     </div>
                     <div class="form-group">
                         <label>Tên điện thoại:</label>
@@ -112,39 +116,50 @@
                     $('#txtMaHoaDon').removeClass('is-invalid').addClass('is-valid');
                 }
                 if ($('#added-list').children().length === 0) {
-                    $('#added-list').parent().css({ 'outline': 'solid 1px red' });
+                    $('#added-list').parent().css({
+                        'outline': 'solid 1px red'
+                    });
                     isValid = false;
                 } else {
-                    $('#added-list').parent().css({ 'outline': 'solid 1px green' });
+                    $('#added-list').parent().css({
+                        'outline': 'solid 1px green'
+                    });
                 }
 
                 $.each($('#added-list li'), function () {
                     billProductIDs.push($(this).attr('data-ma'));
                     billProductNbs.push($(this).children('span.badge').attr('data-soLuong'));
                 });
-
+                console.log({
+                    billID: maHoaDon,
+                    billProductIDs: billProductIDs.join(),
+                    billProductNbs: billProductNbs.join(),
+                    typerName: $('#txtNguoiNhap').val(),
+                    time: $('#txtThoiGian').val()
+                });
                 if (isValid) {
+                    console.log('hd hop le');
                     $.post('/api/products/add-bill',
                         {
                             billID: maHoaDon,
                             billProductIDs: billProductIDs.join(),
                             billProductNbs: billProductNbs.join(),
-                            typerName: txtNguoiNhap
+                            typerName: $('#txtNguoiNhap').val(),
+                            time: $('#txtThoiGian').val()
                         },
-                        (data, status) => {
-                            console.log(data.result);
+                        function (data, status) {
                             switch (data.result) {
                                 case 'ERROR':
                                     $('#msg-field').html(
                                         `<div class="alert alert-danger" role="alert">
-                                            Thêm thất bại
+                                            Thêm thất bại, ${data.message}
                                         </div>`
                                     );
                                     break;
                                 case 'OK':
                                     $('#msg-field').html(
-                                        `<div class="alert alert-sucess" role="alert">
-                                            Thêm thành công
+                                        `<div class="alert alert-success" role="alert">
+                                            Thêm thành công, ${data.message}
                                         </div>`
                                     );
                                     $('#added-list').empty();
@@ -153,6 +168,9 @@
                             }
                         }
                     );
+                } else {
+                    console.log('hd hop le');
+                    console.log('Hoa don khong hop le');
                 }
             });
         });

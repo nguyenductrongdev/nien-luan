@@ -24,7 +24,10 @@ module.exports = {
                 (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
                 OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
                 AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA`,
-            (err, field) => calback(err, field)
+            (err, field) => {
+                con.destroy();
+                calback(err, field);
+            }
         );
     }
 }

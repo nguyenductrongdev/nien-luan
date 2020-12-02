@@ -31,9 +31,7 @@ router
 
 
 router
-    .get('/add-bill', controller.addBill);
-
-
+    .get('/add-bill', controller.addBill)
 
 router
     .get('/add-discount', controller.addDiscount);

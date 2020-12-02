@@ -23,12 +23,26 @@ router
 
 router
     .get('/filter-RAM', controller.filterRAM);
+
+
+// bill start
+router
+    .post('/add-bill', controller.postAddBill)
+    // .get('/add-bill', () => console.log('get'));
+    // bill end
+
+
+
 // discount start
 router
     .post('/add-discount', controller.postAddDiscount);
 
 router
     .post('/edit-discount', controller.postEditDiscount);
+
+
+
+
 // discount end
 router
     .get('/filter-ge-pin', controller.filterGEPin);

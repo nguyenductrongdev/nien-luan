@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const formidable = require('formidable');
 const dienThoaiModel = require('./../models/dienThoai.model');
 const loaiDienThoaiModel = require('./../models/loaiDienThoai.model');
+const hoaDonBanModel = require('../../models/hoaDonBan.model');
 // const config = {
 //     host: "localhost",
 //     user: "trongnguyen",
@@ -274,8 +275,142 @@ module.exports.postAddDiscount = (req, res, next) => {
     }
 }
 
+// module.exports.postAddBill = (req, res, next) => {
+//     res.setHeader('Content-Type', 'application/json');
+//     let form = formidable.IncomingForm();
+//     form.parse(req, (err, fields) => {
+//         let {
+//             billID: HDB_MA,
+//             typerName: ND_TEN_DANG_NHAP,
+//             time: HDB_THOI_GIAN,
+//             billProductIDs,
+//             billProductNbs
+//         } = fields;
+//         LDT_MAs = [...billProductIDs.split(',')];
+//         billProductNbs = [...billProductNbs.split(',')].map(item => +item);
+//         hoaDonBanModel.insert({ HDB_MA, ND_TEN_DANG_NHAP, HDB_THOI_GIAN }, (err) => {
+//             if (err) {
+//                 res.json({
+//                     result: 'ERROR',
+//                     message: 'Hoa don is exist'
+//                 });
+//                 return;
+//             } else {
+//                 dienThoaiModel.get((err, field) => {
+//                     if (err) throw Error('get all dien thoai error');
+//                     // get all DIEN_THOAI row has null value at HDB_MA field
+//                     let buyableProducts = field.filter(item => !item.HDB_MA);
+//                     console.log('>>', buyableProducts);
+//                     let isAllProductEnough = true;
+//                     for (let j = 0; j < LDT_MAs.length; j++) {
+//                         if (billProductNbs[i] >
+//                             buyableProducts.filter(item => item.LDT_MA === LDT_MAs[i]).length) {
+//                             isAllProductEnough = false;
+//                             break;
+//                         }
+
+//                     }
+//                     for (let i = 0; i < LDT_MAs.length; i++) {
+//                         let LDT_MA = LDT_MAs[i];
+//                         let billProductNb = billProductNbs[i];
+//                         let buyProducts = buyableProducts
+//                             .filter(item => item.LDT_MA = LDT_MA)
+//                             .slice(-billProductNb);
+
+//                         if (billProductNb <= buyProducts.length) {
+//                             console.log('so luong con >= can ban');
+//                             for (let buyProduct of buyProducts) {
+//                                 dienThoaiModel.updateSetHDB_MAWhereDT_IMEI(HDB_MA, buyProduct.DT_IMEI, err => {
+//                                     if (err) throw new Error(err);
+//                                 });
+//                             }
+//                             res.json({
+//                                 result: 'OK',
+//                                 message: 'Thêm hóa đơn thành công'
+//                             });
+//                         } else {
+//                             console.log('Khong du de ban');
+//                             res.json({
+//                                 result: 'ERROR',
+//                                 message: 'Not enough product to buy'
+//                             });
+//                         }
+//                     }
+//                 });
+//             }
+//         });
+//     });
+//     next();
+// }
+
+module.exports.postAddBill = (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json');
+    let form = formidable.IncomingForm();
+    form.parse(req, (err, fields) => {
+        let {
+            billID: HDB_MA,
+            typerName: ND_TEN_DANG_NHAP,
+            time: HDB_THOI_GIAN,
+            billProductIDs,
+            billProductNbs
+        } = fields;
+        LDT_MAs = [...billProductIDs.split(',')];
+        billProductNbs = [...billProductNbs.split(',')].map(item => +item);
+
+        dienThoaiModel.get((err, field) => {
+            let isAllProductEnough = true;
+            if (err) throw Error('get all dien thoai error');
+            // get all DIEN_THOAI row has null value at HDB_MA field
+            let buyableProducts = field.filter(item => !item.HDB_MA);
+            for (let i = 0; i < LDT_MAs.length; i++) {
+                let canBuyNb = billProductNbs[i];
+                let remainNb = buyableProducts
+                    .filter(item => item.LDT_MA === LDT_MAs[i])
+                    .length;
+                console.log(canBuyNb, remainNb);
+                if (canBuyNb > remainNb) {
+                    isAllProductEnough = false;
+                    break;
+                }
+            }
+            console.log(isAllProductEnough);
+            if (isAllProductEnough) {
+                hoaDonBanModel.insert({ HDB_MA, ND_TEN_DANG_NHAP, HDB_THOI_GIAN }, (err) => {
+                    for (let i = 0; i < LDT_MAs.length; i++) {
+                        let LDT_MA = LDT_MAs[i];
+                        let billProductNb = billProductNbs[i];
+                        let buyProducts = buyableProducts
+                            .filter(item => item.LDT_MA === LDT_MA)
+                            .slice(-billProductNb);
+                        for (let buyProduct of buyProducts) {
+                            dienThoaiModel.updateSetHDB_MAWhereDT_IMEI(
+                                HDB_MA,
+                                buyProduct.DT_IMEI,
+                                err => {
+                                    if (err) throw new Error(err);
+                                }
+                            );
+                        }
+                    }
+                    res.json({
+                        result: 'OK',
+                        message: 'Thêm hóa đơn thành công'
+                    });
+                });
+            } else {
+                res.json({
+                    result: 'ERROR',
+                    message: 'Not enough product to buy'
+                });
+            }
+        });
+    });
+}
+
+
 module.exports.postEditDiscount = (req, res, next) => {
     try {
+        console.log('call api post add discount');
         res.setHeader('Content-Type', 'application/json');
         let form = formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {

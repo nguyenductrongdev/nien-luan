@@ -3,7 +3,8 @@ const fs = require('fs');
 const formidable = require('formidable');
 const { query } = require('express');
 const loaiDienThoaiModel = require('./../models/loaiDienThoai.model');
-
+const dienThoaiModel = require('./../models/dienThoai.model');
+const hoaDonBanModel = require('./../models/hoaDonBan.model');
 
 // const config = {
 //     host: "localhost",
@@ -223,40 +224,6 @@ module.exports.addUnit = (req, res, next) => {
 }
 
 module.exports.viewProduct = (req, res, next) => {
-    // try {
-    //     const LDT_MA = req.query.LDT_MA;
-    //     let con = mysql.createConnection(config);
-    //     con.connect(function(err) {
-    //         if (err) throw err;
-    //         // res.send(`SELECT * FROM LOAI_DIEN_THOAI WHERE LDT_MA='${LDT_MA}'`);
-    //         con.query(
-    //             `SELECT * 
-    //             FROM 
-    //                 LOAI_DIEN_THOAI, NHA_SAN_XUAT, HINH_ANH
-    //             WHERE
-    //                 '${LDT_MA}' = LOAI_DIEN_THOAI.LDT_MA 
-    //                 AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA
-    //                 AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
-    //             function(err, result) {
-    //                 if (err) throw new Error(err);
-    //                 con.end();
-
-    //                 result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
-    //                 result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
-    //                 res.render('products/view-product', {
-    //                     title: "Thông tin chi tiết",
-    //                     username: req.cookies.username,
-    //                     avatar: req.cookies.avatar,
-    //                     product: result[0],
-    //                     username: req.cookies.username,
-    //                     avatar: req.cookies.avatar
-    //                 });
-    //             }
-    //         );
-    //     });
-    // } catch (error) {
-    //     if (error) next(error);
-    // }
     try {
         const LDT_MA = req.query.LDT_MA;
         loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, result) => {
@@ -432,6 +399,8 @@ module.exports.addBill = (req, res, next) => {
         next(error)
     }
 }
+
+
 
 module.exports.addDiscount = (req, res) => {
     let con = mysql.createConnection(config);
