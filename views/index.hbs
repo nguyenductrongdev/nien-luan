@@ -171,7 +171,7 @@
 </main>
 
 <script>
-    const PRODUCT_PER_PAGE = 5;
+    const PRODUCT_PER_PAGE = 20;
 
     axios.get(`/api/products/page?page=1&productsPerPage=${PRODUCT_PER_PAGE}`)
         .then(response => response.data)
@@ -199,14 +199,12 @@
                     emptyPagination();
                     let nbPageitem = Math.ceil(PRODUCT_LENGTH / PRODUCT_PER_PAGE);
                     for (let i = 0; i < nbPageitem; i++) {
-                        if (i === 0)
-                            $('.index-pagination').append(
-                                `<li class="page-item active"> <span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></ > `
-                            );
-                        else
-                            $('.index-pagination').append(
-                                `<li class="page-item"> <span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></ > `
-                            );
+                        let pageItem = $(`<li class="page-item"><span class="page-link" role="button" data-page="${i + 1}">${i + 1}</span></li>`);
+                        if (i === 0) {
+                            pageItem.addClass('active');
+                        }
+                        if (i > 5) pageItem.hide();
+                        $('.index-pagination').append(pageItem);
                     }
                 }
 
@@ -312,7 +310,7 @@
                         }
                         else {
                             str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
-                                <div class="card text-center shadow" role="button">
+                                <div class="card text-center shadow overflow-hidden" role="button">
                                     <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>
@@ -357,9 +355,17 @@
 
                 $(document).on('click', '.index-pagination .page-link', function () {
                     $('.index-pagination .active').removeClass('active');
+                    // add .active to page-item clicked
                     $(this).parents('li').addClass('active');
 
-                    let page = $(this).attr('data-page');
+                    let page = +$(this).attr('data-page');
+                    $('.index-pagination').children().hide();
+                    let startShowIndex = (page - 3 > 0) ? page - 3 : 0;
+                    for (let i = startShowIndex; i <= startShowIndex + 5; i++) {
+                        if (i < 0) i = 0;
+                        $('.index-pagination').children().eq(i).show();
+                    }
+
                     axios.get(`/api/products/page?page=${page}&productsPerPage=${PRODUCT_PER_PAGE}`)
                         .then(result => result.data)
                         .then(product => {
