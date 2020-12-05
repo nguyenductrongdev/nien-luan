@@ -38,7 +38,7 @@ module.exports.page = (req, res) => {
     let page = req.query.page || 1;
     let productsPerPage = req.query.productsPerPage || 1;
     let startIndex = (page - 1) * productsPerPage;
-    let endIndex = startIndex + productsPerPage
+    let endIndex = startIndex + (+productsPerPage);
 
     loaiDienThoaiModel.get((err, result) => {
         res.json(result.slice(startIndex, endIndex));
