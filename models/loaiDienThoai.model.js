@@ -9,25 +9,63 @@ const config = {
 }
 
 module.exports = {
+    get: (calback) => {
+        let con = mysql.createConnection(config);
+        let sqls = [
+            `SELECT * 
+            FROM 
+                LOAI_DIEN_THOAI, HINH_ANH 
+            WHERE 
+                LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+
+            `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`
+        ];
+        con.query(sqls.join(';'),
+            (err, fields) => {
+                if (err) throw new Error(err);
+                let [ldts, ctkms] = fields;
+                for (let i = 0; i < ldts.length; i++) {
+                    let CTKM_HE_SO = 0;
+                    for (let j = 0; j < ctkms.length; j++) {
+                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                            CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
+                        }
+                    }
+                    ldts[i].CTKM_HE_SO = CTKM_HE_SO;
+                }
+                con.destroy();
+                calback(err, ldts);
+            }
+        );
+    },
+
     getByLDT_MA: (LDT_MA, callback) => {
         let con = mysql.createConnection(config);
-        con.query(
-            `SELECT
-                DISTINCT LOAI_DIEN_THOAI.LDT_MA,
-                LOAI_DIEN_THOAI.LDT_TEN,
-                HINH_ANH.HA_URL,
-                LOAI_DIEN_THOAI.LDT_GIA,
-                IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, NULL, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 3)) as CTKM_HE_SO
-            FROM
-                LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
-            WHERE
-                (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
-                AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
-                AND LOAI_DIEN_THOAI.LDT_MA = '${LDT_MA}'`,
-            (err, field) => {
+        let sqls = [
+            `SELECT * 
+            FROM 
+                LOAI_DIEN_THOAI, HINH_ANH 
+            WHERE 
+                LOAI_DIEN_THOAI.LDT_MA = '${LDT_MA}'
+                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+
+            `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`
+        ];
+        con.query(sqls.join(';'),
+            (err, fields) => {
+                if (err) throw new Error(err);
+                let [ldts, ctkms] = fields;
+                for (let i = 0; i < ldts.length; i++) {
+                    let CTKM_HE_SO = 0;
+                    for (let j = 0; j < ctkms.length; j++) {
+                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                            CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
+                        }
+                    }
+                    ldts[i].CTKM_HE_SO = CTKM_HE_SO;
+                }
                 con.destroy();
-                callback(err, field);
+                callback(err, ldts);
             }
         );
     }

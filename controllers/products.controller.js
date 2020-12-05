@@ -154,44 +154,66 @@ module.exports.postAddProduct = (req, res, next) => {
     }
 }
 
+// module.exports.viewProducts = (req, res, next) => {
+//     try {
+//         let con = mysql.createConnection(config);
+//         con.connect(function(err) {
+//             if (err) throw err;
+//             con.query(
+//                 `SELECT
+//                     DISTINCT LOAI_DIEN_THOAI.LDT_MA,
+//                     LOAI_DIEN_THOAI.LDT_TEN,
+//                     HINH_ANH.HA_URL,
+//                     LOAI_DIEN_THOAI.LDT_GIA,
+//                     IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
+//                     LOAI_DIEN_THOAI.CTKM_MA
+//                 FROM
+//                     LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
+//                 WHERE
+//                     (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+//                     OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
+//                     AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
+//                     AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
+//                     OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
+//                 function(err, result) {
+//                     if (err) throw new Error('view product err');
+//                     res.render('products/view-products', {
+//                         products: result = result.map(product => {
+//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO);
+//                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
+//                             product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
+//                             return product;
+//                         }),
+//                         layout: 'admin',
+//                         username: req.cookies.username,
+//                         avatar: req.cookies.avatar
+//                     });
+//                 }
+//             );
+
+//             con.end();
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
 module.exports.viewProducts = (req, res, next) => {
     try {
-        let con = mysql.createConnection(config);
-        con.connect(function(err) {
-            if (err) throw err;
-            con.query(
-                `SELECT
-                    DISTINCT LOAI_DIEN_THOAI.LDT_MA,
-                    LOAI_DIEN_THOAI.LDT_TEN,
-                    HINH_ANH.HA_URL,
-                    LOAI_DIEN_THOAI.LDT_GIA,
-                    IF(LOAI_DIEN_THOAI.CTKM_MA IS NULL, 0, ROUND(CHUONG_TRINH_KHUYEN_MAI.CTKM_HE_SO, 1)) as CTKM_HE_SO,
-                    LOAI_DIEN_THOAI.CTKM_MA
-                FROM
-                    LOAI_DIEN_THOAI, CHUONG_TRINH_KHUYEN_MAI, HINH_ANH
-                WHERE
-                    (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                    OR LOAI_DIEN_THOAI.CTKM_MA IS NULL)
-                    AND HINH_ANH.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
-                    AND (LOAI_DIEN_THOAI.CTKM_MA = CHUONG_TRINH_KHUYEN_MAI.CTKM_MA
-                    OR LOAI_DIEN_THOAI.CTKM_MA IS null)`,
-                function(err, result) {
-                    if (err) throw new Error('view product err');
-                    res.render('products/view-products', {
-                        products: result = result.map(product => {
-                            product.LDT_GIA_DISCOUNTED = product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO);
-                            product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
-                            product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
-                            return product;
-                        }),
-                        layout: 'admin',
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar
-                    });
-                }
-            );
+        loaiDienThoaiModel.get((err, field) => {
+            for (let i = 0; i < field.length; i++) {
+                field[i].LDT_GIA_DISCOUNTED = field[i].LDT_GIA - (field[i].LDT_GIA * field[i].CTKM_HE_SO);
 
-            con.end();
+                field[i].LDT_GIA = field[i].LDT_GIA.toLocaleString('vi');
+                field[i].LDT_GIA_DISCOUNTED = field[i].LDT_GIA_DISCOUNTED.toLocaleString('vi');
+            }
+            res.render('products/view-products', {
+                products: field,
+                username: req.cookies.username,
+                avatar: req.cookies.avatar,
+                layout: 'admin',
+            });
+
         });
     } catch (error) {
         next(error);
