@@ -3,9 +3,9 @@
     <div class="row my-5">
         <div class="col-md-12">
             <h1 class="text-center text-dark">Danh sách các loại sản phẩm</h1>
-            <table class="table table-borderless table-hover shadow-lg">
-                <thead>
-                    <tr class="thead-dark">
+            <table class="table table-borderless table-hover shadow-lg table-striped">
+                <thead class="thead-dark">
+                    <tr>
                         <th>Chọn</th>
                         <th>Chức năng</th>
                         <th>Mã</th>
@@ -13,8 +13,6 @@
                         <th>Nhà sản xuất</th>
                         <th>Giá bán <br /> đã khuyến mãi (VNĐ)</th>
                         <th>Chương trình khuyến mãi</th>
-                        {{!-- <th>Đã bán</th> --}}
-                        {{!-- <th>Còn lại</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -24,12 +22,8 @@
                             <input type="checkbox" name="chk" id="chk-{{this.LDT_MA}}" value="{{this.LDT_MA}}">
                         </td>
                         <td>
-                            <a href="/products/edit-product?LDT_MA={{this.LDT_MA}}"
-                                class="text-decoration-none fas fa-pen btn-warning text-light p-1 rounded js-btn-edit btn-tool"
-                                role="button"></a>
-                            <a href="/products/delete-product?LDT_MA={{this.LDT_MA}}"
-                                class="fas fa-trash-alt btn-danger text-light p-1 rounded js-btn-delete btn-tool"
-                                role="button"></a>
+                            <a href="/products/edit-product?LDT_MA={{this.LDT_MA}}" class="text-decoration-none fas fa-pen btn-warning text-light p-1 rounded js-btn-edit btn-tool" role="button"></a>
+                            <a href="/products/delete-product?LDT_MA={{this.LDT_MA}}" class="fas fa-trash-alt btn-danger text-light p-1 rounded js-btn-delete btn-tool" role="button"></a>
                         </td>
                         <td>{{ this.LDT_MA }}</td>
                         <td>{{ this.LDT_TEN }}</td>
@@ -37,48 +31,44 @@
                         <td class="text-right">{{ this.LDT_GIA_DISCOUNTED }}</td>
                         <td>
                             {{#if this.CTKM_MA }}
-                            <a href="/products/view-discount?ma={{ this.CTKM_MA }}"
-                                class="btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
+                            <a href="/products/view-discount?ma={{ this.CTKM_MA }}" class="btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
                             {{else}}
-                            <a href="/products/view-discount?ma={{ this.CTKM_MA }}"
-                                class="disabled btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
+                            <a href="/products/view-discount?ma={{ this.CTKM_MA }}" class="disabled btn fas fa-eye text-decoration-none alert-dark bg-info text-dark p-1 rounded btn-tool"></a>
                             {{/if}}
                         </td>
-                        {{!-- <td class="text-right">{{ this.LDT_SO_LUONG_CON }}</td> --}}
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
-    {{!-- end row --}}
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <a href="/products/add-product" class="btn btn-success w-25">
-                <i class="fas fa-plus"></i>
-                Thêm
-            </a>
-            <a href="#" class="btn btn-danger w-25 mx-3">
-                <i class="fas fa-trash-alt"></i>
-                Xóa
-            </a>
-        </div>
+</div>
+{{!-- end row --}}
+<div class="row mb-3">
+    <div class="col-md-12">
+        <a href="/products/add-product" class="btn btn-success w-25">
+            <i class="fas fa-plus"></i> Thêm
+        </a>
+        <a href="#" class="btn btn-danger w-25 mx-3">
+            <i class="fas fa-trash-alt"></i> Xóa
+        </a>
     </div>
+</div>
 
 </div>
 
 <script>
     /*
-    $(function () {
-        $('.btn-tool').hide();
-
-        $('tbody tr')
-            .mouseenter(function () {
-                $(this).find('.btn-tool').show();
-            })
-            .mouseleave(function () {
-                $(this).find('.btn-tool').hide();
-            });
-    });
-    */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $(function () {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        $('.btn-tool').hide();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        $('tbody tr')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .mouseenter(function () {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                $(this).find('.btn-tool').show();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            })
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .mouseleave(function () {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                $(this).find('.btn-tool').hide();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    */
 </script>

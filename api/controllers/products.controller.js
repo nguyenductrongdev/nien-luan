@@ -19,6 +19,13 @@ const config = {
     database: "nienluan",
 }
 
+module.exports.getByLDT_MA = (req, res) => {
+    let { LDT_MA } = req.query;
+    loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, field) => {
+        res.json(field[0]);
+    });
+}
+
 module.exports.getNbProducts = (req, res) => {
     let con = mysql.createConnection(config);
     con.connect(function(err) {

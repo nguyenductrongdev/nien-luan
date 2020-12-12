@@ -14,9 +14,10 @@ module.exports = {
         let sqls = [
             `SELECT * 
             FROM 
-                LOAI_DIEN_THOAI, HINH_ANH 
+                LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
             WHERE 
-                LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+                LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
+                AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA`,
 
             `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`
         ];
@@ -27,7 +28,7 @@ module.exports = {
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        if (ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -44,10 +45,11 @@ module.exports = {
         let sqls = [
             `SELECT * 
             FROM 
-                LOAI_DIEN_THOAI, HINH_ANH 
+                LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT  
             WHERE 
                 LOAI_DIEN_THOAI.LDT_MA = '${LDT_MA}'
-                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
+                AND LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
+                AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA`,
 
             `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`
         ];
@@ -58,7 +60,7 @@ module.exports = {
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        if (ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }

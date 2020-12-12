@@ -171,7 +171,7 @@
 </main>
 
 <script>
-    const PRODUCT_PER_PAGE = 20;
+    const PRODUCT_PER_PAGE = 18;
 
     axios.get(`/api/products/page?page=1&productsPerPage=${PRODUCT_PER_PAGE}`)
         .then(response => response.data)
@@ -294,6 +294,7 @@
                     productField.empty();
                     for (let product of products) {
                         let str = '';
+                        console.log(product.CTKM_HE_SO);
                         if (product.CTKM_HE_SO) {
                             str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
                                         <div class="card text-center shadow" role="button">

@@ -4,6 +4,9 @@ const router = express.Router();
 const controller = require('./../../api/controllers/products.controller');
 
 router
+    .get('/getByLDT_MA', controller.getByLDT_MA);
+
+router
     .get('/getNbProducts', controller.getNbProducts);
 
 router

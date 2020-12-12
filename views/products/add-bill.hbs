@@ -9,6 +9,36 @@
 
 <body>
     <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary d-none btn-show-bill" data-toggle="modal"
+                    data-target="#exampleModal">
+                    Xem hóa đơn
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-italic" id="exampleModalLabel">Chi tiết hóa đơn</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body bill-content">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success w-100" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row" id="msg-field">
 
         </div>
@@ -83,20 +113,31 @@
         </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(function () {
+            // Handle event click add product to bill field
             $('#btn-add').click(function () {
-                let nb = $('#txtSoLuong').val();
+                let nb = +$('#txtSoLuong').val();
                 let id = $('#slMaLoaiDienThoai').val();
                 let inner = $(`#slMaLoaiDienThoai option[value='${id}']`).html();
-
-                $('#added-list').append(
-                    `<li data-ma="${id}">
-                        <b>${inner}</b>
-                        <span class="badge badge-danger" data-soLuong="${nb}">${nb}</span>
-                        <button type="button" class="btn btn-sm btn-danger btn-unselect">&times;</button>
-                    </li>`
-                );
+                if ($('#added-list').children(`li[data-ma="${id}"]`).length === 0) {
+                    $('#added-list').append(
+                        `<li data-ma="${id}" data-soLuong="${nb}">
+                            <button type="button" class="btn btn-sm btn-danger btn-unselect rounded-circle">&times;</button>
+                            <b>${inner}</b>
+                            <span class="badge badge-info">${nb}</span>
+                        </li>`
+                    );
+                } else {
+                    let soluongOld = +$(`li[data-ma="${id}"]`).attr('data-soLuong');
+                    $(`li[data-ma="${id}"]`)
+                        .attr('data-soLuong', `${soluongOld + nb}`)
+                        .html(`<button type="button" class="btn btn-sm btn-danger btn-unselect rounded-circle">&times;</button>
+                            <b>${inner}</b>
+                            <span class="badge badge-info">${soluongOld + nb}</span>`);
+                }
             });
 
             $(document).on('click', '.btn-unselect', function () {
@@ -125,11 +166,12 @@
                         'outline': 'solid 1px green'
                     });
                 }
-
+                // Loop through bill field to get all ma and soLuong
                 $.each($('#added-list li'), function () {
                     billProductIDs.push($(this).attr('data-ma'));
-                    billProductNbs.push($(this).children('span.badge').attr('data-soLuong'));
+                    billProductNbs.push($(this).attr('data-soLuong'));
                 });
+                /*
                 console.log({
                     billID: maHoaDon,
                     billProductIDs: billProductIDs.join(),
@@ -137,8 +179,9 @@
                     typerName: $('#txtNguoiNhap').val(),
                     time: $('#txtThoiGian').val()
                 });
+                */
                 if (isValid) {
-                    console.log('hd hop le');
+                    // console.log('hd hop le');
                     $.post('/api/products/add-bill',
                         {
                             billID: maHoaDon,
@@ -147,7 +190,7 @@
                             typerName: $('#txtNguoiNhap').val(),
                             time: $('#txtThoiGian').val()
                         },
-                        function (data, status) {
+                        async function (data, status) {
                             switch (data.result) {
                                 case 'ERROR':
                                     $('#msg-field').html(
@@ -162,6 +205,28 @@
                                             Thêm thành công, ${data.message}
                                         </div>`
                                     );
+                                    // show modal
+                                    let billContentInner = '<table class="table">';
+                                    billContentInner += '<thead class="thead-dark"><tr><th>Tên và đơn giá</th><th>Số lượng mua</th></tr></thead>';
+                                    let total = 0;
+                                    for (let i = 0; i < billProductIDs.length; i++) {
+                                        console.log(`/api/products/getByLDT_MA?LDT_MA=${billProductIDs[i]}`);
+                                        let info = await axios
+                                            .get(`/api/products/getByLDT_MA?LDT_MA=${billProductIDs[i]}`)
+                                            .then(res => res.data);
+                                        let discountedPrice = info.LDT_GIA - info.LDT_GIA * info.CTKM_HE_SO;
+                                        billContentInner += `<tr>
+                                            <td>${info.LDT_TEN} (${discountedPrice.toLocaleString('vi')}/cái):</td>
+                                            <td>${billProductNbs[i]} cái</td>
+                                        </tr>`;
+                                        total += discountedPrice * billProductNbs[i];
+                                    }
+                                    billContentInner += '</table>';
+                                    billContentInner += `<b>Tổng cộng</b>: ${total.toLocaleString('vi')} VND`;
+                                    $('.bill-content').html(billContentInner);
+                                    $('.btn-show-bill').click();
+
+                                    // clear
                                     $('#added-list').empty();
                                     $('#frmfrmAddBill #txtMaHoaDon').val('');
                                     break;
@@ -169,7 +234,6 @@
                         }
                     );
                 } else {
-                    console.log('hd hop le');
                     console.log('Hoa don khong hop le');
                 }
             });
