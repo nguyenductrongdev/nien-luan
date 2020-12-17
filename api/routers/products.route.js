@@ -31,8 +31,8 @@ router
 // bill start
 router
     .post('/add-bill', controller.postAddBill)
-    // .get('/add-bill', () => console.log('get'));
-    // bill end
+    .get('/bill', controller.getBills);
+// bill end
 
 
 

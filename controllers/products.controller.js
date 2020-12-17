@@ -123,12 +123,12 @@ module.exports.postAddProduct = (req, res, next) => {
                 let qr = `INSERT INTO LOAI_DIEN_THOAI (LDT_MA, NSX_MA, LDT_TEN, 
                     LDT_TEN_CHIP, LDT_DUNG_LUONG_PIN, LDT_DUNG_LUONG_RAM, LDT_DUNG_LUONG_ROM,
                     LDT_THONG_TIN_CUONG_LUC, LDT_JACK_TAI_NGHE, LDT_TOC_DO_SAC, LDT_GIA_MUA,
-                    LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI, LDT_MO_TA)
+                    LDT_GIA, LDT_LOAI_PIN, LDT_LOAI_MAN_HINH, LDT_DO_PHAN_GIAI, LDT_MO_TA, LDT_CON_KINH_DOANH)
                     VALUES 
                     ('${txtMa}', '${slNhaSanXuat}', '${txtTen}', 
                     '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
                     '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac}, ${txtGiaMua},
-                    ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}', '${txtMoTa}')`;
+                    ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}', '${txtMoTa}', ${true})`;
                 console.log(qr);
                 con.query(qr, err => {
                     let isExist = false;
@@ -158,6 +158,7 @@ module.exports.postAddProduct = (req, res, next) => {
 module.exports.viewProducts = (req, res, next) => {
     try {
         loaiDienThoaiModel.get((err, field) => {
+            field = field.filter(item => item.LDT_CON_KINH_DOANH);
             for (let i = 0; i < field.length; i++) {
                 field[i].LDT_GIA_DISCOUNTED = field[i].LDT_GIA - (field[i].LDT_GIA * field[i].CTKM_HE_SO);
 
@@ -456,35 +457,31 @@ module.exports.viewDiscount = (req, res, next) => {
 
 module.exports.editDiscount = (req, res, next) => {
     try {
-        try {
-            let { ma } = req.query
-            let con = mysql.createConnection(config);
-            con.connect(err => {
-                if (err) throw new Error(err);
-                con.query(
-                    `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}';
+        let { ma } = req.query
+        let con = mysql.createConnection(config);
+        con.connect(err => {
+            if (err) throw new Error(err);
+            con.query(
+                `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}';
                     SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA = '${ma}';
                     SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA IS NULL`,
-                    (err, fields) => {
-                        if (err) throw new Error(err);
-                        let ctkm_heso = fields[0][0].CTKM_HE_SO;
-                        fields[1] = fields[1].map(row => {
-                            row['LDT_GIA_DISCOUNTED'] = row.LDT_GIA - (row.LDT_GIA * ctkm_heso);
-                            return row;
-                        })
-                        res.render('products/edit-discount', {
-                            discount: fields[0][0],
-                            productsDiscounted: fields[1],
-                            productsDiscountable: fields[2],
-                            layout: 'admin'
-                        });
-                        con.end();
-                    }
-                );
-            });
-        } catch (error) {
-            next(error);
-        }
+                (err, fields) => {
+                    if (err) throw new Error(err);
+                    let ctkm_heso = fields[0][0].CTKM_HE_SO;
+                    fields[1] = fields[1].map(row => {
+                        row['LDT_GIA_DISCOUNTED'] = row.LDT_GIA - (row.LDT_GIA * ctkm_heso);
+                        return row;
+                    })
+                    res.render('products/edit-discount', {
+                        discount: fields[0][0],
+                        productsDiscounted: fields[1],
+                        productsDiscountable: fields[2],
+                        layout: 'admin'
+                    });
+                    con.end();
+                }
+            );
+        });
     } catch (error) {
         next(error);
     }
@@ -516,23 +513,23 @@ module.exports.deleteProduct = (req, res, next) => {
         let con = mysql.createConnection(config);
         con.connect(err => {
             if (err) throw new Error(err);
-            con.query(`
-                    SELECT HA_URL FROM HINH_ANH WHERE LDT_MA = '${LDT_MA}';
-                    DELETE FROM DIEN_THOAI WHERE LDT_MA = '${LDT_MA}';
-                    DELETE FROM HINH_ANH WHERE LDT_MA = '${LDT_MA}';
-                    DELETE FROM LOAI_DIEN_THOAI WHERE LDT_MA = '${LDT_MA}'`,
-                (err, fields) => {
-                    if (err) throw new Error(err);
-                    let oldURL = fields[0][0].HA_URL;
-                    fs.unlink(`./public${oldURL}`, err => {
-                        if (err) throw new Error(err);
-                    });
-
-                    res.redirect('/products/view-products');
-                }
-            );
+            con.query(`UPDATE LOAI_DIEN_THOAI 
+                SET LDT_CON_KINH_DOANH = ${false}
+                WHERE LDT_MA = '${LDT_MA}'`, (err) => {
+                if (err) throw err;
+                res.redirect('/products/view-products');
+            });
         });
     } catch (error) {
         next(error);
+    }
+}
+
+
+module.exports.viewStatistic = (req, res, next) => {
+    try {
+        res.render('products/view-statistic');
+    } catch (error) {
+        next(error)
     }
 }

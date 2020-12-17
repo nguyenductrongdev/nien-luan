@@ -1,0 +1,56 @@
+<style>
+    .container {
+        min-height: 80vh;
+    }
+
+    .statistic-group {
+        box-sizing: border-box;
+        font-size: 2vw !important;
+        padding: 2vw 0;
+        padding-left: 2vw;
+        border-left: solid 2vw tomato;
+        border-top: solid 1px tomato;
+    }
+</style>
+
+<div class="container">
+    <div class="row my-5">
+        <div class="col-12">
+            <h1 class="text-center title">Thống kê năm</h1>
+            <script>
+                let yearNow = new Date().getFullYear();
+                $.get(
+                    `/api/products/bill?year=${yearNow}`, (data, status) => {
+                        let tongTienNhan = 0;
+                        let tongVon = 0;
+                        for (let hdb of data) {
+                            let [year, month, date] = hdb.HDB_THOI_GIAN.split('-');
+                            console.log(year, yearNow)
+
+                            if (yearNow === year) {
+                                tongTienNhan += +hbd.LDT_GIA;
+                                tongVon += +hbd.LDT_GIA_MUA;
+                            }
+                        }
+                        console.log(tongTienNhan, tongVon);
+                    }
+                );
+                /*
+                for (let i = 1; i <= 12; i++) {
+
+                    document.write(`<h2 class="title font-italic">Tháng ${i}</h2>
+                        <ul class="list-unstyled">
+                            <li>Tổng tiền thu được: </li>
+                            <li>Tổng vốn: </li>
+                            <li>Lợi nhuận: </li>
+                        </ul>`);
+                }
+                */
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

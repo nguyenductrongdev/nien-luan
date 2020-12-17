@@ -50,6 +50,8 @@ router
 router
     .get('/view-discounts', controller.viewDiscounts);
 
+router
+    .get('/view-statistic', controller.viewStatistic);
 
 
 module.exports = router;

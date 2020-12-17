@@ -48,6 +48,8 @@ module.exports.page = (req, res) => {
     let endIndex = startIndex + (+productsPerPage);
 
     loaiDienThoaiModel.get((err, result) => {
+        // filter to get all product
+        result = result.filter(item => item.LDT_CON_KINH_DOANH);
         res.json(result.slice(startIndex, endIndex));
     });
 }
@@ -106,8 +108,9 @@ module.exports.postAddUnit = (req, res) => {
 module.exports.filterBrand = (req, res, next) => {
     try {
         let { brandName: NSX_MA } = req.query;
-        loaiDienThoaiModel.getByNSX_MA(NSX_MA, (err, field) => {
-            res.json(field);
+        loaiDienThoaiModel.getByNSX_MA(NSX_MA, (err, result) => {
+            result = result.filter(item => item.LDT_CON_KINH_DOANH);
+            res.json(result);
         });
     } catch (error) {
         next(error);
@@ -118,8 +121,9 @@ module.exports.filterBrand = (req, res, next) => {
 module.exports.filterROM = (req, res, next) => {
     try {
         let { ROM } = req.query;
-        loaiDienThoaiModel.getByLDT_DUNG_LUONG_ROM(ROM, (err, field) => {
-            res.json(field);
+        loaiDienThoaiModel.getByLDT_DUNG_LUONG_ROM(ROM, (err, result) => {
+            result = result.filter(item => item.LDT_CON_KINH_DOANH);
+            res.json(result);
         });
     } catch (error) {
         next(error);
@@ -129,8 +133,9 @@ module.exports.filterROM = (req, res, next) => {
 module.exports.filterRAM = (req, res, next) => {
     try {
         let { RAM } = req.query;
-        loaiDienThoaiModel.getByLDT_DUNG_LUONG_RAM(RAM, (err, field) => {
-            res.json(field);
+        loaiDienThoaiModel.getByLDT_DUNG_LUONG_RAM(RAM, (err, result) => {
+            result = result.filter(item => item.LDT_CON_KINH_DOANH);
+            res.json(result);
         });
     } catch (error) {
         next(error);
@@ -143,8 +148,9 @@ module.exports.filterGEPin = (req, res, next) => {
         con.connect(err => {
             if (err) throw new Error(err);
             let { pin } = req.query;
-            loaiDienThoaiModel.getGreaterOrEqualLDT_DUNG_LUONG_PIN(pin, (err, field) => {
-                res.json(field);
+            loaiDienThoaiModel.getGreaterOrEqualLDT_DUNG_LUONG_PIN(pin, (err, result) => {
+                result = result.filter(item => item.LDT_CON_KINH_DOANH);
+                res.json(result);
             });
         });
     } catch (error) {
@@ -158,8 +164,9 @@ module.exports.filterLTPin = (req, res, next) => {
         con.connect(err => {
             if (err) throw new Error(err);
             let { pin } = req.query;
-            loaiDienThoaiModel.getLessThanLDT_DUNG_LUONG_PIN(pin, (err, field) => {
-                res.json(field);
+            loaiDienThoaiModel.getLessThanLDT_DUNG_LUONG_PIN(pin, (err, result) => {
+                result = result.filter(item => item.LDT_CON_KINH_DOANH);
+                res.json(result);
             });
         });
     } catch (error) {
@@ -213,6 +220,7 @@ module.exports.postAddDiscount = (req, res, next) => {
     }
 }
 
+// START BILL ----------------------------------
 module.exports.postAddBill = (req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
     let form = formidable.IncomingForm();
@@ -237,13 +245,13 @@ module.exports.postAddBill = (req, res, next) => {
                 let remainNb = buyableProducts
                     .filter(item => item.LDT_MA === LDT_MAs[i])
                     .length;
-                console.log(canBuyNb, remainNb);
+                // console.log(canBuyNb, remainNb);
                 if (canBuyNb > remainNb) {
                     isAllProductEnough = false;
                     break;
                 }
             }
-            console.log(isAllProductEnough);
+            // console.log(isAllProductEnough);
             if (isAllProductEnough) {
                 hoaDonBanModel.insert({ HDB_MA, ND_TEN_DANG_NHAP, HDB_THOI_GIAN }, (err) => {
                     for (let i = 0; i < LDT_MAs.length; i++) {
@@ -277,6 +285,18 @@ module.exports.postAddBill = (req, res, next) => {
     });
 }
 
+module.exports.getBills = (req, res, next) => {
+        try {
+            let { date, month, year } = req.query;
+            let con = mysql.createConnection(config);
+            hoaDonBanModel.get({ date, month, year }, (err, result) => {
+                res.json(result);
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+    // END BILL ----------------------------------
 
 module.exports.postEditDiscount = (req, res, next) => {
     try {

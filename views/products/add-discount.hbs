@@ -11,14 +11,14 @@
 
             </ul>
         </div>
-        <div class="col-6 mx-auto">
-            <h1 class="text-center">Thêm chương trình giảm giá</h1>
+        <div class="col-7 mx-auto">
+            <h1 class="text-center title">Thêm chương trình giảm giá</h1>
             <form action="/products/add-discount" class="shadow-lg p-5 m-3" id="frmAddDiscount" method="POST"
                 novalidate>
-                <div class="form-group">
+                <div class="form-group d-none">
                     <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến mãi</label>
-                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
-                        autofocus> --}}
+                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai" class="form-control"
+                        id="maChuongTrinhKhuyenMai" autofocus> --}}
                     <script>
                         document.write(`<input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai" value="${+new Date()}" disabled>`)
                     </script>
