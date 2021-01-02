@@ -70,5 +70,18 @@ module.exports = {
                 callback(err, ldts);
             }
         );
+    },
+
+    deleteByLDT_MA: (LDT_MA, callback) => {
+        let con = mysql.createConnection(config);
+        con.query(
+            `UPDATE LOAI_DIEN_THOAI 
+            SET CTKM_MA = ${null} WHERE CTKM_MA = '${ma}';
+            DELETE FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${LDT_MA}'`,
+            (err) => {
+                con.destroy();
+                callback(err);
+            }
+        );
     }
 }

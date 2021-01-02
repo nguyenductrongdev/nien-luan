@@ -11,10 +11,12 @@ const config = {
 module.exports = {
     insert: (data, callback) => {
         let { NSX_MA, NSX_TEN } = data;
+        // console.log(data);
         let con = mysql.createConnection(config);
         con.query(
-            `INSERT INTO NHA_SAN_XUAT(NSX_MA, NSX_TEN) VALUES('${NSX_MA}', '${NSX_TEN}'`,
+            `INSERT INTO NHA_SAN_XUAT(NSX_MA, NSX_TEN) VALUES('${NSX_MA}', '${NSX_TEN}')`,
             (err, field) => {
+                if (err) console.log(err);
                 con.destroy();
                 callback(err, field);
             }

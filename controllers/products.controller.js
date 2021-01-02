@@ -26,8 +26,7 @@ module.exports.addBrand = (req, res) => {
     res.render('products/add-brand', {
         title: 'Thêm nhà sản xuất',
         layout: 'admin',
-        username: req.cookies.username,
-        avatar: req.cookies.avatar
+        ...res.locals.userInfo
     });
 }
 
@@ -129,12 +128,12 @@ module.exports.postAddProduct = (req, res, next) => {
                     '${txtTenChip}', ${txtDungLuongPin}, ${txtDungLuongRAM}, ${txtDungLuongROM}, 
                     '${txtThongTinCuongLuc}', ${rdJackTaiNghe}, ${txtTocDoSac}, ${txtGiaMua},
                     ${txtGia}, '${rdLoaiPin}', '${rdLoaiManHinh}', '${slDoPhanGiai}', '${txtMoTa}', ${true})`;
-                console.log(qr);
+                // console.log(qr);
                 con.query(qr, err => {
                     let isExist = false;
                     if (err) {
                         isExist = true;
-                        res.redirect(`/products/add-product?isExist=${isExist}`);
+                        res.redirects(`/products/add-product?isExist=${isExist}`);
                         con.end();
                         return;
                     }
@@ -167,9 +166,8 @@ module.exports.viewProducts = (req, res, next) => {
             }
             res.render('products/view-products', {
                 products: field,
-                username: req.cookies.username,
-                avatar: req.cookies.avatar,
                 layout: 'admin',
+                ...res.locals.userInfo
             });
 
         });
@@ -190,9 +188,8 @@ module.exports.addUnit = (req, res, next) => {
                     if (err) throw new Error('add unit err');
                     res.render('products/add-unit', {
                         brands: result,
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar,
-                        layout: 'admin'
+                        layout: 'admin',
+                        ...res.locals.userInfo
                     });
                 }
             );
@@ -207,21 +204,18 @@ module.exports.viewProduct = (req, res, next) => {
     try {
         const LDT_MA = req.query.LDT_MA;
         loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, result) => {
-            console.log(result);
+            // console.log(result);
             if (err) throw new Error(err);
             result[0].LDT_JACK_TAI_NGHE = (result[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
             result[0].LDT_GIA_DISCOUNTED = result[0].LDT_GIA - (result[0].LDT_GIA * result[0].CTKM_HE_SO);
 
             result[0].LDT_GIA = result[0].LDT_GIA.toLocaleString('vi-VN');
             result[0].LDT_GIA_DISCOUNTED = result[0].LDT_GIA_DISCOUNTED.toLocaleString('vi-VN');
-            console.log(result[0]);
+            // console.log(result[0]);
             res.render('products/view-product', {
                 title: "Thông tin chi tiết",
-                username: req.cookies.username,
-                avatar: req.cookies.avatar,
                 product: result[0],
-                username: req.cookies.username,
-                avatar: req.cookies.avatar
+                ...res.locals.userInfo
             });
         });
 
@@ -256,13 +250,11 @@ module.exports.editProduct = (req, res, next) => {
 
                     productInfo[0].LDT_JACK_TAI_NGHE = (productInfo[0].LDT_JACK_TAI_NGHE === 1 ? 'Có' : 'Không');
                     res.render('products/edit-product', {
+                        layout: 'admin',
                         title: "Sửa sản phẩm",
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar,
                         product: productInfo[0],
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar,
-                        nhaSanXuatOptions: providerInfo
+                        nhaSanXuatOptions: providerInfo,
+                        ...res.locals.userInfo
                     });
                 }
             );
@@ -368,10 +360,10 @@ module.exports.addBill = (req, res, next) => {
             con.query('SELECT * FROM LOAI_DIEN_THOAI', (err, result) => {
                 if (err) throw new Error(err);
                 res.render('products/add-bill', {
+                    layout: 'admin',
+                    title: 'Thêm hóa đơn',
                     products: result,
-                    username: req.cookies.username,
-                    avatar: req.cookies.avatar,
-                    layout: 'admin'
+                    ...res.locals.userInfo
                 });
             });
         });
@@ -389,10 +381,10 @@ module.exports.addDiscount = (req, res) => {
         con.query('SELECT * FROM LOAI_DIEN_THOAI WHERE CTKM_MA IS NULL', (err, result) => {
             if (err) throw new Error(err);
             res.render('products/add-discount', {
+                layout: 'admin',
+                title: 'Thêm chương trình khuyến mãi',
                 products: result,
-                username: req.cookies.username,
-                avatar: req.cookies.avatar,
-                layout: 'admin'
+                ...res.locals.userInfo
             });
         });
     });
@@ -405,10 +397,10 @@ module.exports.viewDiscounts = (req, res, next) => {
             if (err) throw new Error(err);
             con.query(`SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`, (err, field) => {
                 res.render('products/view-discounts', {
-                    discounts: field,
-                    username: req.cookies.username,
-                    avatar: req.cookies.avatar,
                     layout: 'admin',
+                    title: 'Danh sách chương trình khuyến mãi',
+                    discounts: field,
+                    ...res.locals.userInfo
                 });
                 con.end();
             });
@@ -436,15 +428,14 @@ module.exports.viewDiscount = (req, res, next) => {
                         return row;
                     })
                     res.render('products/view-discount', {
+                        layout: 'admin',
                         discount: fields[0][0],
                         products: fields[1].map(product => {
                             product.LDT_GIA = product.LDT_GIA.toLocaleString('vi');
                             product.LDT_GIA_DISCOUNTED = product.LDT_GIA_DISCOUNTED.toLocaleString('vi');
                             return product;
                         }),
-                        username: req.cookies.username,
-                        avatar: req.cookies.avatar,
-                        layout: 'admin'
+                        ...res.locals.userInfo
                     });
                     con.end();
                 }
@@ -493,14 +484,10 @@ module.exports.deleteDiscount = (req, res, next) => {
         let con = mysql.createConnection(config);
         con.connect(err => {
             if (err) throw new Error(err);
-            con.query(
-                `UPDATE LOAI_DIEN_THOAI SET CTKM_MA = ${null} WHERE CTKM_MA = '${ma}';
-                DELETE FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${ma}'`,
-                (err) => {
-                    if (err) throw new Error(err);
-                    res.redirect('/products/view-discounts');
-                }
-            );
+            loaiDienThoaiModel.deleteByLDT_MA(ma, (err) => {
+                if (err) throw new Error(err);
+                res.redirect('/products/view-discounts');
+            });
         });
     } catch (error) {
         next(error);
@@ -528,7 +515,11 @@ module.exports.deleteProduct = (req, res, next) => {
 
 module.exports.viewStatistic = (req, res, next) => {
     try {
-        res.render('products/view-statistic');
+        res.render('products/view-statistic', {
+            layout: 'admin',
+            title: 'Thống kê năm',
+            ...res.locals.userInfo
+        });
     } catch (error) {
         next(error)
     }

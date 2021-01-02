@@ -23,9 +23,33 @@
 <script>
     $(function () {
         $('#frmAddBrand #btn-add').click(function () {
+            $('.msg').empty();
             let txtMa = $('#txtMa').val();
             let txtTen = $('#txtTen').val();
-
+            let isValidForm = true;
+            if (txtMa.length === 0) {
+                isValidForm = false;
+                $('#txtMa').removeClass('is-valid').addClass('is-invalid');
+                $('.msg').append(`
+                    <div class="alert alert-danger" role="alert">
+                        Vui lòng điền mã
+                    </div>
+                `);
+            } else {
+                $('#txtMa').removeClass('is-invalid').addClass('is-valid');
+            }
+            if (txtTen.length === 0) {
+                isValidForm = false;
+                $('#txtTen').removeClass('is-valid').addClass('is-invalid');
+                $('.msg').append(`
+                    <div class="alert alert-danger" role="alert">
+                        Vui lòng điền tên
+                    </div>
+                `);
+            } else {
+                $('#txtTen').removeClass('is-invalid').addClass('is-valid');
+            }
+            if (!isValidForm) return;
             $.post(`/api/products/add-brand?txtMa=${txtMa}&txtTen=${txtTen}`,
                 function (data, stt) {
                     console.log(data)
@@ -41,7 +65,7 @@
                         case 'error':
                             $('.msg').html(`
                                 <div class="alert alert-danger" role="alert">
-                                    ${message.join('<br/>')}
+                                    ${message}
                                 </div >
                             `);
                             break;

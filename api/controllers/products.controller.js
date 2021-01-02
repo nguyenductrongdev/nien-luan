@@ -58,36 +58,18 @@ module.exports.postAddBrand = (req, res) => {
     let { txtMa, txtTen } = req.query;
     let result = {
         status: '',
-        message: []
+        message: ''
     };
-
-    if (!txtMa) {
-        result.status = 'error';
-        result.message.push(`Thêm không thành công, chưa nhập mã nhà sản xuât`);
-    }
-    if (!txtTen) {
-        result.status = 'error';
-        result.message.push(`Thêm không thành công, chưa nhập tên nhà sản xuât`);
-    }
-    if (!txtMa || !txtTen) {
+    nhaSanXuatModel.insert({ NSX_MA: txtMa, NSX_TEN: txtTen }, (err) => {
+        result = {};
+        if (err) {
+            result.status = 'error';
+            result.message = `Thêm không thành công, nhà sản xuất có mã ${txtMa} đã tôn tại`;
+        } else {
+            result.status = 'success';
+            result.message = 'Thêm thành công';
+        }
         res.json(result);
-        return;
-    }
-
-    let con = mysql.createConnection(config);
-    con.connect(function(err) {
-        if (err) throw err;
-        nhaSanXuatModel.insert({ NSX_MA: txtMa, NSX_TEN: txtTen }, (err) => {
-            if (err) {
-                result.status = 'error';
-                result.message.push(`Thêm không thành công, nhà sản xuất có mã ${txtMa} đã tôn tại`);
-            } else {
-                result.status = 'success';
-                result.message.push('Thêm thành công');
-            }
-            con.end();
-            res.json(result);
-        });
     });
 }
 
