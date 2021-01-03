@@ -49,7 +49,7 @@
                 tongVon[i] = tongVon[i] || 0;
                 tongTienNhan[i] = tongTienNhan[i] || 0;
             }
-            let detail = [['Thang', 'Tien von', 'Tien thu', 'Loi nhuan']];
+            let detail = [];
             for (let i = 1; i <= nowMonth; i++) {
                 detail.push([
                     `${i}`,
@@ -59,30 +59,39 @@
                 ]);
             }
             /////
-            google.charts.load('current', {
-                'packages': ['corechart']
-            });
+            google.charts.load('current', { 'packages': ['line'] });
             google.charts.setOnLoadCallback(drawChart);
 
             function drawChart() {
-                var data = google.visualization.arrayToDataTable(detail);
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Tháng');
+                data.addColumn('number', 'Tổng vốn');
+                data.addColumn('number', 'Tổng tiền nhận');
+                data.addColumn('number', 'Lợi nhuận');
+
+                data.addRows(detail);
 
                 var options = {
-                    title: `Biểu đồ thống kê lợi nhuận năm ${nowYear}`,
-                    hAxis: {
-                        title: 'Tháng',
-                        titleTextStyle: {
-                            color: '#333'
+                    chart: {
+                        title: 'Biểu đồ thống kê doanh số',
+                        subtitle: `thống kê từ 1/${nowYear} đến ${nowDate}/${nowMonth}/${nowYear}`
+                    },
+                    height: 500,
+                    axes: {
+                        x: {
+                            0: { side: 'bottom' }
                         }
                     },
                     vAxis: {
-                        title: 'Tiền (VNĐ)',
-                        minValue: 0
+                        title: 'VNĐ',
+                        format: 'decimal'
                     }
                 };
 
-                var chart = new google.visualization.AreaChart(document.querySelector('.statistic-presenter'));
-                chart.draw(data, options);
+                var chart = new google.charts.Line(document.querySelector('.statistic-presenter'));
+
+                chart.draw(data, google.charts.Line.convertOptions(options));
             }
             /////
         });
