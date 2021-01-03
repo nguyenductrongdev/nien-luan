@@ -46,7 +46,6 @@ module.exports.page = (req, res) => {
     let productsPerPage = req.query.productsPerPage || 1;
     let startIndex = (page - 1) * productsPerPage;
     let endIndex = startIndex + (+productsPerPage);
-
     loaiDienThoaiModel.get((err, result) => {
         // filter to get all product
         result = result.filter(item => item.LDT_CON_KINH_DOANH);

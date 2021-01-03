@@ -30,7 +30,16 @@ module.exports = {
                     let CTKM_HE_SO = 0;
                     // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -58,10 +67,21 @@ module.exports = {
             (err, fields) => {
                 if (err) throw new Error(err);
                 let [ldts, ctkms] = fields;
+                // Loop through all LDT
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
+                    // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -89,10 +109,21 @@ module.exports = {
             (err, fields) => {
                 if (err) throw new Error(err);
                 let [ldts, ctkms] = fields;
+                // Loop through all LDT
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
+                    // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -120,10 +151,21 @@ module.exports = {
             (err, fields) => {
                 if (err) throw new Error(err);
                 let [ldts, ctkms] = fields;
+                // Loop through all LDT
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
+                    // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -151,10 +193,21 @@ module.exports = {
             (err, fields) => {
                 if (err) throw new Error(err);
                 let [ldts, ctkms] = fields;
+                // Loop through all LDT
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
+                    // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -187,7 +240,16 @@ module.exports = {
                     let CTKM_HE_SO = 0;
                     // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
@@ -215,10 +277,21 @@ module.exports = {
             (err, fields) => {
                 if (err) throw new Error(err);
                 let [ldts, ctkms] = fields;
+                // Loop through all LDT
                 for (let i = 0; i < ldts.length; i++) {
                     let CTKM_HE_SO = 0;
+                    // Find CTKM_HE_SO
                     for (let j = 0; j < ctkms.length; j++) {
-                        if (ldts[i].LDT_MA === ctkms[j].LDT_MA) {
+                        let [ctkm_year, ctkm_month, ctkm_date] = ctkms[j].CTKM_NGAY_KET_THUC.split('-');
+                        ctkm_year = +ctkm_year;
+                        ctkm_month = +ctkm_month;
+                        ctkm_date = +ctkm_date;
+
+                        let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
+                        let nowDate = new Date();
+
+                        if (+endDate > +nowDate &&
+                            ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
                     }
