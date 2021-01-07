@@ -88,9 +88,12 @@
                             document.write(`<input type="text" name="txtNguoiNhap" class="form-control" id="txtNguoiNhap" value="${username}" disabled>`)
                         </script>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="txtMaHoaDon">Mã hóa đơn:</label>
-                        <input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control" value="mahoadon">
+                        <script>
+                            document.write(`<input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control" value="${new Date().getTime()}" disabled>`);
+                        </script>
+
                     </div>
                     <div class="form-group">
                         <label>Tên điện thoại:</label>
@@ -171,15 +174,7 @@
                     billProductIDs.push($(this).attr('data-ma'));
                     billProductNbs.push($(this).attr('data-soLuong'));
                 });
-                /*
-                console.log({
-                    billID: maHoaDon,
-                    billProductIDs: billProductIDs.join(),
-                    billProductNbs: billProductNbs.join(),
-                    typerName: $('#txtNguoiNhap').val(),
-                    time: $('#txtThoiGian').val()
-                });
-                */
+
                 if (isValid) {
                     // console.log('hd hop le');
                     $.post('/api/products/add-bill',

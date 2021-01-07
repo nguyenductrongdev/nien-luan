@@ -9,15 +9,14 @@ const config = {
 }
 
 module.exports = {
-    get: (callback) => {
+    get: (calback) => {
         let con = mysql.createConnection(config);
         let sqls = [
             `SELECT * 
             FROM 
-                LOAI_DIEN_THOAI, HINH_ANH, NHA_SAN_XUAT
+                LOAI_DIEN_THOAI, HINH_ANH 
             WHERE 
-                LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA
-                AND LOAI_DIEN_THOAI.NSX_MA = NHA_SAN_XUAT.NSX_MA`,
+                LOAI_DIEN_THOAI.LDT_MA = HINH_ANH.LDT_MA`,
 
             `SELECT * FROM CHUONG_TRINH_KHUYEN_MAI`
         ];
@@ -38,7 +37,12 @@ module.exports = {
                         let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
                         let nowDate = new Date();
 
-                        if (+endDate > +nowDate &&
+                        let isDiscount = true;
+                        if (endDate.getFullYear() < nowDate.getFullYear()) isDiscount = false;
+                        else if (endDate.getMonth() < nowDate.getMonth()) isDiscount = false;
+                        else if (endDate.getDate() < nowDate.getDate()) isDiscount = false;
+
+                        if (isDiscount &&
                             ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
@@ -46,7 +50,7 @@ module.exports = {
                     ldts[i].CTKM_HE_SO = CTKM_HE_SO;
                 }
                 con.destroy();
-                callback(err, ldts);
+                calback(err, ldts);
             }
         );
     },
@@ -81,7 +85,12 @@ module.exports = {
                         let endDate = new Date(ctkm_year, ctkm_month - 1, ctkm_date);
                         let nowDate = new Date();
 
-                        if (+endDate > +nowDate &&
+                        let isDiscount = true;
+                        if (endDate.getFullYear() < nowDate.getFullYear()) isDiscount = false;
+                        else if (endDate.getMonth() < nowDate.getMonth()) isDiscount = false;
+                        else if (endDate.getDate() < nowDate.getDate()) isDiscount = false;
+
+                        if (isDiscount &&
                             ldts[i].CTKM_MA === ctkms[j].CTKM_MA) {
                             CTKM_HE_SO = ctkms[j].CTKM_HE_SO;
                         }
@@ -94,12 +103,12 @@ module.exports = {
         );
     },
 
-    deleteByLDT_MA: (LDT_MA, callback) => {
+    deleteCTKM_MAByLDT_MA: (CTKM_MA, callback) => {
         let con = mysql.createConnection(config);
         con.query(
             `UPDATE LOAI_DIEN_THOAI 
-            SET CTKM_MA = ${null} WHERE CTKM_MA = '${ma}';
-            DELETE FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${LDT_MA}'`,
+            SET CTKM_MA = ${null} WHERE CTKM_MA = '${CTKM_MA}';
+            DELETE FROM CHUONG_TRINH_KHUYEN_MAI WHERE CTKM_MA = '${CTKM_MA}'`,
             (err) => {
                 con.destroy();
                 callback(err);

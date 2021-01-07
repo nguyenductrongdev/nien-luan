@@ -215,7 +215,8 @@ module.exports.viewProduct = (req, res, next) => {
             res.render('products/view-product', {
                 title: "Thông tin chi tiết",
                 product: result[0],
-                ...res.locals.userInfo
+                username: req.cookies.username,
+                avatar: req.cookies.avatar
             });
         });
 
@@ -480,11 +481,12 @@ module.exports.editDiscount = (req, res, next) => {
 
 module.exports.deleteDiscount = (req, res, next) => {
     try {
+        // Get CTKM_MA
         let { ma } = req.query;
         let con = mysql.createConnection(config);
         con.connect(err => {
             if (err) throw new Error(err);
-            loaiDienThoaiModel.deleteByLDT_MA(ma, (err) => {
+            loaiDienThoaiModel.deleteCTKM_MAByLDT_MA(ma, (err) => {
                 if (err) throw new Error(err);
                 res.redirect('/products/view-discounts');
             });

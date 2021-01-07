@@ -18,11 +18,8 @@ app.engine('hbs', hbs({
 }));
 
 app.use(cookieParser());
-
-
 app.use('/users', usersRoute);
 app.use('/products', productsRoute);
-
 app.use('/api/products', apiProductsRoute);
 
 app.set('view engine', 'hbs');

@@ -1,3 +1,9 @@
+<style>
+    .title {
+        font-size: 3vw !important;
+    }
+</style>
+
 <div class="container">
     <div class="row">
         <div class="col-12" id="msg-field">
@@ -6,18 +12,18 @@
     </div>
     <div class="row">
         <div class="col-4">
-            <h1 class="text-center">Các sản phẩm</h1><br>
+            <h1 class="font-italic">Các sản phẩm:</h1><br>
             <ul class="list-unstyled d-block shadow-lg p-5" id="added-list">
                 {{#each productsDiscounted }}
-                <li data-ma="{{ this.LDT_MA }}">
+                <li class="m-1" data-ma="{{ this.LDT_MA }}">
+                    <button type="button" class="btn btn-sm btn-danger btn-unselect">&times;</button>
                     <b> {{ this.LDT_TEN }} </b>
-                    <button type="button" class="btn btn-danger btn-unselect">&times;</button>
                 </li>
                 {{/each}}
             </ul>
         </div>
-        <div class="col-6 mx-auto">
-            <h1 class="text-center">Thêm chương trình giảm giá</h1>
+        <div class="col-7 mx-auto">
+            <h1 class="text-center title">Sửa chương trình khuyến mãi</h1>
             <form action="/products/add-discount" class="shadow-lg p-5 m-3" id="frmAddDiscount" method="POST"
                 novalidate>
                 <div class="form-group">
@@ -34,7 +40,7 @@
                     <label for="heSoChuongTrinhKhuyenMai">Hệ số khuyến mãi</label>
                     <input type="number" name="heSoChuongTrinhKhuyenMai" class="form-control"
                         id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1" max="0.9" value="{{ discount.CTKM_HE_SO }}">
-                    <small class="form-text text-muted">Hệ số từ 0.1 đến 0.9.</small>
+                    <small class="form-text text-muted"> Hệ số lớn hơn 0 và nhỏ hơn 1.</small>
                 </div>
                 <div class="form-group">
                     <label for="ngayKetThucChuongTrinhKhuyenMai">Ngày kết thúc</label>
@@ -70,7 +76,7 @@
                 if ($(this).val() === '') isValid = false;
                 switch ($(this).attr('name')) {
                     case 'heSoChuongTrinhKhuyenMai':
-                        if (+$(this).val() < 0.1 || +$(this).val() > 0.9)
+                        if (+$(this).val() <= 0 || +$(this).val() >= 1)
                             isValid = false;
                         break;
                 }
