@@ -51,22 +51,20 @@ module.exports.postRegister = (req, res, next) => {
             let tempPath = files.fAvatar.path;
             let dbPath = `/uploads/${txtTenDangNhap}_${files.fAvatar.name}`;
 
-            fs.rename(tempPath, `./public/uploads/${txtTenDangNhap}_${files.fAvatar.name}`, err => {
-                if (err) throw new Error('upload avatar error');
-            });
-
             let con = mysql.createConnection(config);
-            con.connect(function(err) {
-                if (err) throw err;
+            console.log(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
+            '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${dbPath}')`);
 
-                con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
+            con.query(`INSERT INTO NGUOI_DUNG VALUES('${txtTenDangNhap}', '${txtVaiTro}', 
                 '${txtMatKhau}', '${txtSoDienThoai}', '${txtEmail}', '${dbPath}')`, err => {
-                    if (err) throw err;
+                if (err) throw err;
+                fs.rename(tempPath, `./public/uploads/${txtTenDangNhap}_${files.fAvatar.name}`, err => {
+                    if (err) throw new Error('upload avatar error');
+                    res.redirect(`/users?username=${txtTenDangNhap}&avatar=${dbPath}`);
                 });
-                con.end();
-                res.redirect(`/users?username=${txtTenDangNhap}&avatar=${dbPath}`);
-                return;
             });
+            con.end();
+            return;
         });
     } catch (error) {
         next(error);
@@ -100,37 +98,34 @@ module.exports.postLogin = (req, res, next) => {
             let txtMatKhau = fields.txtMatKhau;
 
             let con = mysql.createConnection(config);
-            con.connect(function(err) {
-                if (err) throw err;
-                con.query(
-                    `SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA 
+            con.query(
+                `SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA 
                     FROM NGUOI_DUNG 
                     WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`,
-                    function(err, result) {
-                        if (err) throw new Error('login err');
-                        let isExist = result.length === 1;
+                function(err, result) {
+                    if (err) throw new Error('login err');
+                    let isExist = result.length === 1;
 
-                        if (!isExist) {
+                    if (!isExist) {
+                        res.render('users/login', {
+                            existErr: true
+                        });
+                        return;
+                    } else {
+                        let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
+                        if (isMatchMatKhau) {
+                            res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
+                            res.cookie('avatar', `${result[0].ND_AVATAR}`);
+                            res.redirect('/');
+                        } else {
                             res.render('users/login', {
-                                existErr: true
+                                matchMatKhauErr: true
                             });
                             return;
-                        } else {
-                            let isMatchMatKhau = result[0].ND_MAT_KHAU === txtMatKhau;
-                            if (isMatchMatKhau) {
-                                res.cookie('username', `${result[0].ND_TEN_DANG_NHAP}`);
-                                res.cookie('avatar', `${result[0].ND_AVATAR}`);
-                                res.redirect('/');
-                            } else {
-                                res.render('users/login', {
-                                    matchMatKhauErr: true
-                                });
-                                return;
-                            }
                         }
-                    });
-                con.end();
-            });
+                    }
+                });
+            con.end();
         });
     } catch (error) {
         next(error);

@@ -17,7 +17,9 @@
     <div class="row my-5">
         <div class="col-12">
             <h1 class="text-center title">Thống kê năm</h1>
-            <div class="statistic-presenter d-block m-0 mx-auto shadow-lg p-5"></div>
+            <div class="statistic-presenter d-block m-0 mx-auto shadow-lg p-5 d-flex">
+                <div class="spinner-border mx-auto text-center"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -78,7 +80,7 @@
 
                 var options = {
                     chart: {
-                        title: 'Biểu đồ thống kê doanh số',
+                        title: `Biểu đồ thống kê doanh số năm ${nowYear}`,
                         subtitle: `thống kê từ 1/${nowYear} đến ${nowDate}/${nowMonth}/${nowYear}`
                     },
                     height: 500,
