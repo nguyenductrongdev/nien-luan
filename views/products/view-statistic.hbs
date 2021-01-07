@@ -25,16 +25,20 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     $(function () {
-        let nowYear = +new Date().getFullYear();
+        let nowYear = +(new Date().getFullYear());
         let nowMonth = +(new Date().getMonth() + 1);
-        let nowDate = +(new Date().getDate() + 1);
+        let nowDate = +(new Date().getDate());
 
-        nowMonth = 12;
-        nowYear = 2020;
+        //nowMonth = 12;
+        //nowYear = 2021;
 
         $.get(`/api/products/bill?year=${nowYear}`, (data, status) => {
             let tongTienNhan = {};
             let tongVon = {};
+            for (let i = 1; i <= 12; i++) {
+                tongTienNhan[i] = 0;
+                tongVon[i] = 0;
+            }
 
             for (let i = 1; i <= nowMonth; i++) {
                 for (let unit of data) {
@@ -48,7 +52,7 @@
                 tongTienNhan[i] = tongTienNhan[i] || 0;
             }
             let detail = [];
-            for (let i = 1; i <= nowMonth; i++) {
+            for (let i = 1; i <= 12; i++) {
                 detail.push([
                     `${i}`,
                     tongVon[i],
@@ -56,6 +60,8 @@
                     tongTienNhan[i] - tongVon[i]
                 ]);
             }
+            console.log(detail);
+
             /////
             google.charts.load('current', { 'packages': ['line'] });
             google.charts.setOnLoadCallback(drawChart);

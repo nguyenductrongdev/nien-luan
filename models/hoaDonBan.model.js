@@ -12,8 +12,9 @@ module.exports = {
     get: (data, callback) => {
         let con = mysql.createConnection(config);
         let { date = '%', month = '%', year = '%' } = data;
-        con.query(`SELECT 
-            * 
+        con.query(
+            `SELECT 
+                * 
             FROM 
                 HOA_DON_BAN, DIEN_THOAI, LOAI_DIEN_THOAI
             WHERE 
@@ -21,6 +22,7 @@ module.exports = {
                 AND DIEN_THOAI.LDT_MA = LOAI_DIEN_THOAI.LDT_MA
                 AND HOA_DON_BAN.HDB_THOI_GIAN LIKE '${year}-${month}-${date}'`,
             (err, field) => {
+                // console.log(field);
                 callback(err, field);
             });
     },

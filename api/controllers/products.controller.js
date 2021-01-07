@@ -269,7 +269,7 @@ module.exports.postAddBill = (req, res, next) => {
 module.exports.getBills = (req, res, next) => {
         try {
             let { date, month, year } = req.query;
-            let con = mysql.createConnection(config);
+            console.log(date, month, year);
             hoaDonBanModel.get({ date, month, year }, (err, result) => {
                 res.json(result);
             });
