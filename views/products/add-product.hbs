@@ -1,5 +1,11 @@
+<style>
+    .title {
+        font-size: 3vw !important;
+    }
+</style>
+
 <div class="container">
-    <form name="frmAddProduct" action="/products/add-product" method="POST" id="frmAddProduct" --}}
+    <form name="frmAddProduct" action="/products/add-product" method="POST" id="frmAddProduct"
         class="shadow-lg p-5 my-3" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6 mx-auto">
@@ -26,7 +32,7 @@
                 </label>
             </div>
             <div class="col-md-7 mx-auto">
-                <h1 class="text-center title bg-dark text-light rounded">Thêm loại điện thoại</h1>
+                <h1 class="text-center title bg-dark text-light rounded title">Thêm loại điện thoại</h1>
                 <div class="shadow-lg p-5">
                     <div class="form-group">
                         <label for="txtMa">Mã</label>
@@ -252,9 +258,11 @@
                 $('#txtGiaMua').removeClass('is-invalid').addClass('is-valid');
                 $('#txtGia').removeClass('is-invalid').addClass('is-valid');
             }
+            console.log('>>', isMissValue, errorValue);
             if (isMissValue || errorValue) {
                 event.preventDefault();
                 return false;
+                alert("Form không hợp lệ");
             }
         });
     });
