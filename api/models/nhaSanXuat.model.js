@@ -16,7 +16,6 @@ module.exports = {
         con.query(
             `INSERT INTO NHA_SAN_XUAT(NSX_MA, NSX_TEN) VALUES('${NSX_MA}', '${NSX_TEN}')`,
             (err, field) => {
-                if (err) console.log(err);
                 con.destroy();
                 callback(err, field);
             }

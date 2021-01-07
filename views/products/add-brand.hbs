@@ -36,22 +36,12 @@
             if (txtMa.length === 0) {
                 isValidForm = false;
                 $('#txtMa').removeClass('is-valid').addClass('is-invalid');
-                $('.msg').append(`
-                    <div class="alert alert-danger" role="alert">
-                        Vui lòng điền mã
-                    </div>
-                `);
             } else {
                 $('#txtMa').removeClass('is-invalid').addClass('is-valid');
             }
             if (txtTen.length === 0) {
                 isValidForm = false;
                 $('#txtTen').removeClass('is-valid').addClass('is-invalid');
-                $('.msg').append(`
-                    <div class="alert alert-danger" role="alert">
-                        Vui lòng điền tên
-                    </div>
-                `);
             } else {
                 $('#txtTen').removeClass('is-invalid').addClass('is-valid');
             }
