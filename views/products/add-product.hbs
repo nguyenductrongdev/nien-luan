@@ -236,6 +236,18 @@
                 slDoPhanGiai = $('#slDoPhanGiai'),
                 fHinhAnh = $('#fHinhAnh')
             ];
+            if (fHinhAnh.val() === '') {
+                $('label[for="fHinhAnh"]').css({
+                    'outline': 'solid 1px red',
+                    'outline-offset': '1vw'
+                });
+            } else {
+                $('label[for="fHinhAnh"]').css({
+                    'outline': 'solid 1px green',
+                    'outline-offset': '1vw'
+                });
+            }
+
             for (field of fields) {
                 if (field.val() === '') {
                     field.remove('is-valid');

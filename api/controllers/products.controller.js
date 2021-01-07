@@ -259,7 +259,7 @@ module.exports.postAddBill = (req, res, next) => {
             } else {
                 res.json({
                     result: 'ERROR',
-                    message: 'Not enough product to buy'
+                    message: 'Không đủ sản phẩm để bán'
                 });
             }
         });
