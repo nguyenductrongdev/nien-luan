@@ -70,14 +70,18 @@
             let isValid = true;
             // Validate
             $.each($('#frmAddDiscount input, #frmAddDiscount select'), function () {
-                isValid = true;
+                let fieldHople = true;
                 if ($(this).val() === '') {
+                    console.log(this);
+                    fieldHople = false;
                     isValid = false;
                 }
                 switch ($(this).attr('name')) {
                     case 'heSoChuongTrinhKhuyenMai':
-                        if (+$(this).val() <= 0 || +$(this).val() >= 1)
+                        if (+$(this).val() <= 0 || +$(this).val() >= 1) {
+                            fieldHople = false;
                             isValid = false;
+                        }
                         break;
                     case 'ngayKetThucChuongTrinhKhuyenMai':
                         let [ctkm_year, ctkm_month, ctkm_date] = $(this).val().split('-');
@@ -87,17 +91,35 @@
 
                         let end = new Date(ctkm_year, ctkm_month - 1, ctkm_date, 23, 59, 59);
                         let now = new Date();
-                        if (end.getFullYear() < now.getFullYear()) isValid = false;
-                        else if (end.getMonth() < now.getMonth()) isValid = false;
-                        else if (end.getDate() < now.getDate()) isValid = false;
+
+                        console.log(end.getFullYear(), now.getFullYear())
+                        console.log(end.getMonth(), now.getMonth())
+                        console.log(end.getDate(), now.getDate())
+
+                        if (+(end.getFullYear()) < +(now.getFullYear())) {
+                            fieldHople = false;
+                            isValid = false;
+                        }
+                        else if (+(end.getMonth()) < +(now.getMonth())) {
+                            fieldHople = false;
+                            isValid = false;
+                        }
+                        else if (+(end.getDate()) < +(now.getDate())) {
+                            fieldHople = false;
+                            isValid = false;
+                        }
+                        console.log(isValid);
+
                         break;
                 }
-                if (isValid) $(this).removeClass('is-invalid').addClass('is-valid');
+                if (fieldHople) $(this).removeClass('is-invalid').addClass('is-valid');
                 else $(this).removeClass('is-valid').addClass('is-invalid');
             });
             if ($('#added-list li').length === 0) {
                 isValid = false;
             }
+            console.log(isValid);
+
             if (isValid) {
                 let discountProductIDs = [];
                 // get all id of discounted products
@@ -134,7 +156,6 @@
             else {
                 alert('khong hop le');
             }
-            console.log(isValid);
         });
 
         $('#btn-add').click(function () {

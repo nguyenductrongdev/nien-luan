@@ -51,7 +51,6 @@ img {
   padding: 0 !important;
 }
 .card .card-img-top {
-  object-fit: contain;
   height: 60%;
   margin-bottom: 10px !important;
 }
@@ -137,16 +136,6 @@ main.container {
   .card .card-body .card-text {
     font-size: 12px !important;
   }
-  .card--overlay {
-    background-color: blueviolet;
-    opacity: 0;
-    backdrop-filter: opacity(0.5);
-    transform: rotateY(180deg);
-    top: 0;
-  }
-  .card--overlay:hover {
-    backdrop-filter: opacity(0.5);
-  }
 }
 @media (min-width: 992px) {
   * {
@@ -155,7 +144,7 @@ main.container {
 
   .card {
     display: inline-block;
-    width: 19.3%;
+    width: 175px;
     height: 280px;
     margin: 0.2vw;
     overflow: auto;
@@ -185,4 +174,4 @@ main.container {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=style.css~.map */

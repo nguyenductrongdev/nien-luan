@@ -52,6 +52,7 @@ img {
         padding: 0 !important;
     }
     .card-img-top {
+        object-fit: contain;
         height: 60%;
         margin-bottom: 10px !important;
     }
@@ -79,12 +80,10 @@ main.container {
     * {
         font-size: 10px !important;
     }
-
     .brand-list img {
         width: 70px;
         height: 10px;
     }
-
     .card {
         display: inline-block;
         width: 110px;
@@ -111,11 +110,10 @@ main.container {
     }
 }
 
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
     * {
         font-size: 15px !important;
     }
-
     .card {
         display: inline-block;
         width: 150px;
@@ -139,17 +137,26 @@ main.container {
                 font-size: 12px !important;
             }
         }
+        &--overlay {
+            background-color: blueviolet;
+            opacity: 0;
+            backdrop-filter: opacity(0.5);
+            transform: rotateY(180deg);
+            top: 0;
+            &:hover {
+                backdrop-filter: opacity(0.5),
+            }
+        }
     }
 }
 
 @media (min-width: 992px) {
     * {
-        font-size: 17px !important;  
+        font-size: 17px !important;
     }
-
     .card {
         display: inline-block;
-        width: 175px;
+        width: 19.3%;
         height: 280px;
         margin: 0.2vw;
         overflow: auto;
@@ -168,7 +175,6 @@ main.container {
             }
         }
     }
-
     .brand-list {
         li {
             outline: solid 1px grey;
@@ -182,6 +188,3 @@ main.container {
 }
 
 // @media (min-width: 1200px) { ... }
-
-
-

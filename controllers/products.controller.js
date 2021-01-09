@@ -133,7 +133,7 @@ module.exports.postAddProduct = (req, res, next) => {
                     let isExist = false;
                     if (err) {
                         isExist = true;
-                        res.redirects(`/products/add-product?isExist=${isExist}`);
+                        res.redirect(`/products/add-product?isExist=${isExist}`);
                         con.end();
                         return;
                     }

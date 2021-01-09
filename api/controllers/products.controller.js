@@ -41,6 +41,18 @@ module.exports.getNbProducts = (req, res) => {
     });
 }
 
+module.exports.searchByLDT_TEN = (req, res) => {
+    let { content = '' } = req.query;
+    loaiDienThoaiModel.get((err, result) => {
+        // filter by LDT_TEN
+        result = result.filter(item => {
+            return (item.LDT_CON_KINH_DOANH &&
+                item.LDT_TEN.toUpperCase().includes(content.toUpperCase()));
+        });
+        res.json(result);
+    });
+}
+
 module.exports.page = (req, res) => {
     let page = req.query.page || 1;
     let productsPerPage = req.query.productsPerPage || 1;
