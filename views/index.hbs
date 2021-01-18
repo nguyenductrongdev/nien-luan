@@ -106,6 +106,7 @@
                             </label>
                         </li>
                     </ul>
+
                     <ul class="list-unstyled d-inline-block">
                         <span class="font-weight-bold">RAM:</span>
                         <li>
@@ -151,11 +152,11 @@
                 </div>
             </li>
         </ul>
-    </div>
 
-    <div class="d-flex mr-3">
-        <input type="text" id="searchContent" class="form-control form-control-sm mr-1" placeholder="Search...">
-        <button type="button" class="btn btn-success btn-search">Search</button>
+        <div class="d-flex flex-row ml-auto">
+            <input type="text" id="searchContent" class="form-control form-control-sm mr-1" placeholder="Search...">
+            <button type="button" class="btn btn-success btn-search">Search</button>
+        </div>
     </div>
 </nav>
 
@@ -312,7 +313,7 @@
                                                     <span class="text-danger font-italic font-weight-light">-${product.CTKM_HE_SO * 100}%</span>
                                                 </p>
                                             </div>
-                                            <div class="position-absolute w-100 h-100 text-left card--overlay">
+                                            <div class="position-absolute text-left card--overlay">
                                                 <ul class="list-unstyled">
                                                     <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
                                                     <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
@@ -332,7 +333,7 @@
                                         <p class="card-text"><del><small class="text-muted font-italic invi invisible">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
                                         <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</p>
                                     </div>
-                                    <div class="position-absolute w-100 h-100 text-left card--overlay">
+                                    <div class="position-absolute text-left card--overlay">
                                         <ul class="list-unstyled">
                                             <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
                                             <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
@@ -343,9 +344,7 @@
                                 </div>
                             </a>`;
                         }
-                        productField.append(
-                            str
-                        );
+                        productField.append(str);
                     }
                 }
 
@@ -472,9 +471,10 @@
                     .on('mouseenter', '.card', function () {
                         $(this).children('.card--overlay').css({
                             "opacity": "1",
-                            "backdrop-filter": "opacity(0.5)",
                             "transform": "rotateY(0)",
-                            "transition": "all 0.5s"
+                            "transition": "transform 0.3s, background-color 0.1s",
+                            //"mix-blend-mode": "overlay",
+                            "background-color": "rgba(255, 255, 255, 0.5)",
                         });
                     })
                     .on('mouseleave', '.card', function () {

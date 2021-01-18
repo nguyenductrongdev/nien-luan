@@ -1,51 +1,40 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['line']
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Day');
-            data.addColumn('number', 'Guardians of the Galaxy');
-            data.addColumn('number', 'The Avengers');
-            data.addColumn('number', 'Transformers: Age of Extinction');
-
-            data.addRows([
-                [1, 37.8, 80.8, 41.8],
-
-            ]);
-
-            var options = {
-                chart: {
-                    title: 'Box Office Earnings in First Two Weeks of Opening',
-                    subtitle: 'in millions of dollars (USD)'
-                },
-                width: 900,
-                height: 500,
-                axes: {
-                    x: {
-                        0: {
-                            side: 'top'
-                        }
-                    }
-                }
-            };
-
-            var chart = new google.charts.Line(document.getElementById('line_top_x'));
-
-            chart.draw(data, google.charts.Line.convertOptions(options));
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            box-sizing: border-box;
         }
-    </script>
+        
+        section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('bg.jpg');
+            background-size: cover;
+        }
+        
+        section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9tpkn0JdhewAsR17igf5TLhXD86J7zsOjww&usqp=CAU');
+            background-size: 100%;
+            mix-blend-mode: screen;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="line_top_x"></div>
+    <section></section>
 </body>
 
 </html>
