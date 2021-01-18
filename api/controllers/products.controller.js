@@ -28,11 +28,13 @@ module.exports.getByLDT_MA = (req, res) => {
 
 module.exports.getNbProducts = (req, res) => {
     let con = mysql.createConnection(config);
-    con.connect(function(err) {
+    con.connect(function (err) {
         if (err) throw err;
         con.query(
-            `SELECT COUNT(LOAI_DIEN_THOAI.LDT_MA) AS LDT_LENGTH FROM LOAI_DIEN_THOAI`,
-            function(err, result) {
+            `SELECT COUNT(LOAI_DIEN_THOAI.LDT_MA) AS LDT_LENGTH 
+                FROM LOAI_DIEN_THOAI
+                WHERE LDT_CON_KINH_DOANH = 1`,
+            function (err, result) {
                 if (err) throw new Error('count ldt error');
                 con.end();
                 res.json(result);
@@ -267,17 +269,17 @@ module.exports.postAddBill = (req, res, next) => {
 }
 
 module.exports.getBills = (req, res, next) => {
-        try {
-            let { date, month, year } = req.query;
-            console.log(date, month, year);
-            hoaDonBanModel.get({ date, month, year }, (err, result) => {
-                res.json(result);
-            });
-        } catch (error) {
-            next(error);
-        }
+    try {
+        let { date, month, year } = req.query;
+        console.log(date, month, year);
+        hoaDonBanModel.get({ date, month, year }, (err, result) => {
+            res.json(result);
+        });
+    } catch (error) {
+        next(error);
     }
-    // END BILL ----------------------------------
+}
+// END BILL ----------------------------------
 
 module.exports.postEditDiscount = (req, res, next) => {
     try {

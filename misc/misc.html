@@ -1,51 +1,51 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['line']
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Day');
-            data.addColumn('number', 'Guardians of the Galaxy');
-            data.addColumn('number', 'The Avengers');
-            data.addColumn('number', 'Transformers: Age of Extinction');
-
-            data.addRows([
-                [1, 37.8, 80.8, 41.8],
-
-            ]);
-
-            var options = {
-                chart: {
-                    title: 'Box Office Earnings in First Two Weeks of Opening',
-                    subtitle: 'in millions of dollars (USD)'
-                },
-                width: 900,
-                height: 500,
-                axes: {
-                    x: {
-                        0: {
-                            side: 'top'
-                        }
-                    }
-                }
-            };
-
-            var chart = new google.charts.Line(document.getElementById('line_top_x'));
-
-            chart.draw(data, google.charts.Line.convertOptions(options));
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .cover-layer {
+            z-index: 1;
+            opacity: 0;
+            background-color: whitesmoke;
+            transform: rotateY(180deg);
         }
-    </script>
+
+        .cover-layer:hover {
+            opacity: 0.7;
+            transform: rotateY(360deg);
+            transition: all 3s;
+            backdrop-filter: blur(3px);
+            color: red;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        img,
+        .cover-layer {
+            height: 30vw !important;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="line_top_x"></div>
+    <a href="#" class="text-dark text-decoration-none">
+        <div class="card text-center shadow overflow-hidden position-relative w-25 m-5" role="button">
+            <img src="https://cdn.tgdd.vn/Products/Images/42/196963/samsung-galaxy-a50-055920-045942-600x600.jpg"
+                class="card-img-top" alt="abc" />
+            <div class="card-body h-25">
+                <p class="card-title h5">Ten</p>
+                <p class="card-text font-weight-bold">30.000.000</p>
+            </div>
+            <div class="position-absolute w-100 cover-layer">Thong tin</div>
+        </div>
+    </a>
 </body>
 
 </html>

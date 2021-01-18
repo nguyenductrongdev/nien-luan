@@ -330,6 +330,8 @@
                 render(viewProducts);
                 drawPagination();
 
+                console.log(PRODUCT_LENGTH, PRODUCT_PER_PAGE, Math.ceil(PRODUCT_LENGTH / PRODUCT_PER_PAGE))
+
                 $('.btn-asc').click(function () {
                     render(ascCost(viewProducts));
                 });

@@ -1,14 +1,14 @@
 const express = require('express');
-const app = express();
+const cookieParser = require('cookie-parser');
+const hbs = require('express-handlebars');
+const cors = require('cors');
 
 const usersRoute = require('./routers/users.route');
 const productsRoute = require('./routers/products.route');
 
 const apiProductsRoute = require('./api/routers/products.route');
 
-const cookieParser = require('cookie-parser');
-
-const hbs = require('express-handlebars');
+const app = express();
 const port = 8080;
 
 app.engine('hbs', hbs({
@@ -17,15 +17,15 @@ app.engine('hbs', hbs({
     defaultLayout: 'layout'
 }));
 
+app.use(cors());
 app.use(cookieParser());
+app.use(express.static('./public'));
 app.use('/users', usersRoute);
 app.use('/products', productsRoute);
 app.use('/api/products', apiProductsRoute);
 
 app.set('view engine', 'hbs');
 app.set('views', './views');
-
-app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
     let { username, avatar } = req.cookies;
