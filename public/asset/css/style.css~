@@ -13,8 +13,7 @@ img {
 }
 
 .tool-bar {
-  background: #3941cc;
-  background: linear-gradient(39deg, #3941cc 3%, #3941cc 13%, #0f0729 51%, #4552fc 100%, #120c36 100%, #0d0420 100%, #222173 100%, #0c021c 100%);
+  background: lightcyan;
 }
 
 .brand-list li {
@@ -52,9 +51,7 @@ img {
   padding: 0 !important;
 }
 .card .card-img-top {
-  object-fit: contain;
   height: 60%;
-  padding-top: 3% !important;
   margin-bottom: 10px !important;
 }
 .card .card-body {
@@ -139,19 +136,6 @@ main.container {
   .card .card-body .card-text {
     font-size: 12px !important;
   }
-  .card--overlay {
-    background-color: lightgray;
-    color: black;
-    opacity: 0;
-    transform: rotateY(-180deg);
-    background-color: rgba(221, 221, 221, 0);
-    backdrop-filter: blur(0.08vw);
-    top: 0;
-    width: 90%;
-    height: 90%;
-    margin: 5% !important;
-    padding: 20px !important;
-  }
 }
 @media (min-width: 992px) {
   * {
@@ -160,7 +144,7 @@ main.container {
 
   .card {
     display: inline-block;
-    width: 19.3%;
+    width: 175px;
     height: 280px;
     margin: 0.2vw;
     overflow: auto;
@@ -190,4 +174,4 @@ main.container {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=style.css~.map */

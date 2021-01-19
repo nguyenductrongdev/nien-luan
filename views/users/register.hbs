@@ -95,7 +95,7 @@
 
             let isValidUserName = /^[0-9A-Za-z]{8,50}$/.test(tenDangNhap.val());
             let isValidPassword = /^[0-9A-Za-z]{8,50}$/.test(matKhau.val());
-            let isValidSoDienThoai = /^[0-9]{10}$/.test(soDienThoai.val());
+            let isValidSoDienThoai = /^[0]{1}[0-9]{9}$/.test(soDienThoai.val());
             let isValidEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email.val());
 
             if (!isValidUserName)

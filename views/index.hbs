@@ -57,6 +57,7 @@
     </li>
 </ul>
 
+
 <nav class="navbar navbar-expand-lg navbar-light p-0 tool-bar my-1">
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
@@ -105,6 +106,7 @@
                             </label>
                         </li>
                     </ul>
+
                     <ul class="list-unstyled d-inline-block">
                         <span class="font-weight-bold">RAM:</span>
                         <li>
@@ -150,10 +152,15 @@
                 </div>
             </li>
         </ul>
+
+        <div class="d-flex flex-row ml-auto">
+            <input type="text" id="searchContent" class="form-control form-control-sm mr-1" placeholder="Search...">
+            <button type="button" class="btn btn-success btn-search">Search</button>
+        </div>
     </div>
 </nav>
 
-<main class="container">
+<main class="container-fluid">
     <div class="row my-3">
         <div class="col-md-12 d-flex justify-content-center align-items-center">
             <div class="product-field mx-auto">
@@ -297,8 +304,8 @@
                         console.log(product.CTKM_HE_SO);
                         if (product.CTKM_HE_SO) {
                             str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
-                                        <div class="card text-center shadow" role="button">
-                                            <img src="${product.HA_URL}" class="card-img-top overflow-hidden" alt="abc" />
+                                        <div class="card text-center shadow position-relative" role="button">
+                                            <img src="${product.HA_URL}" class="card-img-top overflow-hidden w-100" alt="abc" />
                                             <div class="card-body">
                                                 <p class="card-title h5">${product.LDT_TEN}</p>
                                                 <p class="card-text"><del><small class="text-muted font-italic">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
@@ -306,24 +313,38 @@
                                                     <span class="text-danger font-italic font-weight-light">-${product.CTKM_HE_SO * 100}%</span>
                                                 </p>
                                             </div>
+                                            <div class="position-absolute text-left card--overlay">
+                                                <ul class="list-unstyled">
+                                                    <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
+                                                    <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
+                                                    <li>Bộ nhớ trong: ${product.LDT_DUNG_LUONG_ROM} GB</li>
+                                                    <li>RAM: ${product.LDT_DUNG_LUONG_RAM} GB</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </a>`;
                         }
                         else {
                             str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
-                                <div class="card text-center shadow overflow-hidden" role="button">
-                                    <img src="${product.HA_URL}" class="card-img-top" alt="abc" />
+                                <div class="card text-center shadow overflow-hidden position-relative" role="button">
+                                    <img src="${product.HA_URL}" class="card-img-top w-100" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>
                                         <p class="card-text"><del><small class="text-muted font-italic invi invisible">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
-                                        <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</ >
-                                    </div >
-                                </div >
-                            </a > `;
+                                        <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</p>
+                                    </div>
+                                    <div class="position-absolute text-left card--overlay">
+                                        <ul class="list-unstyled">
+                                            <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
+                                            <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
+                                            <li>Bộ nhớ trong: ${product.LDT_DUNG_LUONG_ROM} GB</li>
+                                            <li>RAM: ${product.LDT_DUNG_LUONG_RAM} GB</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </a>`;
                         }
-                        productField.append(
-                            str
-                        );
+                        productField.append(str);
                     }
                 }
 
@@ -355,6 +376,7 @@
                     viewProducts = await filterProducts();
                     render(viewProducts);
                 });
+
 
                 $(document).on('click', '.index-pagination .page-link', function () {
                     $('.index-pagination .active').removeClass('active');
@@ -436,7 +458,34 @@
                     viewProducts = await filterProducts();
                     render(viewProducts);
                 });
+
+                $('.btn-search').click(async function () {
+                    emptyPagination();
+                    let searchContent = $('#searchContent').val();
+                    viewProducts = await axios.get(`api/products/search?content=${searchContent}`)
+                        .then(response => response.data);
+                    $('#searchContent').val('');
+                    render(viewProducts);
+                });
+
+                // animation
+                $(document)
+                    .on('mouseenter', '.card', function () {
+                        $(this).children('.card--overlay').css({
+                            "opacity": "1",
+                            "transform": "rotateY(0)",
+                            "transition": "transform 0.3s, background-color 0.1s",
+                            //"mix-blend-mode": "overlay",
+                            "background-color": "rgba(255, 255, 255, 0.5)",
+                        });
+                    })
+                    .on('mouseleave', '.card', function () {
+                        $(this).children('.card--overlay').css({
+                            "opacity": "0",
+                            "transform": "rotateY(180deg)",
+                            "transition": "all 0.5s"
+                        });
+                    });
             });
         });
-
 </script>
