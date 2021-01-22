@@ -102,7 +102,7 @@ module.exports.postLogin = (req, res, next) => {
                 `SELECT ND_TEN_DANG_NHAP, ND_MAT_KHAU, ND_AVATAR, VT_MA 
                     FROM NGUOI_DUNG 
                     WHERE ND_TEN_DANG_NHAP='${txtTenDangNhap}'`,
-                function(err, result) {
+                function (err, result) {
                     if (err) throw new Error('login err');
                     let isExist = result.length === 1;
 
