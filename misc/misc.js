@@ -1,25 +1,22 @@
-var http = require('http');
-var formidable = require('formidable');
-var fs = require('fs');
+const mysql = require('mysql');
 
-http.createServer(function (req, res) {
-    if (req.url == '/fileupload') {
-        var form = new formidable.IncomingForm();
-        form.parse(req, function (err, fields, files) {
-            var oldpath = files.filetoupload.path;
-            var newpath = './' + files.filetoupload.name;
-            fs.rename(oldpath, newpath, function (err) {
-                if (err) throw err;
-                res.write('File uploaded and moved!');
-                res.end();
-            });
-        });
-    } else {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
-        res.write('<input type="file" name="filetoupload"><br>');
-        res.write('<input type="submit">');
-        res.write('</form>');
-        return res.end();
-    }
-}).listen(8080);
+const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "nghiencuu",
+    multipleStatements: true
+});
+
+con.query('SELECT register_date FROM account', (err, result) => {
+    if (err) console.log(err);
+    let a = result[0];
+    let hihi = a.register_date;
+    console.log(hihi, typeof hihi);
+
+    // console.log(new Date(hihi).toLocaleDateString('vi'));
+    console.log(hihi.toLocaleDateString('vi'));
+    con.destroy()
+
+    console.log("=============================================================");
+});
