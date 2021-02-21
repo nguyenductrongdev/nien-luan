@@ -37,4 +37,6 @@ router.get("/filter-lt-pin", controller.filterLTPin);
 
 router.get("/search", controller.searchByLDT_TEN);
 
+router.get("/filter", controller.filter);
+
 module.exports = router;

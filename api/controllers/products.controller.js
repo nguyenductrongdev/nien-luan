@@ -6,11 +6,55 @@ const hoaDonBanModel = require("../../models/hoaDonBan.model");
 const nhaSanXuatModel = require("../models/nhaSanXuat.model");
 const mysqlConf = require("./../../mysqlConf");
 
-module.exports.getByLDT_MA = (req, res) => {
-  let { LDT_MA } = req.query;
-  loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, field) => {
-    res.json(field[0]);
-  });
+module.exports.getByLDT_MA = (req, res, next) => {
+  try {
+    let { LDT_MA } = req.query;
+    loaiDienThoaiModel.getByLDT_MA(LDT_MA, (err, field) => {
+      res.json(field[0]);
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.filter = (req, res, next) => {
+  try {
+    let { rams = "", roms = "", brands = "" } = req.query;
+    rams = [...rams.split(",")].filter((item) => item !== "");
+    roms = [...roms.split(",")].filter((item) => item !== "");
+    brands = [...brands.split(",")].filter((item) => item !== "");
+
+    loaiDienThoaiModel.get((err, data) => {
+      if (err) throw err;
+      console.log(rams, roms, brands);
+      res.json(
+        data.filter((product) => {
+          let ramValid = false;
+          let romValid = false;
+          let brandValid = false;
+
+          if (
+            rams.length === 0 ||
+            rams.includes(product.LDT_DUNG_LUONG_RAM + "")
+          )
+            ramValid = true;
+
+          if (
+            roms.length === 0 ||
+            rams.includes(product.LDT_DUNG_LUONG_ROM + "")
+          )
+            romValid = true;
+
+          if (brands.length === 0 || brands.includes(product.NSX_MA + ""))
+            brandValid = true;
+
+          return ramValid && romValid && brandValid;
+        })
+      );
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.getNbProducts = (req, res) => {
