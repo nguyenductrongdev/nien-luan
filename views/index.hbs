@@ -179,7 +179,7 @@
 
 <script>
     const PRODUCT_PER_PAGE = 18;
-
+    
     axios.get(`/api/products/page?page=1&productsPerPage=${PRODUCT_PER_PAGE}`)
         .then(response => response.data)
         .then(function (products) {
@@ -198,6 +198,7 @@
                 let PRODUCT_LENGTH = await axios.get('/api/products/getNbProducts')
                     .then(result => result.data[0].LDT_LENGTH);
 
+                
                 function emptyPagination() {
                     $('.index-pagination').empty();
                 }
