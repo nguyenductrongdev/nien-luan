@@ -13,12 +13,6 @@ router.post("/add-brand", controller.postAddBrand);
 
 router.post("/add-unit", controller.postAddUnit);
 
-router.get("/filter-brand", controller.filterBrand);
-
-router.get("/filter-ROM", controller.filterROM);
-
-router.get("/filter-RAM", controller.filterRAM);
-
 // bill start
 router
   .post("/add-bill", controller.postAddBill)
@@ -29,11 +23,7 @@ router
 router.post("/add-discount", controller.postAddDiscount);
 
 router.post("/edit-discount", controller.postEditDiscount);
-
 // discount end
-router.get("/filter-ge-pin", controller.filterGEPin);
-
-router.get("/filter-lt-pin", controller.filterLTPin);
 
 router.get("/search", controller.searchByLDT_TEN);
 

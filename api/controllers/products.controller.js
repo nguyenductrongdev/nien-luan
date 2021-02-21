@@ -19,36 +19,54 @@ module.exports.getByLDT_MA = (req, res, next) => {
 
 module.exports.filter = (req, res, next) => {
   try {
-    let { rams = "", roms = "", brands = "" } = req.query;
+    let { rams = "", roms = "", brands = "", pins = "" } = req.query;
+
+    console.log(">>", rams);
+
     rams = [...rams.split(",")].filter((item) => item !== "");
     roms = [...roms.split(",")].filter((item) => item !== "");
     brands = [...brands.split(",")].filter((item) => item !== "");
+    pins = [...pins.split(",")].filter((item) => item !== "");
 
     loaiDienThoaiModel.get((err, data) => {
       if (err) throw err;
-      console.log(rams, roms, brands);
       res.json(
         data.filter((product) => {
           let ramValid = false;
           let romValid = false;
           let brandValid = false;
+          let pinValid = false;
 
+          // check for ram
           if (
             rams.length === 0 ||
             rams.includes(product.LDT_DUNG_LUONG_RAM + "")
           )
             ramValid = true;
 
+          // check for rom
           if (
             roms.length === 0 ||
-            rams.includes(product.LDT_DUNG_LUONG_ROM + "")
+            roms.includes(product.LDT_DUNG_LUONG_ROM + "")
           )
             romValid = true;
 
+          // check for brand
           if (brands.length === 0 || brands.includes(product.NSX_MA + ""))
             brandValid = true;
 
-          return ramValid && romValid && brandValid;
+          // check for pin
+          if (pins.length === 0) pinValid = true;
+          else if (
+            pins.includes(">=4000") &&
+            product.LDT_DUNG_LUONG_PIN >= 4000
+          )
+            pinValid = true;
+          else if (pins.includes("<4000") && product.LDT_DUNG_LUONG_PIN < 4000)
+            pinValid = true;
+
+          // return true if match all condition
+          return ramValid && romValid && brandValid && pinValid;
         })
       );
     });
@@ -126,77 +144,6 @@ module.exports.postAddUnit = (req, res) => {
     if (err) res.json({ status: "ERROR" });
     else res.json({ status: "SUCCESS" });
   });
-};
-
-module.exports.filterBrand = (req, res, next) => {
-  try {
-    let { brandName: NSX_MA } = req.query;
-    loaiDienThoaiModel.getByNSX_MA(NSX_MA, (err, result) => {
-      result = result.filter((item) => item.LDT_CON_KINH_DOANH);
-      res.json(result);
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.filterROM = (req, res, next) => {
-  try {
-    let { ROM } = req.query;
-    loaiDienThoaiModel.getByLDT_DUNG_LUONG_ROM(ROM, (err, result) => {
-      result = result.filter((item) => item.LDT_CON_KINH_DOANH);
-      res.json(result);
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.filterRAM = (req, res, next) => {
-  try {
-    let { RAM } = req.query;
-    loaiDienThoaiModel.getByLDT_DUNG_LUONG_RAM(RAM, (err, result) => {
-      result = result.filter((item) => item.LDT_CON_KINH_DOANH);
-      res.json(result);
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.filterGEPin = (req, res, next) => {
-  try {
-    let con = mysql.createConnection(mysqlConf);
-    con.connect((err) => {
-      if (err) throw new Error(err);
-      let { pin } = req.query;
-      loaiDienThoaiModel.getGreaterOrEqualLDT_DUNG_LUONG_PIN(
-        pin,
-        (err, result) => {
-          result = result.filter((item) => item.LDT_CON_KINH_DOANH);
-          res.json(result);
-        }
-      );
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-module.exports.filterLTPin = (req, res, next) => {
-  try {
-    let con = mysql.createConnection(mysqlConf);
-    con.connect((err) => {
-      if (err) throw new Error(err);
-      let { pin } = req.query;
-      loaiDienThoaiModel.getLessThanLDT_DUNG_LUONG_PIN(pin, (err, result) => {
-        result = result.filter((item) => item.LDT_CON_KINH_DOANH);
-        res.json(result);
-      });
-    });
-  } catch (error) {
-    next(error);
-  }
 };
 
 module.exports.postAddDiscount = (req, res, next) => {
