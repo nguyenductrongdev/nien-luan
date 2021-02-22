@@ -40,6 +40,14 @@ img {
   margin: 0 auto;
 }
 
+.index-pagination li {
+  margin-left: 0.3rem;
+}
+
+main.container {
+  min-height: 70vh;
+}
+
 .card {
   display: inline-block;
   width: 47%;
@@ -65,14 +73,6 @@ img {
 }
 .card .card-body .card-text {
   font-size: 10px !important;
-}
-
-.index-pagination li {
-  margin: 0.3rem;
-}
-
-main.container {
-  min-height: 70vh;
 }
 
 @media (min-width: 576px) {
@@ -110,6 +110,7 @@ main.container {
     font-size: 5px !important;
   }
 }
+/* Tablet */
 @media (min-width: 768px) {
   * {
     font-size: 15px !important;
@@ -117,8 +118,8 @@ main.container {
 
   .card {
     display: inline-block;
-    width: 150px;
-    height: 200px;
+    width: 23.4vw;
+    height: 30vw;
     margin: 0.2vw;
     overflow: auto;
   }

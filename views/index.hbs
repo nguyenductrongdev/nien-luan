@@ -205,17 +205,16 @@
         <div class="row my-3">
             <div class="col-md-12 d-flex justify-content-center
                 align-items-center">
-                <div class="product-field mx-auto">
-
+                {{!-- START product-field --}}
+                <div class="product-field">
                 </div>
+                {{!-- END product-field --}}
             </div>
         </div>
         <div class="row">
-            <div class="col-3 ml-auto">
-                <nav>
-                    <ul class="pagination pagination-sm index-pagination"></ul>
-                </nav>
-            </div>
+            <nav class="col-12 d-flex justify-content-end">
+                <ul class="pagination pagination-sm index-pagination"></ul>
+            </nav>
         </div>
     </main>
 
@@ -227,7 +226,6 @@
         .then(function (products) {
             $(async function () {
                 const productField = $('.product-field');
-
                 let viewProducts = products;
 
                 let filter = {
@@ -265,7 +263,6 @@
 
                 async function filterProducts() {
                     try {
-                        console.log(filter.roms)
                         let apiStr = `/api/products/filter?`;
                         if(filter.rams.length > 0) apiStr += `rams=${filter.rams.join()}&`;
                         if(filter.roms.length > 0) apiStr += `roms=${filter.roms.join()}&`
@@ -297,37 +294,16 @@
                     productField.empty();
                     for (let product of products) {
                         let str = '';
-                        console.log(product.CTKM_HE_SO);
                         if (product.CTKM_HE_SO) {
-                            str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
-                                        <div class="card text-center shadow position-relative" role="button">
-                                            <img src="${product.HA_URL}" class="card-img-top overflow-hidden w-100" alt="abc" />
-                                            <div class="card-body">
-                                                <p class="card-title h5">${product.LDT_TEN}</p>
-                                                <p class="card-text"><del><small class="text-muted font-italic">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
-                                                <p class="card-text cost font-weight-bold">${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')} 
-                                                    <span class="text-danger font-italic font-weight-light">-${product.CTKM_HE_SO * 100}%</span>
-                                                </p>
-                                            </div>
-                                            <div class="position-absolute text-left card--overlay">
-                                                <ul class="list-unstyled">
-                                                    <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
-                                                    <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
-                                                    <li>Bộ nhớ trong: ${product.LDT_DUNG_LUONG_ROM} GB</li>
-                                                    <li>RAM: ${product.LDT_DUNG_LUONG_RAM} GB</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </a>`;
-                        }
-                        else {
-                            str = `<a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
-                                <div class="card text-center shadow overflow-hidden position-relative" role="button">
-                                    <img src="${product.HA_URL}" class="card-img-top w-100" alt="abc" />
+                            str = `<div class="card text-center shadow position-relative" role="button">
+                                    <a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                                    <img src="${product.HA_URL}" class="card-img-top overflow-hidden w-100" alt="abc" />
                                     <div class="card-body">
                                         <p class="card-title h5">${product.LDT_TEN}</p>
-                                        <p class="card-text"><del><small class="text-muted font-italic invi invisible">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
-                                        <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</p>
+                                        <p class="card-text"><del><small class="text-muted font-italic">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
+                                        <p class="card-text cost font-weight-bold">${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')} 
+                                            <span class="text-danger font-italic font-weight-light">-${product.CTKM_HE_SO * 100}%</span>
+                                        </p>
                                     </div>
                                     <div class="position-absolute text-left card--overlay">
                                         <ul class="list-unstyled">
@@ -337,8 +313,28 @@
                                             <li>RAM: ${product.LDT_DUNG_LUONG_RAM} GB</li>
                                         </ul>
                                     </div>
-                                </div>
-                            </a>`;
+                                    </a>
+                                </div>`;
+                        }
+                        else {
+                            str = `<div class="card text-center shadow overflow-hidden position-relative" role="button">
+                                    <a href="/products/view-product?LDT_MA=${product.LDT_MA}" class="text-dark text-decoration-none">
+                                        <img src="${product.HA_URL}" class="card-img-top w-100" alt="abc" />
+                                        <div class="card-body">
+                                            <p class="card-title h5">${product.LDT_TEN}</p>
+                                            <p class="card-text"><del><small class="text-muted font-italic invi invisible">${(product.LDT_GIA).toLocaleString('vi')}</small></del></p>
+                                            <p class="card-text cost font-weight-bold" > ${(product.LDT_GIA - (product.LDT_GIA * product.CTKM_HE_SO)).toLocaleString('vi')}</p>
+                                        </div>
+                                        <div class="position-absolute text-left card--overlay">
+                                            <ul class="list-unstyled">
+                                                <li>Chip xử lý: ${product.LDT_TEN_CHIP}</li>
+                                                <li>Pin: ${product.LDT_DUNG_LUONG_PIN} mAh</li>
+                                                <li>Bộ nhớ trong: ${product.LDT_DUNG_LUONG_ROM} GB</li>
+                                                <li>RAM: ${product.LDT_DUNG_LUONG_RAM} GB</li>
+                                            </ul>
+                                        </div>
+                                    </a>
+                                </div>`;
                         }
                         productField.append(str);
                     }
@@ -346,8 +342,6 @@
 
                 render(viewProducts);
                 drawPagination();
-
-                console.log(PRODUCT_LENGTH, PRODUCT_PER_PAGE, Math.ceil(PRODUCT_LENGTH / PRODUCT_PER_PAGE))
 
                 $('.btn-asc').click(function () {
                     render(ascCost(viewProducts));
@@ -434,7 +428,6 @@
                     }
                     viewProducts = await filterProducts();
                     render(viewProducts);
-                    console.log(viewProducts);
                 });
 
                 $('input[name="txtRAM"]').click(async function () {
@@ -466,7 +459,7 @@
 
                 // animation
                 $(document)
-                    .on('mouseenter', '.card', function () {
+                    .on('mouseenter', '.card a', function () {
                         $(this).children('.card--overlay').css({
                             "opacity": "1",
                             "transform": "rotateY(0)",
@@ -475,7 +468,7 @@
                             "background-color": "rgba(255, 255, 255, 0.5)",
                         });
                     })
-                    .on('mouseleave', '.card', function () {
+                    .on('mouseleave', '.card a', function () {
                         $(this).children('.card--overlay').css({
                             "opacity": "0",
                             "transform": "rotateY(180deg)",
