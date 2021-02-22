@@ -1,65 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm hóa đơn</title>
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Thêm hóa đơn</title>
+        <style>
         .title {
             font-size: 3vw !important;
         }
     </style>
-</head>
+    </head>
 
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary d-none btn-show-bill" data-toggle="modal"
-                    data-target="#exampleModal">
-                    Xem hóa đơn
-                </button>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary d-none
+                        btn-show-bill" data-toggle="modal"
+                        data-target="#exampleModal">
+                        Xem hóa đơn
+                    </button>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title font-italic" id="exampleModalLabel">Chi tiết hóa đơn</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body bill-content">
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title font-italic"
+                                        id="exampleModalLabel">Chi tiết hóa đơn</h5>
+                                    <button type="button" class="close"
+                                        data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body bill-content">
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success w-100" data-dismiss="modal">OK</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success
+                                        w-100" data-dismiss="modal">OK</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row" id="msg-field">
+            <div class="row" id="msg-field">
 
-        </div>
-        <div class="row">
-            <div class="col-4 shadow-lg p-5">
-                <i>Các sản phẩm đã thêm:</i>
-                <ol id="added-list">
-
-                </ol>
             </div>
-            <div class="col-8 mx-auto">
-                <h1 class="text-center h1" style="font-size: 3vw !important;">Thêm hóa đơn bán ra</h1>
-                <form action="#" name="frmAddBill" id="frmAddBill" method="POST" class="shadow-lg p-5" novalidate>
-                    <div class="form-group">
-                        <label>Thời gian:</label>
-                        <script>
+            <div class="row">
+                <div class="col-4 shadow-lg p-5">
+                    <i>Các sản phẩm đã thêm:</i>
+                    <ol id="added-list">
+
+                    </ol>
+                </div>
+                <div class="col-8 mx-auto">
+                    <h1 class="text-center h1" style="font-size: 3vw
+                        !important;">Thêm hóa đơn bán ra</h1>
+                    <form action="#" name="frmAddBill" id="frmAddBill"
+                        method="POST" class="shadow-lg p-5" novalidate>
+                        <div class="form-group">
+                            <label>Thời gian:</label>
+                            <script>
                             const now = new Date();
                             m = now.getMonth() + 1;
                             d = now.getDate();
@@ -70,10 +77,10 @@
                             y = ('0000' + y).substr(-4);
                             document.write(`<input type="date" name="txtThoiGian" class="form-control" id="txtThoiGian" value="${y}-${m}-${d}" disabled>`);
                         </script>
-                    </div>
-                    <div class="form-group">
-                        <label>Người nhập:</label>
-                        <script>
+                        </div>
+                        <div class="form-group">
+                            <label>Người nhập:</label>
+                            <script>
                             function getCookie(cname) {
                                 var name = cname + "=";
                                 var decodedCookie = decodeURIComponent(document.cookie);
@@ -92,38 +99,43 @@
                             const username = getCookie('username');
                             document.write(`<input type="text" name="txtNguoiNhap" class="form-control" id="txtNguoiNhap" value="${username}" disabled>`)
                         </script>
-                    </div>
-                    <div class="form-group d-none">
-                        <label for="txtMaHoaDon">Mã hóa đơn:</label>
-                        <script>
+                        </div>
+                        <div class="form-group d-none">
+                            <label for="txtMaHoaDon">Mã hóa đơn:</label>
+                            <script>
                             document.write(`<input type="text" name="txtMaHoaDon" id="txtMaHoaDon" class="form-control" value="${new Date().getTime()}" disabled>`);
                         </script>
-
-                    </div>
-                    <div class="form-group">
-                        <label>Tên điện thoại:</label>
-                        <div class="d-flex">
-                            <select name="slMaLoaiDienThoai" id="slMaLoaiDienThoai" class="custom-select w-75" />
-                            {{#each products }}
-                            <option value="{{ this.LDT_MA }}">{{ LDT_TEN }}</option>
-                            {{/each}}
-                            </select>
-                            <input type="number" name="txtSoLuong" class="form-control w-25" id="txtSoLuong"
-                                placeholder="Số lượng..." min="1" />
-                            <button type="button" class="btn btn-success d-block ml-3" id="btn-add">+</button>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label>Tên điện thoại:</label>
+                            <div class="d-flex">
+                                <select name="slMaLoaiDienThoai"
+                                    id="slMaLoaiDienThoai" class="custom-select
+                                    w-75" />
+                                    {{#each products }}
+                                    <option value="{{ this.LDT_MA }}">{{ LDT_TEN
+                                        }}</option>
+                                    {{/each}}
+                                </select>
+                                <input type="number" name="txtSoLuong"
+                                    class="form-control w-25" id="txtSoLuong"
+                                    placeholder="Số lượng..." min="1" />
+                                <button type="button" class="btn btn-success
+                                    d-block ml-3" id="btn-add">+</button>
+                            </div>
+                        </div>
 
-                    <button type="button" class="btn btn-primary form-control btn-send">Thêm hóa
-                        đơn</button>
-                </form>
+                        <button type="button" class="btn btn-primary
+                            form-control btn-send">Thêm hóa
+                            đơn</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
         $(function () {
             // Handle event click add product to bill field
             $('#btn-add').click(function () {
@@ -181,8 +193,7 @@
                 });
 
                 if (isValid) {
-                    // console.log('hd hop le');
-                    $.post('/api/products/add-bill',
+                    $.post('/api/products/bill',
                         {
                             billID: maHoaDon,
                             billProductIDs: billProductIDs.join(),
@@ -239,6 +250,6 @@
             });
         });
     </script>
-</body>
+    </body>
 
 </html>

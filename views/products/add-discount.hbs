@@ -14,50 +14,61 @@
         <div class="col-3">
             <h1 class="font-italic">Các sản phẩm:</h1><br>
             <ul class="list-unstyled d-block shadow-lg p-5" id="added-list">
-
             </ul>
         </div>
         <div class="col-7 mx-auto">
             <h1 class="text-center title">Thêm chương trình khuyến mãi</h1>
-            <form action="/products/add-discount" class="shadow-lg p-5 m-3" id="frmAddDiscount" method="POST"
+            <form action="/products/add-discount" class="shadow-lg p-5 m-3"
+                id="frmAddDiscount" method="POST"
                 novalidate>
                 <div class="form-group d-none">
-                    <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến mãi</label>
-                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai" class="form-control"
+                    <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến
+                        mãi</label>
+                    {{!-- <input type="text" name="maChuongTrinhKhuyenMai"
+                        class="form-control"
                         id="maChuongTrinhKhuyenMai" autofocus> --}}
                     <script>
                         document.write(`<input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai" value="${+new Date()}" disabled>`)
                     </script>
                 </div>
                 <div class="form-group">
-                    <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến mãi</label>
-                    <input type="text" name="tenChuongTrinhKhuyenMai" class="form-control" id="tenChuongTrinhKhuyenMai">
+                    <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến
+                        mãi</label>
+                    <input type="text" name="tenChuongTrinhKhuyenMai"
+                        class="form-control" id="tenChuongTrinhKhuyenMai">
                 </div>
                 <div class="form-group">
                     <label for="heSoChuongTrinhKhuyenMai">Hệ số khuyến mãi</label>
-                    <input type="number" name="heSoChuongTrinhKhuyenMai" class="form-control"
-                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1" max="0.9">
-                    <small class="form-text text-muted"> Hệ số lớn hơn 0 và nhỏ hơn 1.</small>
+                    <input type="number" name="heSoChuongTrinhKhuyenMai"
+                        class="form-control"
+                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1"
+                        max="0.9">
+                    <small class="form-text text-muted"> Hệ số lớn hơn 0 và nhỏ
+                        hơn 1.</small>
                 </div>
                 <div class="form-group">
                     <label for="ngayKetThucChuongTrinhKhuyenMai">Ngày kết thúc</label>
-                    <input type="date" name="ngayKetThucChuongTrinhKhuyenMai" class="form-control"
+                    <input type="date" name="ngayKetThucChuongTrinhKhuyenMai"
+                        class="form-control"
                         id="ngayKetThucChuongTrinhKhuyenMai">
                 </div>
                 <div class="form-group">
                     <label>Các loại điện thoại trong chương trình</label>
                     <div class="d-flex">
-                        <select name="maLoaiDienThoai" id="maLoaiDienThoai" class="custom-select">
+                        <select name="maLoaiDienThoai" id="maLoaiDienThoai"
+                            class="custom-select">
                             <option value="">Chọn tên loại điện thoại</option>
                             {{#each products }}
                             <option value="{{ this.LDT_MA }}">{{ LDT_TEN }}</option>
                             {{/each}}
                         </select>
-                        <button type="button" class="btn btn-secondary ml-1" id="btn-add">Thêm</button>
+                        <button type="button" class="btn btn-secondary ml-1"
+                            id="btn-add">Thêm</button>
                     </div>
 
                 </div>
-                <button type="button" class="btn btn-primary form-control btn-submit">Thêm chương trình khuyến
+                <button type="button" class="btn btn-primary form-control
+                    btn-submit">Thêm chương trình khuyến
                     mãi</button>
             </form>
         </div>
@@ -127,7 +138,7 @@
                     discountProductIDs.push($(this).attr('data-ma'));
                 });
 
-                $.post('/api/products/add-discount',
+                $.post('/api/products/discount',
                     {
                         maChuongTrinhKhuyenMai: $('#maChuongTrinhKhuyenMai').val(),
                         tenChuongTrinhKhuyenMai: $('#tenChuongTrinhKhuyenMai').val(),

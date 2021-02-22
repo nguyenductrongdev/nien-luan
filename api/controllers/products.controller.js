@@ -21,8 +21,6 @@ module.exports.filter = (req, res, next) => {
   try {
     let { rams = "", roms = "", brands = "", pins = "" } = req.query;
 
-    console.log(">>", rams);
-
     rams = [...rams.split(",")].filter((item) => item !== "");
     roms = [...roms.split(",")].filter((item) => item !== "");
     brands = [...brands.split(",")].filter((item) => item !== "");

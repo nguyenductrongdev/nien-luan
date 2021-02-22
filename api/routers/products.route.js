@@ -13,20 +13,17 @@ router.post("/add-brand", controller.postAddBrand);
 
 router.post("/add-unit", controller.postAddUnit);
 
-// bill start
+// bill
+router.get("/bill", controller.getBills).post("/bill", controller.postAddBill);
+
+// discount
 router
-  .post("/add-bill", controller.postAddBill)
-  .get("/bill", controller.getBills);
-// bill end
-
-// discount start
-router.post("/add-discount", controller.postAddDiscount);
-
-router.post("/edit-discount", controller.postEditDiscount);
-// discount end
+  .post("/discount", controller.postAddDiscount)
+  .put("/discount", controller.postEditDiscount);
 
 router.get("/search", controller.searchByLDT_TEN);
 
+// api for filtering feature
 router.get("/filter", controller.filter);
 
 module.exports = router;

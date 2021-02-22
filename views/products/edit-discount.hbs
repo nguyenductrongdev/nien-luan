@@ -16,7 +16,8 @@
             <ul class="list-unstyled d-block shadow-lg p-5" id="added-list">
                 {{#each productsDiscounted }}
                 <li class="m-1" data-ma="{{ this.LDT_MA }}">
-                    <button type="button" class="btn btn-sm btn-danger btn-unselect">&times;</button>
+                    <button type="button" class="btn btn-sm btn-danger
+                        btn-unselect">&times;</button>
                     <b> {{ this.LDT_TEN }} </b>
                 </li>
                 {{/each}}
@@ -24,43 +25,56 @@
         </div>
         <div class="col-7 mx-auto">
             <h1 class="text-center title">Sửa chương trình khuyến mãi</h1>
-            <form action="/products/add-discount" class="shadow-lg p-5 m-3" id="frmAddDiscount" method="POST"
+            <form action="/products/add-discount" class="shadow-lg p-5 m-3"
+                id="frmAddDiscount" method="POST"
                 novalidate>
                 <div class="form-group">
-                    <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến mãi</label>
-                    <input type="text" name="maChuongTrinhKhuyenMai" class="form-control" id="maChuongTrinhKhuyenMai"
+                    <label for="maChuongTrinhKhuyenMai">Mã chương trình khuyến
+                        mãi</label>
+                    <input type="text" name="maChuongTrinhKhuyenMai"
+                        class="form-control" id="maChuongTrinhKhuyenMai"
                         value="{{ discount.CTKM_MA }}" disabled>
                 </div>
                 <div class="form-group">
-                    <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến mãi</label>
-                    <input type="text" name="tenChuongTrinhKhuyenMai" class="form-control" id="tenChuongTrinhKhuyenMai"
+                    <label for="tenChuongTrinhKhuyenMai">Tên chương trình khuyến
+                        mãi</label>
+                    <input type="text" name="tenChuongTrinhKhuyenMai"
+                        class="form-control" id="tenChuongTrinhKhuyenMai"
                         value="{{ discount.CTKM_TEN }}">
                 </div>
                 <div class="form-group">
                     <label for="heSoChuongTrinhKhuyenMai">Hệ số khuyến mãi</label>
-                    <input type="number" name="heSoChuongTrinhKhuyenMai" class="form-control"
-                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1" max="0.9" value="{{ discount.CTKM_HE_SO }}">
-                    <small class="form-text text-muted"> Hệ số lớn hơn 0 và nhỏ hơn 1.</small>
+                    <input type="number" name="heSoChuongTrinhKhuyenMai"
+                        class="form-control"
+                        id="heSoChuongTrinhKhuyenMai" step="0.1" min="0.1"
+                        max="0.9" value="{{ discount.CTKM_HE_SO }}">
+                    <small class="form-text text-muted"> Hệ số lớn hơn 0 và nhỏ
+                        hơn 1.</small>
                 </div>
                 <div class="form-group">
                     <label for="ngayKetThucChuongTrinhKhuyenMai">Ngày kết thúc</label>
-                    <input type="date" name="ngayKetThucChuongTrinhKhuyenMai" class="form-control"
-                        id="ngayKetThucChuongTrinhKhuyenMai" value="{{ discount.CTKM_NGAY_KET_THUC }}">
+                    <input type="date" name="ngayKetThucChuongTrinhKhuyenMai"
+                        class="form-control"
+                        id="ngayKetThucChuongTrinhKhuyenMai" value="{{
+                        discount.CTKM_NGAY_KET_THUC }}">
                 </div>
                 <div class="form-group">
                     <label>Các loại điện thoại trong chương trình</label>
                     <div class="d-flex">
-                        <select name="maLoaiDienThoai" id="maLoaiDienThoai" class="custom-select">
+                        <select name="maLoaiDienThoai" id="maLoaiDienThoai"
+                            class="custom-select">
                             <option value="">Chọn tên loại điện thoại</option>
                             {{#each productsDiscountable }}
                             <option value="{{ this.LDT_MA }}">{{ LDT_TEN }}</option>
                             {{/each}}
                         </select>
-                        <button type="button" class="btn btn-secondary ml-1" id="btn-add">Thêm</button>
+                        <button type="button" class="btn btn-secondary ml-1"
+                            id="btn-add">Thêm</button>
                     </div>
 
                 </div>
-                <button type="button" class="btn btn-primary form-control btn-submit">Áp dụng chỉnh sửa</button>
+                <button type="button" class="btn btn-primary form-control
+                    btn-submit">Áp dụng chỉnh sửa</button>
             </form>
         </div>
     </div>
@@ -89,16 +103,19 @@
                 $.each($('#added-list li'), function () {
                     discountProductIDs.push($(this).attr('data-ma'));
                 });
-
-                $.post('/api/products/edit-discount',
-                    {
+                
+                // send ajax request with PUT method
+                $.ajax({
+                    url: '/api/products/discount',
+                    type: "PUT",
+                    data: {
                         maChuongTrinhKhuyenMai: $('#maChuongTrinhKhuyenMai').val(),
                         tenChuongTrinhKhuyenMai: $('#tenChuongTrinhKhuyenMai').val(),
                         heSoChuongTrinhKhuyenMai: $('#heSoChuongTrinhKhuyenMai').val(),
                         ngayKetThucChuongTrinhKhuyenMai: $('#ngayKetThucChuongTrinhKhuyenMai').val(),
                         maSanPhams: discountProductIDs.join()
                     },
-                    function (data, status) {
+                    success: function (data) {
                         if (data.result === 'OK') {
                             $('#msg-field').html(
                                 `<div class="alert alert-success" role="alert">
@@ -113,7 +130,7 @@
                             );
                         }
                     }
-                );
+                });
             }
         });
         $('#btn-add').click(function () {
